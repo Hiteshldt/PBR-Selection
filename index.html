@@ -247,14 +247,25 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   </div>
 
   <div class="card">
-    <div class="card-h"><h2>5.3 Remote IoT Monitoring, Control &amp; Automation Suite</h2></div>
-    <div class="sen on" id="sen-iotSuite"><div class="sen-hd" onclick="tog('iotSuite')"><span class="sen-nm">WiFi + Cloud IoT Dashboard + Remote Monitoring &amp; Control + Automation Suite</span><span class="sen-pr">&#8377;1,00,000</span><label class="sw" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="tog('iotSuite')"><span class="tk"></span></label></div>
+    <div class="card-h"><h2>5.3 Connectivity &amp; IoT Options</h2></div>
+
+    <div class="sec-label" style="margin-top:0"><span class="n">A</span>Connectivity (choose one)</div>
+    <div class="opts" id="connOpts">
+      <div class="opt pk" data-conn="wifi" onclick="pConn(this)"><div class="opt-n">WiFi Only (Standard)</div><div class="opt-d">802.11 b/g/n 2.4 GHz via customer router &bull; MQTT over TLS &bull; QoS 1</div><div class="opt-p">&#8377;5,000</div></div>
+      <div class="opt" data-conn="4g" onclick="pConn(this)"><div class="opt-n">WiFi + 4G LTE Cat-4</div><div class="opt-d">Standalone 4G SIM connectivity &bull; No router required &bull; Always-on remote access</div><div class="opt-p">&#8377;22,000</div></div>
+    </div>
+
+    <div class="sec-label"><span class="n">B</span>Cloud IoT Dashboard</div>
+    <div class="sen on" id="sen-iotDash"><div class="sen-hd" onclick="tog('iotDash')">
+      <span class="sen-nm">Cloud IoT Dashboard &mdash; Remote Monitoring, Control &amp; Automation</span>
+      <span class="sen-pr">&#8377;35,000</span>
+      <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="tog('iotDash')"><span class="tk"></span></label>
+    </div>
       <div class="sen-bd"><div class="sen-sp"><table>
-        <tr><td>Connectivity</td><td>802.11 b/g/n WiFi &bull; MQTT over TLS (QoS 1) &bull; Integrated with HMI</td></tr>
         <tr><td>Dashboard</td><td>AWS-based real-time WebSocket dashboard &bull; Web + Mobile access &bull; No install required</td></tr>
         <tr><td>Data Retention</td><td>30-day hot storage &bull; 2-year cold archive &bull; Backup server</td></tr>
         <tr><td>Control</td><td>Remote relay ON/OFF &bull; Setpoint adjustment &bull; Automation rules &bull; Alert notifications</td></tr>
-        <tr><td>Payment</td><td>One-time setup: &#8377;1,00,000 &bull; Annual subscription: TBD (for continued access, history, automation &amp; backup)</td></tr>
+        <tr><td>Payment</td><td>One-time setup: &#8377;35,000 &bull; Annual subscription: TBD (for continued access, history, automation &amp; backup)</td></tr>
       </table></div></div>
     </div>
   </div>
@@ -380,7 +391,7 @@ const SENS={
       desc:'Range: 0\u201320 mg/L (0\u2013200% sat.) \u2022 Resolution: 0.01 mg/L\nAccuracy: \u00b13% FS \u2022 Response: \u226460 s \u2022 0\u201340 \u00b0C\nRS-485 Modbus RTU \u2022 DC 10\u201330 V \u2022 0.2 W \u2022 IP68\nNo electrolyte \u2022 Auto temp compensation\nFluorescent film life: 1 year \u2022 5 m cable'}}}
 };
 
-let ST={size:50,frame:'ss',led:'strip',air:'A',heater:false,wavemaker:false,iotSuite:true};
+let ST={size:50,frame:'ss',led:'strip',air:'A',heater:false,wavemaker:false,conn:'wifi',iotDash:true};
 
 /* ════════ HELPERS ════════ */
 function cfg(){return T[ST.size];}
@@ -392,7 +403,7 @@ function tLed(){const c=cfg();const l=ST.led==='strip'?c.ledStrip:c.ledTube;retu
 function tAir(){return ST.air==='A'?42500:78000;}
 function tThermal(){const c=cfg();let t=0;if(ST.heater)c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(ST.wavemaker&&c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
 function tElec(){return ELEC.mcb+ELEC.panel+ELEC.smps+ELEC.misc+HMI;}
-function tIoT(){return ST.iotSuite?100000:0;}
+function tIoT(){return(ST.conn==='wifi'?5000:22000)+(ST.iotDash?35000:0);}
 function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
 function gst(){return Math.round(sub()*.18);}
 function gt(){return sub()+gst();}
@@ -518,11 +529,13 @@ function rStep5Dyn(){
 /* ════════ OTHER HANDLERS ════════ */
 function pAir(el){ST.air=el.dataset.air;document.querySelectorAll('[data-air]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
 function tog(k){
-  if(k==='iotSuite'){ST.iotSuite=!ST.iotSuite;const el=document.getElementById('sen-iotSuite'),cb=el.querySelector('input');cb.checked=ST.iotSuite;el.classList.toggle('on',ST.iotSuite);el.classList.toggle('off',!ST.iotSuite);}
+  if(k==='iotDash'){ST.iotDash=!ST.iotDash;const el=document.getElementById('sen-iotDash'),cb=el.querySelector('input');cb.checked=ST.iotDash;el.classList.toggle('on',ST.iotDash);el.classList.toggle('off',!ST.iotDash);}
   if(k==='heater'){ST.heater=!ST.heater;if(cur===5)rStep5Dyn();}
   if(k==='wavemaker'){ST.wavemaker=!ST.wavemaker;if(cur===5)rStep5Dyn();}
   tick();
 }
+
+function pConn(el){ST.conn=el.dataset.conn;document.querySelectorAll('[data-conn]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
 
 function addAddon(id,btn){
   if(id==='heater')ST.heater=true;
@@ -546,7 +559,8 @@ function badges(){
   b.push(ST.air==='A'?'Air: Inlet':'Air: In+Out');
   if(ST.heater)b.push('Heater');
   if(ST.wavemaker&&cfg().wavemaker)b.push('Wavemaker');
-  if(ST.iotSuite)b.push('IoT Suite');
+  b.push(ST.conn==='wifi'?'WiFi':'WiFi+4G');
+  if(ST.iotDash)b.push('Cloud IoT');
   return b.map(x=>`<span class="badge">${x}</span>`).join('');
 }
 
@@ -596,9 +610,11 @@ function rBOM(){
   s+=row('Miscellaneous (cables, connectors)',1,'lot',12000,'Wire, terminals, labels');
   srow(s);
 
-  if(ST.iotSuite){s=0;sec('IoT MONITORING, CONTROL &amp; AUTOMATION');
-    s+=row('Remote IoT Suite (WiFi + Dashboard + Control + Automation)',1,'service',100000,'One-time setup; annual subscription TBD');
-    srow(s);}
+  s=0;sec('CONNECTIVITY &amp; IoT');
+  if(ST.conn==='wifi')s+=row('WiFi Module (Standard)',1,'pcs',5000,'802.11 b/g/n, MQTT over TLS');
+  else s+=row('WiFi + 4G LTE Cat-4',1,'pcs',22000,'Standalone SIM, no router required');
+  if(ST.iotDash)s+=row('Cloud IoT Dashboard (setup + 1yr)',1,'service',35000,'WebSocket, remote control, data retention');
+  srow(s);
 
   if(ST.heater||(ST.wavemaker&&c.wavemaker)){s=0;sec('OPTIONAL ADD-ONS (free panel integration)');
     if(ST.heater)c.heater.forEach((ht,i)=>s+=row(`Culture Heater ${ht.w}W${c.heater.length>1?' #'+(i+1):''}`,1,'pcs',ht.price,'SSR-controlled, auto temp setpoint'));
@@ -663,7 +679,8 @@ function rSum(){
   ];
   if(ST.heater){const hp=cfg().heater.reduce((a,h)=>a+h.price,0);lines.push({k:'Culture Heater (Add-on)',v:hp});}
   if(ST.wavemaker&&cfg().wavemaker)lines.push({k:'Wavemaker (Add-on)',v:cfg().wavemaker.price});
-  if(ST.iotSuite)lines.push({k:'IoT Monitoring, Control & Automation Suite',v:100000});
+  lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:ST.conn==='wifi'?5000:22000});
+  if(ST.iotDash)lines.push({k:'Cloud IoT Dashboard',v:35000});
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
   const st=sub(),gs=gst(),gr=gt();
   ph+=`<div class="row total"><span class="k">Grand Total (incl. GST)</span><span class="v">${F(gr)}</span></div>`;
@@ -701,7 +718,8 @@ function exportXL(){
   c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],
     ['Culture Heater',ST.heater?'Yes — '+cfg().heater.map(h=>h.w+'W').join(' + '):'No'],
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
-    ['IoT Suite',ST.iotSuite?'Yes (₹1,00,000 + annual TBD)':'No'],
+    ['Connectivity',ST.conn==='wifi'?'WiFi Only (₹5,000)':'WiFi + 4G LTE (₹22,000)'],
+    ['Cloud IoT Dashboard',ST.iotDash?'Yes (₹35,000 + annual TBD)':'No'],
     [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
@@ -753,7 +771,10 @@ function collectData(){
       aeration:c.pump.lpm,
       wavemaker:(ST.wavemaker&&c.wavemaker)?c.wavemaker.lpm:'Not selected',
       wavemaker_price:(ST.wavemaker&&c.wavemaker)?c.wavemaker.price:0,
-      iot_suite:ST.iotSuite?'Yes':'No',
+      connectivity:ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE',
+      connectivity_price:ST.conn==='wifi'?5000:22000,
+      iot_dashboard:ST.iotDash?'Yes':'No',
+      iot_dashboard_price:ST.iotDash?35000:0,
     },
     pricing:{
       subtotal:sub(),gst:gst(),grand_total:gt()
