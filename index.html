@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carbelim — PBR Product Configurator</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -125,12 +126,12 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 </header>
 <nav class="step-wrap"><div class="stepper" id="stepper">
   <div class="st on" onclick="go(1)"><span class="circle">1</span><span class="label">Client</span></div>
-  <div class="st" onclick="go(2)"><span class="circle">2</span><span class="label">PBR Size</span></div>
-  <div class="st" onclick="go(3)"><span class="circle">3</span><span class="label">Sensors</span></div>
-  <div class="st" onclick="go(4)"><span class="circle">4</span><span class="label">Air</span></div>
-  <div class="st" onclick="go(5)"><span class="circle">5</span><span class="label">Controls</span></div>
-  <div class="st" onclick="go(6)"><span class="circle">6</span><span class="label">BOM</span></div>
-  <div class="st" onclick="go(7)"><span class="circle">7</span><span class="label">Summary</span></div>
+  <div class="st" onclick="go(2)"><span class="circle">2</span><span class="label">Structure</span></div>
+  <div class="st" onclick="go(3)"><span class="circle">3</span><span class="label">Technology</span></div>
+  <div class="st" onclick="go(4)"><span class="circle">4</span><span class="label">Sensors</span></div>
+  <div class="st" onclick="go(5)"><span class="circle">5</span><span class="label">Electrical</span></div>
+  <div class="st" onclick="go(6)"><span class="circle">6</span><span class="label">Review</span></div>
+  <div class="st" onclick="go(7)"><span class="circle">7</span><span class="label">Download</span></div>
 </div></nav>
 
 <main class="main">
@@ -151,10 +152,10 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   <div class="nav"><div></div><button class="btn bp" onclick="go(2)">Continue</button></div>
 </section>
 
-<!-- ═══ 2. PBR SIZE & BUILD ═══ -->
+<!-- ═══ 2. PBR STRUCTURE ═══ -->
 <section class="vw" id="v2">
   <div class="card">
-    <div class="card-h"><h2>2. Choose Your PBR Size and Capacity</h2></div>
+    <div class="card-h"><h2>2. PBR Structure &mdash; Tank, Frame &amp; Hardware</h2></div>
     <div class="sec-label"><span class="n">1</span>Photobioreactor (Flat Shaped) &mdash; Culture Tank</div>
     <p style="font-size:10px;color:var(--ink3);margin-bottom:10px">100% Virgin Cast acrylic &bull; Sealed joints &bull; Bottom drain port with valves &bull; Full transparency &bull; Chemically inert &bull; 5&ndash;45 &deg;C</p>
     <div class="sizes" id="szCards"></div>
@@ -164,21 +165,43 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div id="colorRow" style="display:none;margin-top:8px">
       <div class="field"><label>Choose Your Colour (write colour name or RAL code &mdash; we will best-match)</label><input id="fColor" placeholder="e.g. RAL 7035, Matte Black, Navy Blue"></div>
     </div>
-    <div class="inc" style="margin-top:6px" id="hwRow"></div>
 
-    <div class="sec-label"><span class="n">3</span>LED Grow Lighting</div>
-    <div class="opts" id="ledOpts"></div>
-    <div class="inc" style="margin-top:6px" id="ledDrvRow"></div>
+    <div class="sec-label"><span class="n">3</span>Hardware Kit</div>
+    <div class="inc" style="margin-top:6px" id="hwRow"></div>
 
     <div class="preview-box" id="sizePreview"></div>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(1)">Back</button><button class="btn bp" onclick="go(3)">Continue to Sensors</button></div>
+  <div class="nav"><button class="btn bs" onclick="go(1)">Back</button><button class="btn bp" onclick="go(3)">Continue to Technology</button></div>
 </section>
 
-<!-- ═══ 3. SENSORS ═══ -->
+<!-- ═══ 3. CORE TECHNOLOGY ═══ -->
 <section class="vw" id="v3">
   <div class="card">
-    <div class="card-h"><h2>3. Water Quality Sensors</h2><p>Toggle each sensor &bull; Select variant where available</p></div>
+    <div class="card-h"><h2>3. Core Technology &mdash; Lighting, Heating, Aeration &amp; Mixing</h2><p>Configured for your tank size</p></div>
+
+    <div class="sec-label"><span class="n">1</span>LED Grow Lighting</div>
+    <div class="opts" id="ledOpts"></div>
+    <div class="inc" style="margin-top:6px" id="ledDrvRow"></div>
+
+    <div class="sec-label"><span class="n">2</span>Culture Heater (Optional)</div>
+    <div id="heaterToggle"></div>
+
+    <div class="sec-label"><span class="n">3</span>Aeration &amp; Diffusion (auto-configured for <span id="elTankLbl">50L</span>)</div>
+    <div id="elDynamic"></div>
+
+    <div class="sec-label"><span class="n">4</span>Wavemaker (Optional)</div>
+    <div id="wavemakerToggle"></div>
+
+    <div class="sec-label"><span class="n">5</span>Auxiliary Circulation</div>
+    <div id="fanDynamic"></div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(2)">Back</button><button class="btn bp" onclick="go(4)">Continue to Sensors</button></div>
+</section>
+
+<!-- ═══ 4. SENSORS (Water + Air combined) ═══ -->
+<section class="vw" id="v4">
+  <div class="card">
+    <div class="card-h"><h2>4. Water Quality Sensors</h2><p>Toggle each sensor &bull; Select variant where available</p></div>
     <div id="sensorCards"></div>
     <div id="senAccessories" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--sf4)">
       <p style="font-size:9px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Included with Sensor Package</p>
@@ -186,13 +209,9 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <div class="inc"><div class="ib"><div class="in">Sensor Enclosure</div><div class="is">Waterproof housing for electrode probes &bull; Cable glands</div></div><div class="ie"><div class="ip">&#8377;12,300</div><div class="it">Included</div></div></div>
     </div>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(2)">Back</button><button class="btn bp" onclick="go(4)">Continue to Air Sensor</button></div>
-</section>
 
-<!-- ═══ 4. AIR SENSOR ═══ -->
-<section class="vw" id="v4">
   <div class="card">
-    <div class="card-h"><h2>4. Air Quality Sensor &mdash; ZPHS01B Multi-in-One Module</h2></div>
+    <div class="card-h"><h2>4.2 Air Quality Sensor &mdash; ZPHS01B Multi-in-One Module</h2></div>
     <p style="font-size:10px;color:var(--ink3);margin-bottom:12px">Integrated 11-parameter air quality module with laser dust sensor, infrared CO&#8322;, electrochemical gas sensors, and temperature/humidity sensing. UART (TTL level) communication.</p>
     <div class="ap-grid">
       <div class="ap"><span class="ak">PM1.0 / PM2.5 / PM10</span><span class="av">0&ndash;1000 &micro;g/m&sup3; &bull; &plusmn;15 or &plusmn;15%</span></div>
@@ -213,27 +232,19 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; CO&#8322; uptake, O&#8322; production, air purification efficiency.</div><div class="opt-p">&#8377;78,000</div></div>
     </div>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Controls</button></div>
+  <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Electrical</button></div>
 </section>
 
 <!-- ═══ 5. ELECTRICAL & CONTROL ═══ -->
 <section class="vw" id="v5">
   <div class="card">
-    <div class="card-h"><h2>5. Electrical, Aeration &amp; Control System</h2><p>Configured for your tank size</p></div>
+    <div class="card-h"><h2>5. Electrical, PLC/HMI &amp; Control System</h2><p>Fixed components for your PBR</p></div>
     <div class="sec-label"><span class="n">1</span>Electrical Panel &amp; Protection</div>
     <div class="inc"><div class="ib"><div class="in">MCB Branch Circuit + GFCI/RCCB</div><div class="is">2P 16A MCB (incoming) + 2P 30mA RCCB &bull; CEC/CSA compliant &bull; DIN-rail</div></div><div class="ie"><div class="ip">&#8377;4,400</div><div class="it">Fixed</div></div></div>
     <div class="inc"><div class="ib"><div class="in">Control Panel (DIN-rail Enclosure, IP65)</div><div class="is">Panel fabricated to spec &bull; Wiring, terminals, DIN rails, ducts &bull; SSR &amp; relays</div></div><div class="ie"><div class="ip">&#8377;18,600</div><div class="it">Fixed</div></div></div>
     <div class="inc"><div class="ib"><div class="in">SMPS 24 V + 12 V DC</div><div class="is">Mean Well HDR-100-24 / LRS-100-12 &bull; 150 W total &bull; DIN-rail mount</div></div><div class="ie"><div class="ip">&#8377;5,500</div><div class="it">Fixed</div></div></div>
 
-    <div class="sec-label"><span class="n">2</span>Aeration &amp; Mixing (auto-configured for <span id="elTankLbl">50L</span>)</div>
-    <div id="elDynamic"></div>
-
-    <div class="sec-label"><span class="n">3</span>Optional Add-ons</div>
-    <p style="font-size:10px;color:var(--ink3);margin-bottom:8px">Recommended for your tank configuration. All add-ons include <strong style="color:var(--g)">free integration with your control panel</strong>.</p>
-    <div id="heaterToggle"></div>
-    <div id="wavemakerToggle"></div>
-
-    <div class="sec-label"><span class="n">4</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
+    <div class="sec-label"><span class="n">2</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
     <div class="inc"><div class="ib"><div class="in">All-in-One HMI + PLC Control Unit (WiFi included)</div><div class="is" style="line-height:1.65">
       <strong>Display:</strong> 7&Prime; TFT LCD, 800&times;400, PCAP multi-touch, glove-compatible<br>
       <strong>I/O:</strong> 14 digital in (sink/source) + 8 relay out (2A) &bull; Expandable<br>
@@ -243,11 +254,12 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <strong>Power:</strong> 24 V DC, 5 W &bull; IP66F/IP67F &bull; -20 to +55 &deg;C
     </div></div><div class="ie"><div class="ip">&#8377;1,81,000</div><div class="it">Fixed</div></div></div>
 
+    <div class="sec-label"><span class="n">3</span>Miscellaneous</div>
     <div class="inc"><div class="ib"><div class="in">Miscellaneous (cables, connectors, labels, ferrules, documentation)</div><div class="is">Complete wiring &amp; documentation pack</div></div><div class="ie"><div class="ip">&#8377;12,000</div><div class="it">Fixed</div></div></div>
   </div>
 
   <div class="card">
-    <div class="card-h"><h2>5.3 Connectivity &amp; IoT Options</h2></div>
+    <div class="card-h"><h2>5.2 Connectivity &amp; IoT Options</h2></div>
 
     <div class="sec-label" style="margin-top:0"><span class="n">A</span>Connectivity (choose one)</div>
     <div class="opts" id="connOpts">
@@ -269,35 +281,39 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       </table></div></div>
     </div>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(4)">Back</button><button class="btn bp" onclick="go(6)">View BOM</button></div>
+  <div class="nav"><button class="btn bs" onclick="go(4)">Back</button><button class="btn bp" onclick="go(6)">Review Configuration</button></div>
 </section>
 
-<!-- ═══ 6. BOM ═══ -->
+<!-- ═══ 6. REVIEW & RECOMMENDATIONS ═══ -->
 <section class="vw" id="v6">
+  <div class="card"><div class="card-h"><h2>6. Review &amp; Recommendations</h2></div>
+    <div class="cl-g" id="sCl"></div>
+    <div class="badges" id="sBdg" style="margin-top:10px"></div>
+  </div>
+  <div id="addonSuggest" style="display:none"></div>
   <div class="card">
-    <div class="card-h"><h2>6. Bill of Materials &amp; Indicative Pricing</h2><p>Prices in INR, ex-works. GST @18% additional.</p></div>
+    <div class="card-h"><h2>Bill of Materials &amp; Indicative Pricing</h2><p>Prices in INR, ex-works. GST @18% additional.</p></div>
     <div class="badges" id="bomBdg" style="margin-bottom:12px"></div>
     <div class="tbl-wrap"><table class="bom"><thead><tr><th>#</th><th>Component</th><th class="ac">Qty</th><th>Unit</th><th class="ar">Price (INR)</th><th class="ar">Total (INR)</th><th>Remarks</th></tr></thead><tbody id="bomTb"></tbody></table></div>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(5)">Back</button><button class="btn bp" onclick="go(7)">View Summary</button></div>
-</section>
-
-<!-- ═══ 7. SUMMARY ═══ -->
-<section class="vw" id="v7">
-  <div class="card"><div class="card-h"><h2>7. Pricing Summary</h2></div><div class="cl-g" id="sCl"></div><div class="badges" id="sBdg" style="margin-top:10px"></div></div>
-  <div id="addonSuggest" style="display:none"></div>
   <div class="sum-2">
     <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
     <div class="gb"><div class="gl">Grand Total (incl. 18% GST)</div><div class="gv" id="sGr">--</div><div class="gs">Subtotal: <span id="sSub">--</span> &middot; GST: <span id="sGst">--</span></div></div>
   </div>
+  <div class="nav"><button class="btn bs" onclick="go(5)">Back</button><button class="btn bp" onclick="go(7)">Download &amp; Submit</button></div>
+</section>
+
+<!-- ═══ 7. DOWNLOAD & SUBMIT ═══ -->
+<section class="vw" id="v7">
   <div class="card" style="text-align:center">
+    <div class="card-h"><h2>7. Download &amp; Submit</h2></div>
     <p style="font-size:11px;color:var(--ink3);margin-bottom:14px">Download your complete quotation or submit your configuration request.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn bx" onclick="exportXL()">Download Quotation (.xlsx)</button>
+      <button class="btn bx" style="background:#1e40af" onclick="exportPDF()">Download PDF</button>
       <button class="btn bx" id="btnSubmit" style="background:var(--tl)" onclick="submitQuote()">Submit Configuration Request</button>
     </div>
     <div id="submitStatus" style="margin-top:12px;font-size:12px;display:none"></div>
-    <p style="margin-top:12px;font-size:9px;color:var(--ink4)">All prices indicative, ex-works Coimbatore. GST @18% applicable. Validity 30 days. Payment: 50% advance, 50% before dispatch unless otherwise agreed.</p>
   </div>
   <div class="card" style="font-size:10px;color:var(--ink3);line-height:1.7">
     <div class="card-h"><h2>Notes &amp; Terms</h2></div>
@@ -310,7 +326,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <li>Payment terms: 50% advance, 50% before dispatch, unless otherwise agreed.</li>
     </ul>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(6)">Back</button><button class="btn bp" onclick="window.print()">Print</button></div>
+  <div class="nav"><button class="btn bs" onclick="go(6)">Back to Review</button><div></div></div>
 </section>
 
 </main>
@@ -319,9 +335,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 <footer class="footer">CARBELIM PRIVATE LIMITED &bull; Incubated at IIT Madras IC and Accelerated by IIM-Lucknow EIC &bull; Coimbatore, India</footer>
 
 <script>
-/* ════════ WEBHOOK CONFIG ════════
-   Paste your Google Apps Script web app URL here.
-   See instructions at bottom of this file to set up. */
+/* ════════ WEBHOOK CONFIG ════════ */
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwUagfRqWPn12FBmqi6DGn_YFvbpaFD5OOaY9ubBtgRfkvAOwAEnm9KMuLV-mbY9qeIyw/exec';
 
 const F=n=>'\u20B9'+n.toLocaleString('en-IN');
@@ -415,7 +429,7 @@ function tick(){
   document.getElementById('tkGr').textContent=F(gt());
 }
 
-/* ════════ RENDER STEP 2 ════════ */
+/* ════════ RENDER STEP 2 — Structure only (no LED) ════════ */
 function rStep2(){
   const c=cfg();
   // Sizes
@@ -429,12 +443,6 @@ function rStep2(){
      <div class="opt${ST.frame==='ms'?' pk':''}" onclick="pFrame('ms')"><div class="opt-n">MS with Powder Coat</div><div class="opt-d">Mild Steel square tube &bull; Powder coated finish &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameMS)}</div></div>`;
   document.getElementById('colorRow').style.display=ST.frame==='ms'?'block':'none';
   document.getElementById('hwRow').innerHTML=`<div class="ib"><div class="in">Stainless Steel Hardware Kit</div><div class="is">SS-304 assorted bolts, nuts, standoffs &bull; Complete mounting set</div></div><div class="ie"><div class="ip">${F(c.hw)}</div><div class="it">Included</div></div>`;
-  // LED
-  const ls=c.ledStrip,lt=c.ledTube;
-  document.getElementById('ledOpts').innerHTML=
-    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Spectrum optimised for photosynthesis &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(ls.qty*ls.unit)}</div></div>
-     <div class="opt${ST.led==='tube'?' pk':''}" onclick="pLed('tube')"><div class="opt-n">High-Output LED Grow Tubes</div><div class="opt-d">${lt.label}, enhanced PAR output &bull; Maximum lumination &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(lt.qty*lt.unit)}</div></div>`;
-  document.getElementById('ledDrvRow').innerHTML=`<div class="ib"><div class="in">LED Driver / Power Supply 24 V</div><div class="is">DIN-rail mount &bull; Overload &amp; short-circuit protection</div></div><div class="ie"><div class="ip">${F(c.ledDrv)}</div><div class="it">Included</div></div>`;
   // Preview
   let pv=`<strong>Auto-configured for ${c.label}:</strong> `;
   pv+=c.heater.map(h=>`${h.w}W Culture Heater`).join(' + ')+' &bull; ';
@@ -444,9 +452,69 @@ function rStep2(){
   document.getElementById('sizePreview').innerHTML=pv;
 }
 
-function pSz(s){ST.size=s;rStep2();tick();}
+function pSz(s){ST.size=s;rStep2();if(cur===3)rStep3Dyn();tick();}
 function pFrame(f){ST.frame=f;rStep2();tick();}
-function pLed(l){ST.led=l;rStep2();tick();}
+function pLed(l){ST.led=l;rStep3Dyn();tick();}
+
+/* ════════ RENDER STEP 3 — Core Technology ════════ */
+function rStep3Dyn(){
+  const c=cfg();
+
+  // LED
+  const ls=c.ledStrip,lt=c.ledTube;
+  document.getElementById('ledOpts').innerHTML=
+    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Spectrum optimised for photosynthesis &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(ls.qty*ls.unit)}</div></div>
+     <div class="opt${ST.led==='tube'?' pk':''}" onclick="pLed('tube')"><div class="opt-n">High-Output LED Grow Tubes</div><div class="opt-d">${lt.label}, enhanced PAR output &bull; Maximum lumination &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(lt.qty*lt.unit)}</div></div>`;
+  document.getElementById('ledDrvRow').innerHTML=`<div class="ib"><div class="in">LED Driver / Power Supply 24 V</div><div class="is">DIN-rail mount &bull; Overload &amp; short-circuit protection</div></div><div class="ie"><div class="ip">${F(c.ledDrv)}</div><div class="it">Included</div></div>`;
+
+  // Heater toggle
+  const htrTotal=c.heater.reduce((a,h)=>a+h.price,0);
+  const htrDesc=c.heater.map(h=>h.w+'W').join(' + ');
+  document.getElementById('heaterToggle').innerHTML=
+    `<div class="sen ${ST.heater?'on':'off'}" id="sen-heater"><div class="sen-hd" onclick="tog('heater')">
+      <span class="sen-nm">Culture Heater &mdash; ${htrDesc}${c.heater.length>1?' (Dual)':''}</span>
+      <span class="sen-tg tg-i" style="margin-right:4px">Free Panel Integration</span>
+      <span class="sen-pr">${F(htrTotal)}</span>
+      <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.heater?'checked':''} onchange="tog('heater')"><span class="tk"></span></label>
+    </div>
+    <div class="sen-bd"><div class="sen-sp"><table>
+      <tr><td>Capacity</td><td>${htrDesc} &bull; Sized for ${c.label} tank</td></tr>
+      <tr><td>Control</td><td>SSR-controlled via HMI &bull; Auto temperature setpoint</td></tr>
+      <tr><td>Integration</td><td>Free integration with control panel included</td></tr>
+    </table></div></div></div>`;
+
+  // Tank label
+  document.getElementById('elTankLbl').textContent=c.label;
+
+  // Aeration + diffuser
+  let h='';
+  h+=`<div class="inc"><div class="ib"><div class="in">Aeration Pump &mdash; ${c.pump.lpm}</div><div class="is">${c.pump.w} &bull; Manual flow control valve &bull; Fine bubble aeration</div></div><div class="ie"><div class="ip">${F(c.pump.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  h+=`<div class="inc"><div class="ib"><div class="in">Fine Bubble Diffuser</div><div class="is">${c.diffuser.desc} &bull; Optimised for ${c.label} volume</div></div><div class="ie"><div class="ip">${F(c.diffuser.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  document.getElementById('elDynamic').innerHTML=h;
+
+  // Wavemaker toggle (only for 250L+)
+  const wmEl=document.getElementById('wavemakerToggle');
+  if(c.wavemaker){
+    wmEl.innerHTML=
+      `<div class="sen ${ST.wavemaker?'on':'off'}" id="sen-wavemaker"><div class="sen-hd" onclick="tog('wavemaker')">
+        <span class="sen-nm">Wavemaker &mdash; ${c.wavemaker.lpm}</span>
+        <span class="sen-tg tg-i" style="margin-right:4px">Free Panel Integration</span>
+        <span class="sen-pr">${F(c.wavemaker.price)}</span>
+        <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.wavemaker?'checked':''} onchange="tog('wavemaker')"><span class="tk"></span></label>
+      </div>
+      <div class="sen-bd"><div class="sen-sp"><table>
+        <tr><td>Capacity</td><td>${c.wavemaker.lpm} &bull; Recirculation &amp; mixing for ${c.label} volume</td></tr>
+        <tr><td>Control</td><td>Timer-based relay control via HMI &bull; Configurable ON/OFF cycles</td></tr>
+        <tr><td>Integration</td><td>Free integration with control panel included</td></tr>
+      </table></div></div></div>`;
+  } else {
+    wmEl.innerHTML=`<p style="font-size:10px;color:var(--ink4);padding:8px 0">Wavemaker is available for 250L+ tanks. Select a larger tank to enable this option.</p>`;
+  }
+
+  // Fans
+  document.getElementById('fanDynamic').innerHTML=
+    `<div class="inc"><div class="ib"><div class="in">Auxiliary Circulation Fan${c.fans>1?'s (\u00d72)':''}</div><div class="is">Air intake &amp; HVAC circulation &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.fans*c.fanPrice)}</div><div class="it">Auto-configured</div></div></div>`;
+}
 
 /* ════════ RENDER SENSORS ════════ */
 function rSensors(){
@@ -482,56 +550,12 @@ function rSensors(){
 function togS(k){SENS[k].on=!SENS[k].on;rSensors();tick();}
 function pickV(el){const k=el.dataset.s,v=el.dataset.v;SENS[k].v=v;rSensors();tick();}
 
-/* ════════ RENDER STEP 5 DYNAMIC ════════ */
-function rStep5Dyn(){
-  const c=cfg();
-  document.getElementById('elTankLbl').textContent=c.label;
-  let h='';
-  h+=`<div class="inc"><div class="ib"><div class="in">Aeration Pump &mdash; ${c.pump.lpm}</div><div class="is">${c.pump.w} &bull; Manual flow control valve &bull; Fine bubble aeration</div></div><div class="ie"><div class="ip">${F(c.pump.price)}</div><div class="it">Auto-configured</div></div></div>`;
-  h+=`<div class="inc"><div class="ib"><div class="in">Fine Bubble Diffuser</div><div class="is">${c.diffuser.desc} &bull; Optimised for ${c.label} volume</div></div><div class="ie"><div class="ip">${F(c.diffuser.price)}</div><div class="it">Auto-configured</div></div></div>`;
-  h+=`<div class="inc"><div class="ib"><div class="in">Auxiliary Circulation Fan${c.fans>1?'s (\u00d72)':''}</div><div class="is">Air intake &amp; HVAC circulation &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.fans*c.fanPrice)}</div><div class="it">Auto-configured</div></div></div>`;
-  document.getElementById('elDynamic').innerHTML=h;
-
-  // Heater toggle
-  const htrTotal=c.heater.reduce((a,h)=>a+h.price,0);
-  const htrDesc=c.heater.map(h=>h.w+'W').join(' + ');
-  document.getElementById('heaterToggle').innerHTML=
-    `<div class="sen ${ST.heater?'on':'off'}" id="sen-heater"><div class="sen-hd" onclick="tog('heater')">
-      <span class="sen-nm">Culture Heater &mdash; ${htrDesc}${c.heater.length>1?' (Dual)':''}</span>
-      <span class="sen-pr">${F(htrTotal)}</span>
-      <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.heater?'checked':''} onchange="tog('heater')"><span class="tk"></span></label>
-    </div>
-    <div class="sen-bd"><div class="sen-sp"><table>
-      <tr><td>Capacity</td><td>${htrDesc} &bull; Sized for ${c.label} tank</td></tr>
-      <tr><td>Control</td><td>SSR-controlled via HMI &bull; Auto temperature setpoint</td></tr>
-      <tr><td>Integration</td><td>Free integration with control panel included</td></tr>
-    </table></div></div></div>`;
-
-  // Wavemaker toggle (only for 500L+)
-  const wmEl=document.getElementById('wavemakerToggle');
-  if(c.wavemaker){
-    wmEl.innerHTML=
-      `<div class="sen ${ST.wavemaker?'on':'off'}" id="sen-wavemaker"><div class="sen-hd" onclick="tog('wavemaker')">
-        <span class="sen-nm">Wavemaker &mdash; ${c.wavemaker.lpm}</span>
-        <span class="sen-pr">${F(c.wavemaker.price)}</span>
-        <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.wavemaker?'checked':''} onchange="tog('wavemaker')"><span class="tk"></span></label>
-      </div>
-      <div class="sen-bd"><div class="sen-sp"><table>
-        <tr><td>Capacity</td><td>${c.wavemaker.lpm} &bull; Recirculation &amp; mixing for ${c.label} volume</td></tr>
-        <tr><td>Control</td><td>Timer-based relay control via HMI &bull; Configurable ON/OFF cycles</td></tr>
-        <tr><td>Integration</td><td>Free integration with control panel included</td></tr>
-      </table></div></div></div>`;
-  } else {
-    wmEl.innerHTML='';
-  }
-}
-
 /* ════════ OTHER HANDLERS ════════ */
 function pAir(el){ST.air=el.dataset.air;document.querySelectorAll('[data-air]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
 function tog(k){
   if(k==='iotDash'){ST.iotDash=!ST.iotDash;const el=document.getElementById('sen-iotDash'),cb=el.querySelector('input');cb.checked=ST.iotDash;el.classList.toggle('on',ST.iotDash);el.classList.toggle('off',!ST.iotDash);}
-  if(k==='heater'){ST.heater=!ST.heater;if(cur===5)rStep5Dyn();}
-  if(k==='wavemaker'){ST.wavemaker=!ST.wavemaker;if(cur===5)rStep5Dyn();}
+  if(k==='heater'){ST.heater=!ST.heater;if(cur===3)rStep3Dyn();}
+  if(k==='wavemaker'){ST.wavemaker=!ST.wavemaker;if(cur===3)rStep3Dyn();}
   tick();
 }
 
@@ -541,7 +565,7 @@ function addAddon(id,btn){
   if(id==='heater')ST.heater=true;
   if(id==='wavemaker')ST.wavemaker=true;
   btn.textContent='Added';btn.classList.add('added');btn.disabled=true;
-  tick();rSum();
+  tick();rStep6();
 }
 
 /* ════════ BADGES ════════ */
@@ -629,8 +653,8 @@ function rBOM(){
   document.getElementById('bomBdg').innerHTML=badges();
 }
 
-/* ════════ SUMMARY ════════ */
-function rSum(){
+/* ════════ STEP 6 — REVIEW & RECOMMENDATIONS ════════ */
+function rStep6(){
   const v=id=>document.getElementById(id).value||'\u2014';
   document.getElementById('sCl').innerHTML=
     `<div><span class="lk">Organisation</span><span class="lv">${v('fOrg')}</span></div>
@@ -647,12 +671,12 @@ function rSum(){
     const hd=c2.heater.map(h=>h.w+'W').join(' + ');
     const hp=c2.heater.reduce((a,h)=>a+h.price,0);
     suggestions.push({id:'heater',name:`${hd} Culture Heater${c2.heater.length>1?' (Dual)':''}`,
-      desc:`Your ${c2.label} tank benefits from a ${hd} heater with auto temperature setpoint control.`,
+      desc:`Your ${c2.label} tank would benefit from a ${hd} heater with auto temperature settings — free integration with your control panel.`,
       price:hp});
   }
   if(!ST.wavemaker&&c2.wavemaker){
     suggestions.push({id:'wavemaker',name:`Wavemaker — ${c2.wavemaker.lpm}`,
-      desc:`Recommended for ${c2.label} tanks. Timer-based recirculation & mixing for uniform culture growth.`,
+      desc:`Wavemaker with timer control — free integration with your control panel. Recommended for ${c2.label} tanks for uniform culture growth.`,
       price:c2.wavemaker.price});
   }
   const sgEl=document.getElementById('addonSuggest');
@@ -669,6 +693,10 @@ function rSum(){
     sgEl.style.display='none';
   }
 
+  // BOM
+  rBOM();
+
+  // Pricing summary
   const lines=[
     {k:'Structure (Tank + Frame + Hardware)',v:tStruct()},
     {k:'LED Grow Lighting',v:tLed()},
@@ -697,15 +725,16 @@ function go(n){
   document.querySelectorAll('.vw').forEach((v,i)=>v.classList.toggle('on',i+1===n));
   document.querySelectorAll('.stepper .st').forEach((s,i)=>{s.classList.remove('on','done');if(i+1===n)s.classList.add('on');if(i+1<n)s.classList.add('done');});
   if(n===2)rStep2();
-  if(n===3)rSensors();
-  if(n===5)rStep5Dyn();
-  if(n===6)rBOM();
-  if(n===7)rSum();
+  if(n===3)rStep3Dyn();
+  if(n===4)rSensors();
+  if(n===6)rStep6();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* ════════ EXCEL ════════ */
 function exportXL(){
+  // Ensure BOM is rendered before export
+  rBOM();
   const wb=XLSX.utils.book_new(),st=sub(),gs=gst(),gr=gt(),v=id=>document.getElementById(id).value||'';
   const c1=[['CARBELIM PRIVATE LIMITED'],['Photobioreactor (PBR) Custom Design \u2014 Quotation'],[''],
     ['Organisation',v('fOrg')],['Contact',v('fName')],['Email/Phone',v('fContact')],['Date',v('fDate')],['Reference',v('fRef')],['Delivery',v('fLoc')],[''],
@@ -718,8 +747,8 @@ function exportXL(){
   c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],
     ['Culture Heater',ST.heater?'Yes — '+cfg().heater.map(h=>h.w+'W').join(' + '):'No'],
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
-    ['Connectivity',ST.conn==='wifi'?'WiFi Only (₹5,000)':'WiFi + 4G LTE (₹22,000)'],
-    ['Cloud IoT Dashboard',ST.iotDash?'Yes (₹35,000 + annual TBD)':'No'],
+    ['Connectivity',ST.conn==='wifi'?'WiFi Only (\u20B95,000)':'WiFi + 4G LTE (\u20B922,000)'],
+    ['Cloud IoT Dashboard',ST.iotDash?'Yes (\u20B935,000 + annual TBD)':'No'],
     [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
@@ -730,6 +759,77 @@ function exportXL(){
   XLSX.utils.book_append_sheet(wb,ws2,'BOM & Pricing');
 
   XLSX.writeFile(wb,`Carbelim_PBR_Quotation_${v('fRef')||'CBL-PBR-001'}.xlsx`);
+}
+
+/* ════════ PDF EXPORT ════════ */
+function exportPDF(){
+  // Ensure review step is rendered
+  rStep6();
+  const v=id=>document.getElementById(id).value||'';
+  const ref=v('fRef')||'CBL-PBR-001';
+
+  // Build a temporary container for PDF content
+  const wrap=document.createElement('div');
+  wrap.style.cssText='padding:20px;font-family:Inter,system-ui,sans-serif;font-size:11px;color:#111827;max-width:900px';
+
+  // Header
+  wrap.innerHTML=`
+    <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #065f46">
+      <div style="font-size:16px;font-weight:800;color:#065f46;letter-spacing:1px">CARBELIM PRIVATE LIMITED</div>
+      <div style="font-size:12px;color:#374151;margin-top:2px">Photobioreactor (PBR) Custom Design — Quotation</div>
+      <div style="font-size:9px;color:#6b7280;margin-top:4px">Ex-works Coimbatore, India | Ref: ${ref} | ${v('fDate')||'—'}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;font-size:10px;margin-bottom:14px">
+      <div><strong>Organisation:</strong> ${v('fOrg')||'—'}</div>
+      <div><strong>Contact:</strong> ${v('fName')||'—'}</div>
+      <div><strong>Email/Phone:</strong> ${v('fContact')||'—'}</div>
+      <div><strong>Delivery:</strong> ${v('fLoc')||'—'}</div>
+    </div>
+    <div style="margin-bottom:14px">${document.getElementById('sBdg').innerHTML}</div>
+  `;
+
+  // Clone BOM table
+  const bomTable=document.querySelector('table.bom');
+  if(bomTable){
+    const bomClone=bomTable.cloneNode(true);
+    bomClone.style.cssText='width:100%;border-collapse:collapse;font-size:9px;margin-bottom:14px';
+    wrap.appendChild(bomClone);
+  }
+
+  // Pricing summary
+  const plClone=document.getElementById('sPL');
+  if(plClone){
+    const plDiv=document.createElement('div');
+    plDiv.innerHTML=`<div style="margin-top:10px;padding:12px;border:1px solid #d1d5db;border-radius:8px">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#065f46">Cost Breakdown</div>
+      ${plClone.innerHTML}
+    </div>
+    <div style="text-align:center;margin-top:12px;padding:16px;background:#065f46;color:#fff;border-radius:8px">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.7">Grand Total (incl. 18% GST)</div>
+      <div style="font-size:22px;font-weight:800;margin-top:4px">${F(gt())}</div>
+      <div style="font-size:9px;opacity:.6;margin-top:2px">Subtotal: ${F(sub())} | GST: ${F(gst())}</div>
+    </div>`;
+    wrap.appendChild(plDiv);
+  }
+
+  // Footer
+  const foot=document.createElement('div');
+  foot.style.cssText='margin-top:14px;font-size:8px;color:#6b7280;text-align:center;border-top:1px solid #d1d5db;padding-top:8px';
+  foot.textContent='All prices indicative, ex-works Coimbatore. GST @18% applicable. Validity 30 days. Payment: 50% advance, 50% before dispatch.';
+  wrap.appendChild(foot);
+
+  document.body.appendChild(wrap);
+
+  html2pdf().set({
+    margin: [8,8,8,8],
+    filename: `Carbelim_PBR_Quotation_${ref}.pdf`,
+    image: {type:'jpeg',quality:0.95},
+    html2canvas: {scale:2,useCORS:true},
+    jsPDF: {unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak: {mode:['avoid-all','css','legacy']}
+  }).from(wrap).save().then(()=>{
+    document.body.removeChild(wrap);
+  });
 }
 
 /* ════════ SUBMIT TO GOOGLE SHEET ════════ */
