@@ -31,7 +31,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f5f6f8;color:var(--ink
 .card-h h2{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-.2px}.card-h p{font-size:11px;color:var(--ink3);margin-left:auto}
 .field{margin-bottom:12px}.field label{display:block;font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
 .field input,.field select{width:100%;padding:9px 12px;border:1px solid var(--sf4);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--sf);transition:.2s}
-.field input:focus,.field select:focus{outline:none;border-color:var(--g2);box-shadow:0 0 0 3px rgba(5,150,105,.1)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--g2);box-shadow:0 0 0 3px rgba(5,150,105,.1)}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}.span-2{grid-column:span 2}
 .sec-label{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--ink);margin:18px 0 8px}
 .sec-label:first-child{margin-top:0}
@@ -168,7 +168,13 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 @keyframes bub{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-10px);opacity:.7}}
 @keyframes ledGlow{0%,100%{opacity:.5}50%{opacity:1}}
 @media(max-width:700px){.clr-swatches{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}.clr-custom-row{flex-direction:column}.clr-preview{flex-direction:column;align-items:center;text-align:center}}
-@media print{.topbar,.step-wrap,.nav,.ticker,.addon-suggest{display:none!important}.vw{display:block!important;page-break-inside:avoid}.main{padding-top:0}}
+@media print{.topbar,.step-wrap,.nav,.ticker,.addon-suggest,.wa-fab{display:none!important}.vw{display:block!important;page-break-inside:avoid}.main{padding-top:0}}
+/* WhatsApp FAB */
+.wa-fab{position:fixed;bottom:60px;right:20px;z-index:300;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(37,211,102,.4);cursor:pointer;transition:.25s;text-decoration:none}
+.wa-fab:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(37,211,102,.55)}
+.wa-fab svg{width:28px;height:28px;fill:#fff}
+.wa-fab .wa-tooltip{position:absolute;right:62px;top:50%;transform:translateY(-50%);background:#fff;color:var(--ink);font-size:11px;font-weight:600;padding:6px 12px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.12);white-space:nowrap;opacity:0;pointer-events:none;transition:.2s}
+.wa-fab:hover .wa-tooltip{opacity:1}
 </style>
 </head>
 <body>
@@ -318,8 +324,9 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <div class="ap"><span class="ak">Dimensions</span><span class="av">135 &times; 50 &times; 26.2 mm</span></div>
       <div class="ap"><span class="ak">Warm-up</span><span class="av">3 min (first power-on)</span></div>
     </div>
-    <div class="opts" id="airOpts">
+    <div class="opts opts3" id="airOpts">
       <div class="opt pk" data-air="A" onclick="pAir(this)"><div class="opt-n">Inlet Only</div><div class="opt-d">Single module at air inlet. Monitors incoming air quality fed to the culture.</div><div class="opt-p">&#8377;42,500</div></div>
+      <div class="opt" data-air="O" onclick="pAir(this)"><div class="opt-n">Outlet Only</div><div class="opt-d">Single module at air outlet. Monitors exhaust gases &mdash; CO&#8322; uptake &amp; O&#8322; production by the culture.</div><div class="opt-p">&#8377;42,500</div></div>
       <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; CO&#8322; uptake, O&#8322; production, air purification efficiency.</div><div class="opt-p">&#8377;78,000</div></div>
     </div>
   </div>
@@ -392,6 +399,10 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
     <div class="gb"><div class="gl">Grand Total (incl. 18% GST)</div><div class="gv" id="sGr">--</div><div class="gs">Subtotal: <span id="sSub">--</span> &middot; GST: <span id="sGst">--</span></div></div>
   </div>
+  <div class="card">
+    <div class="card-h"><h2>Comments / Remarks</h2><p>Optional &mdash; add any notes for our team</p></div>
+    <div class="field"><label>Your Comments or Special Requirements</label><textarea id="fRemarks" rows="4" placeholder="e.g. Need delivery by April, custom colour matching required, additional spare sensors, special packaging instructions..." style="width:100%;padding:10px 12px;border:1px solid var(--sf4);border-radius:8px;font-size:12px;font-family:inherit;color:var(--ink);background:var(--sf);resize:vertical;line-height:1.6;transition:.2s"></textarea></div>
+  </div>
   <div class="nav"><button class="btn bs" onclick="go(5)">Back</button><button class="btn bp" onclick="go(7)">Download &amp; Submit</button></div>
 </section>
 
@@ -424,11 +435,15 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 </main>
 
 <div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">50L</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Subtotal</span><span class="tv" id="tkSub">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Grand Total</span><span class="big" id="tkGr">--</span></div></div>
+<a class="wa-fab" href="https://wa.me/917005192650?text=Hi%20Carbelim%2C%20I%20have%20a%20query%20about%20the%20PBR%20configurator." target="_blank" rel="noopener" title="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785c-1.735 0-3.44-.466-4.932-1.348l-.354-.21-3.667.962.979-3.572-.231-.368A9.68 9.68 0 012.27 12.06c0-5.394 4.39-9.784 9.79-9.784a9.72 9.72 0 016.924 2.869 9.72 9.72 0 012.866 6.92c-.004 5.394-4.394 9.784-9.79 9.784zM12.05.516C5.557.516.26 5.813.26 12.06a11.49 11.49 0 001.537 5.748L0 24l6.335-1.662A11.51 11.51 0 0012.05 24c6.493 0 11.79-5.297 11.79-11.94C23.84 5.813 18.543.516 12.05.516z"/></svg>
+  <span class="wa-tooltip">Chat with us</span>
+</a>
 <footer class="footer">CARBELIM PRIVATE LIMITED &bull; Incubated at IIT Madras IC and Accelerated by IIM-Lucknow EIC &bull; Coimbatore, India</footer>
 
 <script>
 /* ════════ WEBHOOK CONFIG ════════ */
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwUagfRqWPn12FBmqi6DGn_YFvbpaFD5OOaY9ubBtgRfkvAOwAEnm9KMuLV-mbY9qeIyw/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbx1D3-mE6ZiH-19GA-r7xtxZG4wQYVweMVWjJBsB0Hn6QXsdeqEOyDSdQsUpCLDfvIoGQ/exec';
 
 const F=n=>'\u20B9'+n.toLocaleString('en-IN');
 
@@ -506,7 +521,7 @@ function anySen(){return Object.values(SENS).some(s=>s.on);}
 function tSen(){let t=0;for(const k in SENS)t+=senP(k);if(anySen())t+=SIG+ENCL;return t;}
 function tStruct(){const c=cfg();return c.tank+(ST.frame==='ss'?c.frameSS:c.frameMS)+c.hw;}
 function tLed(){const c=cfg();const l=ST.led==='strip'?c.ledStrip:c.ledTube;return l.qty*l.unit+c.ledDrv;}
-function tAir(){return ST.air==='A'?42500:78000;}
+function tAir(){return ST.air==='B'?78000:42500;}
 function tThermal(){const c=cfg();let t=0;if(ST.heater)c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(ST.wavemaker&&c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
 function tElec(){return ELEC.panel+ELEC.misc+HMI;}
 function tIoT(){return ST.iotDash?((ST.conn==='wifi'?3760:22000)+35000):0;}
@@ -761,7 +776,7 @@ function badges(){
       b.push(l);
     }
   }
-  b.push(ST.air==='A'?'Air: Inlet':'Air: In+Out');
+  b.push(ST.air==='A'?'Air: Inlet':ST.air==='O'?'Air: Outlet':'Air: In+Out');
   if(ST.heater)b.push('Heater');
   if(ST.wavemaker&&cfg().wavemaker)b.push('Wavemaker');
   if(ST.iotDash){
@@ -803,6 +818,7 @@ function rBOM(){
 
   s=0;sec('AIR QUALITY SENSORS');
   if(ST.air==='A')s+=row('ZPHS01B Air Quality Module (Inlet)',1,'pcs',42500,'11 parameters, UART');
+  else if(ST.air==='O')s+=row('ZPHS01B Air Quality Module (Outlet)',1,'pcs',42500,'11 parameters, UART');
   else{s+=row('ZPHS01B Air Quality Module (Inlet+Outlet)',2,'pcs',39000,'Dual, 11 params each');}
   srow(s);
 
@@ -934,12 +950,13 @@ function exportXL(){
   for(const k in SENS){let l=nm[k],val=SENS[k].on?'Selected':'Not included';
     if(SENS[k].opts&&SENS[k].on)val=SENS[k].opts[SENS[k].v].name+' ('+SENS[k].opts[SENS[k].v].grade+')';
     c1.push([l+' Sensor',val]);}
-  c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],
+  c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':ST.air==='O'?'Outlet Only':'Inlet + Outlet'],
     ['Culture Heater',ST.heater?'Yes — '+cfg().heater.map(h=>h.w+'W').join(' + '):'No'],
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
     ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only (\u20B93,760)':'WiFi + 4G LTE (\u20B922,000)'):'Not selected'],
     ['Cloud IoT Dashboard',ST.iotDash?'Yes (\u20B935,000 + annual TBD)':'No'],
-    [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],['Ex-works Coimbatore. Validity 30 days.']);
+    [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],
+    ['REMARKS',v('fRemarks')||'None'],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
 
@@ -1002,6 +1019,15 @@ function exportPDF(){
     wrap.appendChild(plDiv);
   }
 
+  // Remarks
+  const remarksVal=(document.getElementById('fRemarks').value||'').trim();
+  if(remarksVal){
+    const remDiv=document.createElement('div');
+    remDiv.style.cssText='margin-top:12px;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:10px';
+    remDiv.innerHTML=`<div style="font-size:11px;font-weight:700;color:#065f46;margin-bottom:4px">Comments / Remarks</div><div style="color:#374151;line-height:1.6;white-space:pre-wrap">${remarksVal}</div>`;
+    wrap.appendChild(remDiv);
+  }
+
   // Footer
   const foot=document.createElement('div');
   foot.style.cssText='margin-top:14px;font-size:8px;color:#6b7280;text-align:center;border-top:1px solid #d1d5db;padding-top:8px';
@@ -1054,7 +1080,7 @@ function collectData(){
       led_price:tLed(),
       sensors:sensors,
       sensors_total:tSen(),
-      air_sensor:ST.air==='A'?'Inlet Only':'Inlet + Outlet',
+      air_sensor:ST.air==='A'?'Inlet Only':ST.air==='O'?'Outlet Only':'Inlet + Outlet',
       air_price:tAir(),
       heater:ST.heater?c.heater.map(h=>h.w+'W').join(' + '):'Not selected',
       heater_price:ST.heater?c.heater.reduce((a,h)=>a+h.price,0):0,
@@ -1067,6 +1093,7 @@ function collectData(){
       iot_dashboard_price:ST.iotDash?35000:0,
       iot_suite:ST.iotDash?((ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE')+' + Cloud IoT Dashboard'):'Not selected',
     },
+    remarks:v('fRemarks'),
     pricing:{
       subtotal:sub(),gst:gst(),grand_total:gt()
     }
@@ -1138,7 +1165,8 @@ function doPost(e) {
       'Tank', 'Frame', 'Color', 'LED Type',
       'pH', 'Turbidity', 'TDS', 'Temperature', 'Level', 'DO',
       'Air Sensor', 'IoT Suite',
-      'Subtotal (INR)', 'GST (INR)', 'Grand Total (INR)'
+      'Subtotal (INR)', 'GST (INR)', 'Grand Total (INR)',
+      'Remarks'
     ]);
   }
 
@@ -1164,7 +1192,8 @@ function doPost(e) {
     senStr('temp'), senStr('level'), senStr('do'),
     cfg.air_sensor + ' (₹' + cfg.air_price + ')',
     cfg.iot_suite,
-    p.subtotal, p.gst, p.grand_total
+    p.subtotal, p.gst, p.grand_total,
+    data.remarks || ''
   ]);
 
   return ContentService
