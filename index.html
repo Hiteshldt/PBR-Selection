@@ -116,6 +116,58 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 .addon-suggest .addon-item .ai-btn:hover{background:var(--g3);color:#fff}
 .addon-suggest .addon-item .ai-btn.added{background:var(--g3);color:#fff;border-color:var(--g3)}
 .addon-suggest .free-tag{display:inline-block;font-size:8px;font-weight:700;text-transform:uppercase;background:var(--g4);color:var(--g);padding:2px 6px;border-radius:3px;margin-left:6px}
+.addon-suggest .addon-item.iot-pulse{border-color:#f59e0b;box-shadow:0 0 0 0 rgba(245,158,11,.35);animation:iotPulse 1.8s ease-in-out infinite}
+.conn-note{display:none;margin-top:10px;padding:10px 12px;background:#eff6ff;border:1px dashed #93c5fd;border-radius:var(--r);font-size:10px;color:#1e3a8a}
+@keyframes iotPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.15)}50%{box-shadow:0 0 0 8px rgba(245,158,11,0)}}
+/* ═══ COLOUR PICKER ═══ */
+.clr-picker{background:var(--sf);border:1px solid var(--sf4);border-radius:var(--r2);padding:18px 20px;margin-top:10px}
+.clr-picker .clr-title{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.clr-picker .clr-title .clr-dot{width:8px;height:8px;border-radius:50%;background:var(--g3)}
+.clr-swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:6px;margin-bottom:14px}
+.clr-sw{position:relative;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:1.5px solid var(--sf4);cursor:pointer;transition:.2s;background:var(--sf)}
+.clr-sw:hover{border-color:var(--tl);box-shadow:var(--sh)}
+.clr-sw.pk{border-color:var(--g3);box-shadow:0 0 0 2px rgba(5,150,105,.15)}
+.clr-sw.pk::after{content:'\2713';position:absolute;top:4px;right:5px;width:14px;height:14px;border-radius:50%;background:var(--g3);color:#fff;font-size:7px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.clr-sw .swatch{width:28px;height:28px;border-radius:6px;flex-shrink:0;border:1px solid rgba(0,0,0,.08);box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
+.clr-sw .sw-info{min-width:0}
+.clr-sw .sw-name{font-size:10px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clr-sw .sw-code{font-size:8px;color:var(--ink4);font-weight:500}
+.clr-divider{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:9px;font-weight:600;color:var(--ink4);text-transform:uppercase;letter-spacing:.6px}
+.clr-divider::before,.clr-divider::after{content:'';flex:1;height:1px;background:var(--sf4)}
+.clr-custom-row{display:flex;gap:10px;align-items:flex-end}
+.clr-custom-row .field{flex:1;margin-bottom:0}
+.clr-custom-row .clr-input-wrap{position:relative}
+.clr-custom-row .clr-input-wrap input[type=color]{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:none;background:none;cursor:pointer;padding:0}
+.clr-custom-row .clr-input-wrap input[type=text]{padding-right:42px}
+.clr-preview{margin-top:14px;display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,var(--sf2),#f0f4f8);border:1px solid var(--sf4);border-radius:var(--r2);padding:18px 22px;min-height:100px}
+.clr-preview .cpv-info{flex:1;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.clr-preview .cpv-name{font-size:13px;font-weight:700;color:var(--ink)}
+.clr-preview .cpv-code{font-size:10px;color:var(--ink3);font-family:'Courier New',monospace}
+.clr-preview .cpv-note{font-size:9px;color:var(--ink4);margin-top:4px;line-height:1.5}
+.clr-preview .cpv-swatch{width:52px;height:52px;border-radius:10px;border:1px solid rgba(0,0,0,.1);box-shadow:0 2px 8px rgba(0,0,0,.1);flex-shrink:0;transition:background .3s}
+/* PBR 3D Frame Diagram */
+.pbr-diagram{flex-shrink:0;width:110px;display:flex;flex-direction:column;align-items:center;gap:0;filter:drop-shadow(0 3px 6px rgba(0,0,0,.12))}
+.pbr-top{width:100px;height:14px;border-radius:4px 4px 0 0;transition:background .3s;position:relative}
+.pbr-top::after{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,.25);border-radius:4px 4px 0 0}
+.pbr-tank{width:88px;height:72px;margin:0 auto;background:linear-gradient(180deg,rgba(72,187,120,.18) 0%,rgba(56,161,105,.55) 40%,rgba(39,103,73,.7) 100%);border-left:4px solid transparent;border-right:4px solid transparent;position:relative;overflow:hidden;transition:border-color .3s}
+.pbr-tank .algae{position:absolute;bottom:0;left:0;right:0;height:65%;background:linear-gradient(180deg,rgba(72,187,120,.35),rgba(39,103,73,.75));border-radius:0 0 2px 2px}
+.pbr-tank .algae::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15)}
+.pbr-tank .bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.3)}
+.pbr-tank .bubble.b1{width:4px;height:4px;left:20%;bottom:30%;animation:bub 2.5s ease-in-out infinite}
+.pbr-tank .bubble.b2{width:3px;height:3px;left:55%;bottom:20%;animation:bub 3s ease-in-out .8s infinite}
+.pbr-tank .bubble.b3{width:2px;height:2px;left:72%;bottom:40%;animation:bub 2s ease-in-out 1.5s infinite}
+.pbr-tank .tank-label{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:7px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.8px;text-transform:uppercase}
+.pbr-tank .led-strip{position:absolute;top:0;bottom:0;width:3px;background:linear-gradient(180deg,rgba(167,139,250,.7),rgba(124,58,237,.5),rgba(167,139,250,.7));animation:ledGlow 2s ease-in-out infinite}
+.pbr-tank .led-strip.ll{left:0}.pbr-tank .led-strip.lr{right:0}
+.pbr-bottom{width:100px;height:10px;border-radius:0 0 3px 3px;transition:background .3s;position:relative}
+.pbr-bottom::before{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(0,0,0,.12);border-radius:0 0 3px 3px}
+.pbr-legs{display:flex;justify-content:space-between;width:84px;margin-top:0}
+.pbr-leg{width:8px;height:18px;border-radius:0 0 3px 3px;transition:background .3s;position:relative}
+.pbr-leg::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(0,0,0,.15);border-radius:0 0 3px 3px}
+.pbr-label{font-size:8px;font-weight:700;color:var(--ink3);margin-top:6px;letter-spacing:.3px}
+@keyframes bub{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-10px);opacity:.7}}
+@keyframes ledGlow{0%,100%{opacity:.5}50%{opacity:1}}
+@media(max-width:700px){.clr-swatches{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}.clr-custom-row{flex-direction:column}.clr-preview{flex-direction:column;align-items:center;text-align:center}}
 @media print{.topbar,.step-wrap,.nav,.ticker,.addon-suggest{display:none!important}.vw{display:block!important;page-break-inside:avoid}.main{padding-top:0}}
 </style>
 </head>
@@ -162,8 +214,48 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 
     <div class="sec-label"><span class="n">2</span>Frame Structure</div>
     <div class="opts" id="frameOpts"></div>
-    <div id="colorRow" style="display:none;margin-top:8px">
-      <div class="field"><label>Choose Your Colour (write colour name or RAL code &mdash; we will best-match)</label><input id="fColor" placeholder="e.g. RAL 7035, Matte Black, Navy Blue"></div>
+    <div id="colorRow" style="display:block;margin-top:8px">
+      <div class="clr-picker">
+        <div class="clr-title"><span class="clr-dot"></span>Frame Powder-Coat Finish &mdash; Choose Your Colour</div>
+        <div class="clr-swatches" id="clrSwatches"></div>
+        <div class="clr-divider">Or choose your own</div>
+        <div class="clr-custom-row">
+          <div class="field">
+            <label>Choose Your Color Options ( write &ndash; color or code ) we can try to best match with your color code )</label>
+            <div class="clr-input-wrap">
+              <input type="text" id="fColor" placeholder="e.g. RAL 7035, Matte Black, Navy Blue, Pantone 432 C" oninput="customColorTyped()">
+              <input type="color" id="fColorPick" value="#D7D7D7" onchange="colorPickerChanged(this.value)" title="Pick any colour visually">
+            </div>
+          </div>
+        </div>
+        <div class="clr-preview" id="clrPreview">
+          <div class="pbr-diagram" id="pbrDiagram">
+            <div class="pbr-top" id="pbrTop" style="background:#D7D7D7"></div>
+            <div class="pbr-tank" id="pbrTank" style="border-color:#D7D7D7">
+              <div class="led-strip ll"></div>
+              <div class="led-strip lr"></div>
+              <div class="tank-label">Culture</div>
+              <div class="algae">
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+              </div>
+            </div>
+            <div class="pbr-bottom" id="pbrBottom" style="background:#D7D7D7"></div>
+            <div class="pbr-legs">
+              <div class="pbr-leg" id="pbrLegL" style="background:#D7D7D7"></div>
+              <div class="pbr-leg" id="pbrLegR" style="background:#D7D7D7"></div>
+            </div>
+            <div class="pbr-label">Frame Preview</div>
+          </div>
+          <div class="cpv-swatch" id="cpvSwatch" style="background:#D7D7D7"></div>
+          <div class="cpv-info">
+            <div class="cpv-name" id="cpvName">RAL 7035 &mdash; Light Grey</div>
+            <div class="cpv-code" id="cpvCode">#D7D7D7</div>
+            <div class="cpv-note">Live preview of your PBR frame finish. The acrylic tank remains transparent &mdash; only the frame structure (top, bottom, legs) takes the powder-coat colour. Final shade may vary slightly depending on batch &amp; substrate.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="sec-label"><span class="n">3</span>Hardware Kit</div>
@@ -205,8 +297,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div id="sensorCards"></div>
     <div id="senAccessories" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--sf4)">
       <p style="font-size:9px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Included with Sensor Package</p>
-      <div class="inc"><div class="ib"><div class="in">Signal Converter 0&ndash;5 V &#8594; 4&ndash;20 mA (&times;3)</div><div class="is">DIN-rail mount &bull; For long cable runs to PLC/PCB</div></div><div class="ie"><div class="ip">&#8377;3,360</div><div class="it">Included</div></div></div>
-      <div class="inc"><div class="ib"><div class="in">Sensor Enclosure</div><div class="is">Waterproof housing for electrode probes &bull; Cable glands</div></div><div class="ie"><div class="ip">&#8377;12,300</div><div class="it">Included</div></div></div>
+      <div class="inc"><div class="ib"><div class="in">Sensor Signal Converter &amp; Enclosure Kit</div><div class="is">3&times; DIN-rail 0&ndash;5 V &#8594; 4&ndash;20 mA converters &bull; Waterproof probe enclosure with cable glands</div></div><div class="ie"><div class="ip">&#8377;15,660</div><div class="it">Included</div></div></div>
     </div>
   </div>
 
@@ -240,7 +331,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   <div class="card">
     <div class="card-h"><h2>5. Control System, Display &amp; IoT</h2><p>PLC/HMI, connectivity &amp; monitoring</p></div>
     <div class="sec-label"><span class="n">1</span>Electrical Panel</div>
-    <div class="inc"><div class="ib"><div class="in">Electrical Panel, MCB, RCCB &amp; SMPS</div><div class="is">DIN-rail IP65 enclosure &bull; 2P 16A MCB + 30mA RCCB &bull; 24V + 12V SMPS (150W)</div></div><div class="ie"><div class="ip">&#8377;28,500</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">Electrical Panel, MCB, RCCB &amp; SMPS</div><div class="is">DIN-rail IP65 enclosure &bull; 2P 16A MCB + 30mA RCCB &bull; 24V + 12V SMPS (150W)</div></div><div class="ie"><div class="ip">&#8377;18,400</div><div class="it">Fixed</div></div></div>
 
     <div class="sec-label"><span class="n">2</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
     <div class="inc"><div class="ib"><div class="in">All-in-One HMI + PLC Control Unit (WiFi included)</div><div class="is" style="line-height:1.65">
@@ -253,19 +344,13 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     </div></div><div class="ie"><div class="ip">&#8377;1,81,000</div><div class="it">Fixed</div></div></div>
 
     <div class="sec-label"><span class="n">3</span>Miscellaneous</div>
-    <div class="inc"><div class="ib"><div class="in">Miscellaneous (cables, connectors, labels, ferrules, documentation)</div><div class="is">Complete wiring &amp; documentation pack</div></div><div class="ie"><div class="ip">&#8377;12,000</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">Miscellaneous (cables, connectors, labels, ferrules, documentation)</div><div class="is">Complete wiring &amp; documentation pack</div></div><div class="ie"><div class="ip">&#8377;8,750</div><div class="it">Fixed</div></div></div>
   </div>
 
   <div class="card">
     <div class="card-h"><h2>5.2 Connectivity &amp; IoT Options</h2></div>
 
-    <div class="sec-label" style="margin-top:0"><span class="n">A</span>Connectivity (choose one)</div>
-    <div class="opts" id="connOpts">
-      <div class="opt pk" data-conn="wifi" onclick="pConn(this)"><div class="opt-n">WiFi Only (Standard)</div><div class="opt-d">802.11 b/g/n 2.4 GHz via customer router &bull; MQTT over TLS &bull; QoS 1</div><div class="opt-p">&#8377;5,000</div></div>
-      <div class="opt" data-conn="4g" onclick="pConn(this)"><div class="opt-n">WiFi + 4G LTE Cat-4</div><div class="opt-d">Standalone 4G SIM connectivity &bull; No router required &bull; Always-on remote access</div><div class="opt-p">&#8377;22,000</div></div>
-    </div>
-
-    <div class="sec-label"><span class="n">B</span>Cloud IoT Dashboard</div>
+    <div class="sec-label" style="margin-top:0"><span class="n">A</span>Cloud IoT Dashboard</div>
     <div class="sen on" id="sen-iotDash"><div class="sen-hd" onclick="tog('iotDash')">
       <span class="sen-nm">Cloud IoT Dashboard &mdash; Remote Monitoring, Control &amp; Automation</span>
       <span class="sen-pr">&#8377;35,000</span>
@@ -278,6 +363,15 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
         <tr><td>Payment</td><td>One-time setup: &#8377;35,000 &bull; Annual subscription: TBD (for continued access, history, automation &amp; backup)</td></tr>
       </table></div></div>
     </div>
+
+    <div id="connSection">
+      <div class="sec-label"><span class="n">B</span>Connectivity (choose one)</div>
+      <div class="opts" id="connOpts">
+        <div class="opt pk" data-conn="wifi" onclick="pConn(this)"><div class="opt-n">WiFi Only (Standard)</div><div class="opt-d">802.11 b/g/n 2.4 GHz via customer router &bull; MQTT over TLS &bull; QoS 1</div><div class="opt-p">&#8377;3,760</div></div>
+        <div class="opt" data-conn="4g" onclick="pConn(this)"><div class="opt-n">WiFi + 4G LTE Cat-4</div><div class="opt-d">Standalone 4G SIM connectivity &bull; No router required &bull; Always-on remote access</div><div class="opt-p">&#8377;22,000</div></div>
+      </div>
+    </div>
+    <div class="conn-note" id="connHint">Enable Cloud IoT Dashboard to choose a connectivity option for remote monitoring and control.</div>
   </div>
   <div class="nav"><button class="btn bs" onclick="go(4)">Back</button><button class="btn bp" onclick="go(6)">Review Configuration</button></div>
 </section>
@@ -342,42 +436,42 @@ const F=n=>'\u20B9'+n.toLocaleString('en-IN');
 const T={
   50:{label:'50 Litre',tank:63000,
     frameSS:26775,frameMS:17000,hw:6300,
-    ledStrip:{qty:5,unit:2800,label:'5 strips'},ledTube:{qty:3,unit:5200,label:'3 tubes'},ledDrv:4200,
+    ledStrip:{qty:5,unit:3640,label:'5 strips'},ledTube:{qty:3,unit:5860,label:'3 tubes'},ledDrv:4200,
     heater:[{w:100,price:3500}],
     pump:{lpm:'2\u00d74 LPM (8 LPM)',w:'4W',price:2800},
     diffuser:{desc:'Single outlet',qty:1,price:1800},
-    wavemaker:null,fans:1,fanPrice:6300},
+    wavemaker:null,fans:1,fanPrice:3650},
   100:{label:'100 Litre',tank:95000,
     frameSS:35000,frameMS:22000,hw:7500,
-    ledStrip:{qty:6,unit:2800,label:'6 strips'},ledTube:{qty:4,unit:5200,label:'4 tubes'},ledDrv:4200,
+    ledStrip:{qty:6,unit:3520,label:'6 strips'},ledTube:{qty:4,unit:5740,label:'4 tubes'},ledDrv:4200,
     heater:[{w:200,price:5000}],
     pump:{lpm:'10\u201315 LPM',w:'8W',price:4200},
     diffuser:{desc:'Dual outlet',qty:1,price:2500},
-    wavemaker:null,fans:1,fanPrice:6300},
+    wavemaker:null,fans:1,fanPrice:3650},
   250:{label:'250 Litre',tank:150000,
     frameSS:52000,frameMS:33000,hw:9500,
-    ledStrip:{qty:8,unit:2800,label:'8 strips'},ledTube:{qty:5,unit:5200,label:'5 tubes'},ledDrv:6500,
+    ledStrip:{qty:8,unit:3410,label:'8 strips'},ledTube:{qty:5,unit:5625,label:'5 tubes'},ledDrv:6500,
     heater:[{w:300,price:7000}],
     pump:{lpm:'20\u201325 LPM',w:'15W',price:7500},
     diffuser:{desc:'Multi-outlet bar',qty:1,price:4000},
-    wavemaker:{lpm:'40 LPM',price:8000},fans:1,fanPrice:6300},
+    wavemaker:{lpm:'40 LPM',price:8000},fans:1,fanPrice:3650},
   500:{label:'500 Litre',tank:240000,
     frameSS:78000,frameMS:50000,hw:12000,
-    ledStrip:{qty:12,unit:2800,label:'12 strips'},ledTube:{qty:8,unit:5200,label:'8 tubes'},ledDrv:8500,
+    ledStrip:{qty:12,unit:3325,label:'12 strips'},ledTube:{qty:8,unit:5480,label:'8 tubes'},ledDrv:8500,
     heater:[{w:500,price:9500}],
     pump:{lpm:'45\u201355 LPM',w:'25W',price:14000},
     diffuser:{desc:'Diffuser manifold',qty:1,price:6500},
-    wavemaker:{lpm:'60 LPM',price:12000},fans:2,fanPrice:6300},
+    wavemaker:{lpm:'60 LPM',price:12000},fans:2,fanPrice:3650},
   1000:{label:'1000 Litre',tank:380000,
     frameSS:120000,frameMS:78000,hw:15000,
-    ledStrip:{qty:16,unit:2800,label:'16 strips'},ledTube:{qty:10,unit:5200,label:'10 tubes'},ledDrv:12000,
+    ledStrip:{qty:16,unit:3240,label:'16 strips'},ledTube:{qty:10,unit:5360,label:'10 tubes'},ledDrv:12000,
     heater:[{w:500,price:9500},{w:500,price:9500}],
     pump:{lpm:'100\u2013120 LPM',w:'45W',price:25000},
     diffuser:{desc:'Manifold + ring diffuser',qty:1,price:10000},
-    wavemaker:{lpm:'120 LPM',price:22000},fans:2,fanPrice:6300}
+    wavemaker:{lpm:'120 LPM',price:22000},fans:2,fanPrice:3650}
 };
 
-const ELEC={panel:28500,misc:12000};
+const ELEC={panel:18400,misc:8750};
 const HMI=181000;
 const SIG=3360,ENCL=12300;
 
@@ -415,7 +509,7 @@ function tLed(){const c=cfg();const l=ST.led==='strip'?c.ledStrip:c.ledTube;retu
 function tAir(){return ST.air==='A'?42500:78000;}
 function tThermal(){const c=cfg();let t=0;if(ST.heater)c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(ST.wavemaker&&c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
 function tElec(){return ELEC.panel+ELEC.misc+HMI;}
-function tIoT(){return(ST.conn==='wifi'?5000:22000)+(ST.iotDash?35000:0);}
+function tIoT(){return ST.iotDash?((ST.conn==='wifi'?3760:22000)+35000):0;}
 function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
 function gst(){return Math.round(sub()*.18);}
 function gt(){return sub()+gst();}
@@ -439,7 +533,7 @@ function rStep2(){
   document.getElementById('frameOpts').innerHTML=
     `<div class="opt${ST.frame==='ss'?' pk':''}" onclick="pFrame('ss')"><div class="opt-n">SS304 Matte Frame with Powder Coat</div><div class="opt-d">Stainless Steel 304 square tube &bull; Corrosion resistant &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameSS)}</div></div>
      <div class="opt${ST.frame==='ms'?' pk':''}" onclick="pFrame('ms')"><div class="opt-n">MS with Powder Coat</div><div class="opt-d">Mild Steel square tube &bull; Powder coated finish &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameMS)}</div></div>`;
-  document.getElementById('colorRow').style.display=ST.frame==='ms'?'block':'none';
+  document.getElementById('colorRow').style.display='block';
   document.getElementById('hwRow').innerHTML=`<div class="ib"><div class="in">Stainless Steel Hardware Kit</div><div class="is">SS-304 assorted bolts, nuts, standoffs &bull; Complete mounting set</div></div><div class="ie"><div class="ip">${F(c.hw)}</div><div class="it">Included</div></div>`;
   // Preview
   let pv=`<strong>Auto-configured for ${c.label}:</strong> `;
@@ -452,6 +546,82 @@ function rStep2(){
 
 function pSz(s){ST.size=s;rStep2();if(cur===3)rStep3Dyn();tick();}
 function pFrame(f){ST.frame=f;rStep2();tick();}
+
+/* ═══ COLOUR PICKER ═══ */
+const RAL_COLORS=[
+  {name:'Jet Black',ral:'RAL 9005',hex:'#0A0A0A'},
+  {name:'Anthracite Grey',ral:'RAL 7016',hex:'#293133'},
+  {name:'Graphite Grey',ral:'RAL 7024',hex:'#474A50'},
+  {name:'Light Grey',ral:'RAL 7035',hex:'#D7D7D7'},
+  {name:'White Aluminium',ral:'RAL 9006',hex:'#A5A5A5'},
+  {name:'Traffic White',ral:'RAL 9016',hex:'#F6F6F6'},
+  {name:'Steel Blue',ral:'RAL 5011',hex:'#1A2B3C'},
+  {name:'Sky Blue',ral:'RAL 5015',hex:'#2271B3'},
+  {name:'Moss Green',ral:'RAL 6005',hex:'#2F4538'},
+  {name:'Chocolate Brown',ral:'RAL 8017',hex:'#45322E'},
+  {name:'Ruby Red',ral:'RAL 3003',hex:'#8D1D2C'},
+  {name:'Signal Yellow',ral:'RAL 1003',hex:'#F3AD24'}
+];
+let selColorIdx=3; // default Light Grey
+
+function renderSwatches(){
+  const el=document.getElementById('clrSwatches');if(!el)return;
+  el.innerHTML=RAL_COLORS.map((c,i)=>
+    `<div class="clr-sw${i===selColorIdx?' pk':''}" onclick="pickSwatch(${i})">
+      <div class="swatch" style="background:${c.hex}"></div>
+      <div class="sw-info"><div class="sw-name">${c.name}</div><div class="sw-code">${c.ral}</div></div>
+    </div>`
+  ).join('');
+}
+function updatePreview(name,hex,code){
+  // Swatch
+  const s=document.getElementById('cpvSwatch');if(s)s.style.background=hex;
+  // PBR diagram parts
+  ['pbrTop','pbrBottom','pbrLegL','pbrLegR'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.background=hex;});
+  const tank=document.getElementById('pbrTank');if(tank)tank.style.borderColor=hex;
+  // Info text
+  const n=document.getElementById('cpvName'),cd=document.getElementById('cpvCode'),pk=document.getElementById('fColorPick');
+  if(n)n.innerHTML=name;
+  if(cd)cd.textContent=code||hex;
+  if(pk)pk.value=hex;
+}
+function pickSwatch(i){
+  selColorIdx=i;
+  const c=RAL_COLORS[i];
+  document.getElementById('fColor').value=c.ral+' - '+c.name;
+  updatePreview(c.ral+' &mdash; '+c.name,c.hex,c.hex);
+  renderSwatches();
+}
+function colorPickerChanged(hex){
+  selColorIdx=-1;
+  document.getElementById('fColor').value='Custom: '+hex;
+  updatePreview('Custom Colour',hex,hex);
+  renderSwatches();
+}
+function customColorTyped(){
+  const v=document.getElementById('fColor').value.trim();
+  if(!v)return;
+  // Check if it matches a known swatch
+  const lower=v.toLowerCase();
+  const found=RAL_COLORS.findIndex(c=>lower.includes(c.ral.toLowerCase())||lower.includes(c.name.toLowerCase()));
+  if(found>=0){
+    selColorIdx=found;
+    const c=RAL_COLORS[found];
+    updatePreview(c.ral+' &mdash; '+c.name,c.hex,c.hex);
+    renderSwatches();
+  } else {
+    selColorIdx=-1;
+    // Try to parse as hex
+    const hexMatch=v.match(/#([0-9a-fA-F]{3,8})/);
+    if(hexMatch){
+      updatePreview('Custom: '+v,'#'+hexMatch[1],'#'+hexMatch[1]);
+    } else {
+      updatePreview('Custom: '+v,'#888888','We will best-match this');
+    }
+    renderSwatches();
+  }
+}
+
 function pLed(l){ST.led=l;rStep3Dyn();tick();}
 
 /* ════════ RENDER STEP 3 — Core Technology ════════ */
@@ -550,18 +720,31 @@ function pickV(el){const k=el.dataset.s,v=el.dataset.v;SENS[k].v=v;rSensors();ti
 
 /* ════════ OTHER HANDLERS ════════ */
 function pAir(el){ST.air=el.dataset.air;document.querySelectorAll('[data-air]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
+function syncIoTUI(){
+  const sec=document.getElementById('connSection'),hint=document.getElementById('connHint');
+  if(sec)sec.style.display=ST.iotDash?'block':'none';
+  if(hint)hint.style.display=ST.iotDash?'none':'block';
+}
 function tog(k){
-  if(k==='iotDash'){ST.iotDash=!ST.iotDash;const el=document.getElementById('sen-iotDash'),cb=el.querySelector('input');cb.checked=ST.iotDash;el.classList.toggle('on',ST.iotDash);el.classList.toggle('off',!ST.iotDash);}
+  if(k==='iotDash'){
+    ST.iotDash=!ST.iotDash;
+    const el=document.getElementById('sen-iotDash'),cb=el.querySelector('input');
+    cb.checked=ST.iotDash;
+    el.classList.toggle('on',ST.iotDash);
+    el.classList.toggle('off',!ST.iotDash);
+    syncIoTUI();
+  }
   if(k==='heater'){ST.heater=!ST.heater;if(cur===3)rStep3Dyn();}
   if(k==='wavemaker'){ST.wavemaker=!ST.wavemaker;if(cur===3)rStep3Dyn();}
   tick();
 }
 
-function pConn(el){ST.conn=el.dataset.conn;document.querySelectorAll('[data-conn]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
+function pConn(el){if(!ST.iotDash)return;ST.conn=el.dataset.conn;document.querySelectorAll('[data-conn]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
 
 function addAddon(id,btn){
   if(id==='heater')ST.heater=true;
   if(id==='wavemaker')ST.wavemaker=true;
+  if(id==='iotSuite'){ST.iotDash=true;ST.conn='wifi';syncIoTUI();}
   btn.textContent='Added';btn.classList.add('added');btn.disabled=true;
   tick();rStep6();
 }
@@ -581,8 +764,10 @@ function badges(){
   b.push(ST.air==='A'?'Air: Inlet':'Air: In+Out');
   if(ST.heater)b.push('Heater');
   if(ST.wavemaker&&cfg().wavemaker)b.push('Wavemaker');
-  b.push(ST.conn==='wifi'?'WiFi':'WiFi+4G');
-  if(ST.iotDash)b.push('Cloud IoT');
+  if(ST.iotDash){
+    b.push(ST.conn==='wifi'?'WiFi':'WiFi+4G');
+    b.push('Cloud IoT');
+  }
   return b.map(x=>`<span class="badge">${x}</span>`).join('');
 }
 
@@ -613,7 +798,7 @@ function rBOM(){
   if(SENS.temp.on)s+=row('Temperature PT-100 + Transmitter',1,'set',3640,'SS316, 4\u201320mA');
   if(SENS.level.on)s+=row('Level Pressure Transducer',1,'pcs',5600,'0\u201350kPa, 4\u201320mA, IP65');
   if(SENS.do.on){const o=SENS.do.opts[SENS.do.v];s+=row(`DO Sensor (${o.name})`,1,'pcs',o.price,SENS.do.v==='galv'?'0\u201320 ppm, membrane':'0\u201320 mg/L, RS-485, IP68');}
-  if(anySen()){s+=row('Signal Converter 0\u20135V\u21924\u201320mA',3,'pcs',1120,'DIN-rail');s+=row('Sensor Enclosure',1,'pcs',12300,'Waterproof, cable glands');}
+  if(anySen())s+=row('Sensor Signal Converter & Enclosure Kit',1,'set',15660,'3x DIN-rail converters + waterproof enclosure');
   srow(s);
 
   s=0;sec('AIR QUALITY SENSORS');
@@ -622,19 +807,21 @@ function rBOM(){
   srow(s);
 
   s=0;sec('ELECTRICAL &amp; CONTROL');
-  s+=row('Electrical Panel, MCB, RCCB & SMPS',1,'set',28500,'IP65, 2P 16A MCB, 30mA RCCB, 24V+12V SMPS');
+  s+=row('Electrical Panel, MCB, RCCB & SMPS',1,'set',18400,'IP65, 2P 16A MCB, 30mA RCCB, 24V+12V SMPS');
   s+=row(`Aeration Pump (${c.pump.lpm})`,1,'pcs',c.pump.price,c.pump.w+', valve control');
   s+=row('Fine Bubble Diffuser',c.diffuser.qty,'pcs',c.diffuser.price,c.diffuser.desc);
   s+=row('Circulation Fan (HVAC)',c.fans,'pcs',c.fanPrice,'Air intake');
   s+=row('SmartAXIS Touch HMI + PLC',1,'pcs',181000,'7\u2033 touch, 22 I/O, WiFi included');
-  s+=row('Miscellaneous (cables, connectors)',1,'lot',12000,'Wire, terminals, labels');
+  s+=row('Miscellaneous (cables, connectors)',1,'lot',8750,'Wire, terminals, labels');
   srow(s);
 
-  s=0;sec('CONNECTIVITY &amp; IoT');
-  if(ST.conn==='wifi')s+=row('WiFi Module (Standard)',1,'pcs',5000,'802.11 b/g/n, MQTT over TLS');
-  else s+=row('WiFi + 4G LTE Cat-4',1,'pcs',22000,'Standalone SIM, no router required');
-  if(ST.iotDash)s+=row('Cloud IoT Dashboard (setup + 1yr)',1,'service',35000,'WebSocket, remote control, data retention');
-  srow(s);
+  if(ST.iotDash){
+    s=0;sec('CONNECTIVITY &amp; IoT');
+    if(ST.conn==='wifi')s+=row('WiFi Connectivity (Standard)',1,'pcs',3760,'802.11 b/g/n, MQTT over TLS');
+    else s+=row('WiFi + 4G LTE Cat-4',1,'pcs',22000,'Standalone SIM, no router required, remote access');
+    s+=row('Cloud IoT Dashboard (setup + 1yr)',1,'service',35000,'WebSocket, remote control, data retention');
+    srow(s);
+  }
 
   if(ST.heater||(ST.wavemaker&&c.wavemaker)){s=0;sec('OPTIONAL ADD-ONS (free panel integration)');
     if(ST.heater)c.heater.forEach((ht,i)=>s+=row(`Culture Heater ${ht.w}W${c.heater.length>1?' #'+(i+1):''}`,1,'pcs',ht.price,'SSR-controlled, auto temp setpoint'));
@@ -675,13 +862,18 @@ function rStep6(){
       desc:`Wavemaker with timer control — free integration with your control panel. Recommended for ${c2.label} tanks for uniform culture growth.`,
       price:c2.wavemaker.price});
   }
+  if(!ST.iotDash){
+    suggestions.push({id:'iotSuite',name:'Cloud IoT Dashboard + WiFi Connectivity',
+      desc:'Get live remote monitoring, setpoint control, alerts, automation rules, and historical data access. Start with WiFi now and upgrade to 4G later if you need always-on router-free remote access.',
+      price:38760,pulse:true});
+  }
   const sgEl=document.getElementById('addonSuggest');
   if(suggestions.length>0){
     sgEl.style.display='block';
     let sh=`<div class="addon-suggest"><h3><span>Recommended Add-ons for Your ${c2.label} PBR</span></h3>
       <p style="font-size:10px;color:#92400e;margin-bottom:10px">Based on your tank selection, we suggest the following. All add-ons include <strong>free integration with your control panel</strong> — you buy, we integrate at no extra cost.</p>`;
     suggestions.forEach(sg=>{
-      sh+=`<div class="addon-item"><div class="ai-info"><div class="ai-name">${sg.name}<span class="free-tag">Free Panel Integration</span></div><div class="ai-desc">${sg.desc}</div></div><div class="ai-price">${F(sg.price)}</div><button class="ai-btn" onclick="addAddon('${sg.id}',this)">+ Add</button></div>`;
+      sh+=`<div class="addon-item${sg.pulse?' iot-pulse':''}"><div class="ai-info"><div class="ai-name">${sg.name}<span class="free-tag">Free Panel Integration</span></div><div class="ai-desc">${sg.desc}</div></div><div class="ai-price">${F(sg.price)}</div><button class="ai-btn" onclick="addAddon('${sg.id}',this)">+ Add</button></div>`;
     });
     sh+=`</div>`;
     sgEl.innerHTML=sh;
@@ -703,8 +895,10 @@ function rStep6(){
   ];
   if(ST.heater){const hp=cfg().heater.reduce((a,h)=>a+h.price,0);lines.push({k:'Culture Heater (Add-on)',v:hp});}
   if(ST.wavemaker&&cfg().wavemaker)lines.push({k:'Wavemaker (Add-on)',v:cfg().wavemaker.price});
-  lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:ST.conn==='wifi'?5000:22000});
-  if(ST.iotDash)lines.push({k:'Cloud IoT Dashboard',v:35000});
+  if(ST.iotDash){
+    lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:ST.conn==='wifi'?3760:22000});
+    lines.push({k:'Cloud IoT Dashboard',v:35000});
+  }
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
   const st=sub(),gs=gst(),gr=gt();
   ph+=`<div class="row total"><span class="k">Grand Total (incl. GST)</span><span class="v">${F(gr)}</span></div>`;
@@ -743,7 +937,7 @@ function exportXL(){
   c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],
     ['Culture Heater',ST.heater?'Yes — '+cfg().heater.map(h=>h.w+'W').join(' + '):'No'],
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
-    ['Connectivity',ST.conn==='wifi'?'WiFi Only (\u20B95,000)':'WiFi + 4G LTE (\u20B922,000)'],
+    ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only (\u20B93,760)':'WiFi + 4G LTE (\u20B922,000)'):'Not selected'],
     ['Cloud IoT Dashboard',ST.iotDash?'Yes (\u20B935,000 + annual TBD)':'No'],
     [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
@@ -867,10 +1061,11 @@ function collectData(){
       aeration:c.pump.lpm,
       wavemaker:(ST.wavemaker&&c.wavemaker)?c.wavemaker.lpm:'Not selected',
       wavemaker_price:(ST.wavemaker&&c.wavemaker)?c.wavemaker.price:0,
-      connectivity:ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE',
-      connectivity_price:ST.conn==='wifi'?5000:22000,
+      connectivity:ST.iotDash?(ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE'):'Not selected',
+      connectivity_price:ST.iotDash?(ST.conn==='wifi'?3760:22000):0,
       iot_dashboard:ST.iotDash?'Yes':'No',
       iot_dashboard_price:ST.iotDash?35000:0,
+      iot_suite:ST.iotDash?((ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE')+' + Cloud IoT Dashboard'):'Not selected',
     },
     pricing:{
       subtotal:sub(),gst:gst(),grand_total:gt()
@@ -912,7 +1107,9 @@ function submitQuote(){
 /* ════════ INIT ════════ */
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('fDate').valueAsDate=new Date();
-  rStep2();rSensors();tick();
+  document.getElementById('fColor').value='RAL 7035 - Light Grey';
+  renderSwatches();
+  rStep2();rSensors();syncIoTUI();tick();
 });
 </script>
 

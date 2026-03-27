@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.graylogix.in)",
+      "WebFetch(domain:robu.in)",
+      "Bash(pip install pdfplumber 2>&1 | tail -5)",
+      "Bash(cd \"D:/Carbelim-Work/Product-Selection-Carbelim\" && python -c \"\nimport sys, pdfplumber\nsys.stdout.reconfigure\\(encoding='utf-8'\\)\npdf = pdfplumber.open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f\\\\tool-results\\\\webfetch-1774512785035-ld3g2u.pdf'\\)\nfor i, page in enumerate\\(pdf.pages[:12]\\):\n    text = page.extract_text\\(\\)\n    if text:\n        print\\(f'=== Page {i+1} ==='\\)\n        print\\(text\\)\npdf.close\\(\\)\n\" 2>&1)",
+      "WebFetch(domain:www.winsen-sensor.com)",
+      "Bash(cd \"D:/Carbelim-Work/Product-Selection-Carbelim\" && python -c \"\nimport sys, pdfplumber\nsys.stdout.reconfigure\\(encoding='utf-8'\\)\npdf = pdfplumber.open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f\\\\tool-results\\\\webfetch-1774518123539-nmz1oj.pdf'\\)\nfor i, page in enumerate\\(pdf.pages[:10]\\):\n    text = page.extract_text\\(\\)\n    if text:\n        print\\(f'=== Page {i+1} ==='\\)\n        print\\(text\\)\npdf.close\\(\\)\n\" 2>&1)",
+      "Bash(cd \"D:/Carbelim-Work/Product-Selection-Carbelim\" && python -c \"\nimport sys, pdfplumber\nsys.stdout.reconfigure\\(encoding='utf-8'\\)\npdf = pdfplumber.open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f\\\\tool-results\\\\webfetch-1774520227173-ipobj5.pdf'\\)\nfor i, page in enumerate\\(pdf.pages[:10]\\):\n    text = page.extract_text\\(\\)\n    if text:\n        print\\(f'=== Page {i+1} ==='\\)\n        print\\(text\\)\npdf.close\\(\\)\n\" 2>&1)",
+      "WebFetch(domain:us.idec.com)",
+      "WebFetch(domain:www.idec.com)",
+      "WebSearch",
+      "WebFetch(domain:www.wolfautomation.com)",
+      "WebFetch(domain:www.mouser.com)",
+      "WebFetch(domain:tecotechnology.com)",
+      "Bash(python << 'PYEOF'\nimport json\nwith open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f.jsonl', 'r', encoding='utf-8'\\) as f:\n    for line in f:\n        try:\n            obj = json.loads\\(line\\)\n            role = obj.get\\('role',''\\)\n            content = obj.get\\('content', []\\)\n            if isinstance\\(content, list\\):\n                for c in content:\n                    if isinstance\\(c, dict\\) and c.get\\('type'\\) == 'text':\n                        t = c['text']\n                        if len\\(t\\) > 30 and not t.startswith\\('<system'\\):\n                            print\\(f'{role}: {t[:300]}'\\)\n                            print\\('---'\\)\n        except:\n            pass\nPYEOF)",
+      "Bash(python -c \"import json; f=open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f.jsonl','r',encoding='utf-8'\\); lines=f.readlines\\(\\); print\\(len\\(lines\\)\\); f.close\\(\\)\")",
+      "Bash(python -c \"import json; f=open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f.jsonl','r',encoding='utf-8'\\); lines=f.readlines\\(\\); obj=json.loads\\(lines[0]\\); print\\(type\\(obj\\), list\\(obj.keys\\(\\)\\)[:10]\\)\")",
+      "Bash(python -c \"\nimport json\nwith open\\(r'C:\\\\Users\\\\Hitesh Gutpa\\\\.claude\\\\projects\\\\D--Carbelim-Work-Product-Selection-Carbelim\\\\ffe5be6f-2d7e-4050-af6e-a1031b85465f.jsonl','r',encoding='utf-8'\\) as f:\n    lines = f.readlines\\(\\)\nfor i in range\\(len\\(lines\\)-1, max\\(len\\(lines\\)-5, -1\\), -1\\):\n    obj = json.loads\\(lines[i]\\)\n    print\\(f'Line {i}: type={obj.get\\(\\\\\"type\\\\\"\\)} keys={list\\(obj.keys\\(\\)\\)[:5]}'\\)\n    snap = obj.get\\('snapshot', {}\\)\n    if snap:\n        print\\(f'  snap role={snap.get\\(\\\\\"role\\\\\"\\)} content_len={len\\(snap.get\\(\\\\\"content\\\\\",[]\\)\\)}'\\)\n        content = snap.get\\('content', []\\)\n        if isinstance\\(content, list\\):\n            for j, c in enumerate\\(content[-3:]\\):\n                if isinstance\\(c, dict\\):\n                    if c.get\\('type'\\) == 'text':\n                        print\\(f'  content[{j}]: text={c[\\\\\"text\\\\\"][:100]}'\\)\n                    else:\n                        print\\(f'  content[{j}]: type={c.get\\(\\\\\"type\\\\\"\\)} name={c.get\\(\\\\\"name\\\\\",\\\\\"\\\\\"\\)}'\\)\n\")",
+      "Bash(cd \"D:\\\\Carbelim-Work\\\\Product-Selection-Carbelim\" && gh repo create Product-Selection-Carbelim --public --source=. --push)",
+      "Bash(cd \"D:\\\\Carbelim-Work\\\\Product-Selection-Carbelim\" && gh auth login --web)",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const h=fs.readFileSync\\(''index.html'',''utf8''\\);const s=h.match\\(/<script>/g\\);const e=h.match\\(/<\\\\/script>/g\\);console.log\\(''script tags:'',s?.length,e?.length\\);const o=h.match\\(/function\\\\s+\\\\w+/g\\);console.log\\(''functions:'',o?.join\\('', ''\\)\\)\")",
+      "Bash(node -e \":*)"
+    ]
+  }
+}
