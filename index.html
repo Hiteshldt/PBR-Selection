@@ -106,7 +106,16 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 .preview-box{background:var(--sf2);border:1px solid var(--sf4);border-radius:var(--r);padding:12px 14px;margin-top:12px;font-size:11px;color:var(--ink3);line-height:1.7}
 .preview-box strong{color:var(--ink2)}
 @media(max-width:700px){.grid-2,.vars,.opts,.sum-2,.ap-grid{grid-template-columns:1fr}.span-2{grid-column:span 1}.sizes{flex-direction:column}.ticker{gap:8px;flex-wrap:wrap;padding:5px 10px}.ticker .sep{display:none}.gb .gv{font-size:1.4rem}.card{padding:18px}}
-@media print{.topbar,.step-wrap,.nav,.ticker{display:none!important}.vw{display:block!important;page-break-inside:avoid}.main{padding-top:0}}
+.addon-suggest{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #f59e0b;border-radius:var(--r2);padding:20px 24px;margin-bottom:16px}
+.addon-suggest h3{font-size:13px;font-weight:700;color:#92400e;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.addon-suggest .addon-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border:1px solid #fde68a;border-radius:var(--r);margin-bottom:6px}
+.addon-suggest .addon-item .ai-info{flex:1}.addon-suggest .addon-item .ai-name{font-size:12px;font-weight:600;color:var(--ink)}.addon-suggest .addon-item .ai-desc{font-size:10px;color:var(--ink3);margin-top:2px}
+.addon-suggest .addon-item .ai-price{font-size:12px;font-weight:700;color:var(--g);margin:0 14px}
+.addon-suggest .addon-item .ai-btn{padding:6px 14px;border-radius:6px;font-size:10px;font-weight:700;font-family:inherit;cursor:pointer;border:1.5px solid var(--g3);background:var(--g5);color:var(--g);transition:.2s}
+.addon-suggest .addon-item .ai-btn:hover{background:var(--g3);color:#fff}
+.addon-suggest .addon-item .ai-btn.added{background:var(--g3);color:#fff;border-color:var(--g3)}
+.addon-suggest .free-tag{display:inline-block;font-size:8px;font-weight:700;text-transform:uppercase;background:var(--g4);color:var(--g);padding:2px 6px;border-radius:3px;margin-left:6px}
+@media print{.topbar,.step-wrap,.nav,.ticker,.addon-suggest{display:none!important}.vw{display:block!important;page-break-inside:avoid}.main{padding-top:0}}
 </style>
 </head>
 <body>
@@ -216,10 +225,15 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div class="inc"><div class="ib"><div class="in">Control Panel (DIN-rail Enclosure, IP65)</div><div class="is">Panel fabricated to spec &bull; Wiring, terminals, DIN rails, ducts &bull; SSR &amp; relays</div></div><div class="ie"><div class="ip">&#8377;18,600</div><div class="it">Fixed</div></div></div>
     <div class="inc"><div class="ib"><div class="in">SMPS 24 V + 12 V DC</div><div class="is">Mean Well HDR-100-24 / LRS-100-12 &bull; 150 W total &bull; DIN-rail mount</div></div><div class="ie"><div class="ip">&#8377;5,500</div><div class="it">Fixed</div></div></div>
 
-    <div class="sec-label"><span class="n">2</span>Aeration, Mixing &amp; Thermal (auto-configured for <span id="elTankLbl">50L</span>)</div>
+    <div class="sec-label"><span class="n">2</span>Aeration &amp; Mixing (auto-configured for <span id="elTankLbl">50L</span>)</div>
     <div id="elDynamic"></div>
 
-    <div class="sec-label"><span class="n">3</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
+    <div class="sec-label"><span class="n">3</span>Optional Add-ons</div>
+    <p style="font-size:10px;color:var(--ink3);margin-bottom:8px">Recommended for your tank configuration. All add-ons include <strong style="color:var(--g)">free integration with your control panel</strong>.</p>
+    <div id="heaterToggle"></div>
+    <div id="wavemakerToggle"></div>
+
+    <div class="sec-label"><span class="n">4</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
     <div class="inc"><div class="ib"><div class="in">All-in-One HMI + PLC Control Unit (WiFi included)</div><div class="is" style="line-height:1.65">
       <strong>Display:</strong> 7&Prime; TFT LCD, 800&times;400, PCAP multi-touch, glove-compatible<br>
       <strong>I/O:</strong> 14 digital in (sink/source) + 8 relay out (2A) &bull; Expandable<br>
@@ -260,6 +274,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 <!-- ═══ 7. SUMMARY ═══ -->
 <section class="vw" id="v7">
   <div class="card"><div class="card-h"><h2>7. Pricing Summary</h2></div><div class="cl-g" id="sCl"></div><div class="badges" id="sBdg" style="margin-top:10px"></div></div>
+  <div id="addonSuggest" style="display:none"></div>
   <div class="sum-2">
     <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
     <div class="gb"><div class="gl">Grand Total (incl. 18% GST)</div><div class="gv" id="sGr">--</div><div class="gs">Subtotal: <span id="sSub">--</span> &middot; GST: <span id="sGst">--</span></div></div>
@@ -365,7 +380,7 @@ const SENS={
       desc:'Range: 0\u201320 mg/L (0\u2013200% sat.) \u2022 Resolution: 0.01 mg/L\nAccuracy: \u00b13% FS \u2022 Response: \u226460 s \u2022 0\u201340 \u00b0C\nRS-485 Modbus RTU \u2022 DC 10\u201330 V \u2022 0.2 W \u2022 IP68\nNo electrolyte \u2022 Auto temp compensation\nFluorescent film life: 1 year \u2022 5 m cable'}}}
 };
 
-let ST={size:50,frame:'ss',led:'strip',air:'A',iotSuite:true};
+let ST={size:50,frame:'ss',led:'strip',air:'A',heater:false,wavemaker:false,iotSuite:true};
 
 /* ════════ HELPERS ════════ */
 function cfg(){return T[ST.size];}
@@ -375,7 +390,7 @@ function tSen(){let t=0;for(const k in SENS)t+=senP(k);if(anySen())t+=SIG+ENCL;r
 function tStruct(){const c=cfg();return c.tank+(ST.frame==='ss'?c.frameSS:c.frameMS)+c.hw;}
 function tLed(){const c=cfg();const l=ST.led==='strip'?c.ledStrip:c.ledTube;return l.qty*l.unit+c.ledDrv;}
 function tAir(){return ST.air==='A'?42500:78000;}
-function tThermal(){const c=cfg();let t=0;c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
+function tThermal(){const c=cfg();let t=0;if(ST.heater)c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(ST.wavemaker&&c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
 function tElec(){return ELEC.mcb+ELEC.panel+ELEC.smps+ELEC.misc+HMI;}
 function tIoT(){return ST.iotSuite?100000:0;}
 function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
@@ -461,23 +476,59 @@ function rStep5Dyn(){
   const c=cfg();
   document.getElementById('elTankLbl').textContent=c.label;
   let h='';
-  c.heater.forEach((ht,i)=>{
-    h+=`<div class="inc"><div class="ib"><div class="in">Culture Heater ${c.heater.length>1?'#'+(i+1):''} &mdash; ${ht.w}W</div><div class="is">Nominal heat management for ${c.label} tank &bull; SSR-controlled via HMI</div></div><div class="ie"><div class="ip">${F(ht.price)}</div><div class="it">Auto-configured</div></div></div>`;
-  });
   h+=`<div class="inc"><div class="ib"><div class="in">Aeration Pump &mdash; ${c.pump.lpm}</div><div class="is">${c.pump.w} &bull; Manual flow control valve &bull; Fine bubble aeration</div></div><div class="ie"><div class="ip">${F(c.pump.price)}</div><div class="it">Auto-configured</div></div></div>`;
   h+=`<div class="inc"><div class="ib"><div class="in">Fine Bubble Diffuser</div><div class="is">${c.diffuser.desc} &bull; Optimised for ${c.label} volume</div></div><div class="ie"><div class="ip">${F(c.diffuser.price)}</div><div class="it">Auto-configured</div></div></div>`;
-  if(c.wavemaker){
-    h+=`<div class="inc"><div class="ib"><div class="in">Wavemaker &mdash; ${c.wavemaker.lpm}</div><div class="is">Recirculation &amp; mixing for larger volume culture &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.wavemaker.price)}</div><div class="it">Auto-configured</div></div></div>`;
-  }
   h+=`<div class="inc"><div class="ib"><div class="in">Auxiliary Circulation Fan${c.fans>1?'s (\u00d72)':''}</div><div class="is">Air intake &amp; HVAC circulation &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.fans*c.fanPrice)}</div><div class="it">Auto-configured</div></div></div>`;
   document.getElementById('elDynamic').innerHTML=h;
+
+  // Heater toggle
+  const htrTotal=c.heater.reduce((a,h)=>a+h.price,0);
+  const htrDesc=c.heater.map(h=>h.w+'W').join(' + ');
+  document.getElementById('heaterToggle').innerHTML=
+    `<div class="sen ${ST.heater?'on':'off'}" id="sen-heater"><div class="sen-hd" onclick="tog('heater')">
+      <span class="sen-nm">Culture Heater &mdash; ${htrDesc}${c.heater.length>1?' (Dual)':''}</span>
+      <span class="sen-pr">${F(htrTotal)}</span>
+      <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.heater?'checked':''} onchange="tog('heater')"><span class="tk"></span></label>
+    </div>
+    <div class="sen-bd"><div class="sen-sp"><table>
+      <tr><td>Capacity</td><td>${htrDesc} &bull; Sized for ${c.label} tank</td></tr>
+      <tr><td>Control</td><td>SSR-controlled via HMI &bull; Auto temperature setpoint</td></tr>
+      <tr><td>Integration</td><td>Free integration with control panel included</td></tr>
+    </table></div></div></div>`;
+
+  // Wavemaker toggle (only for 500L+)
+  const wmEl=document.getElementById('wavemakerToggle');
+  if(c.wavemaker){
+    wmEl.innerHTML=
+      `<div class="sen ${ST.wavemaker?'on':'off'}" id="sen-wavemaker"><div class="sen-hd" onclick="tog('wavemaker')">
+        <span class="sen-nm">Wavemaker &mdash; ${c.wavemaker.lpm}</span>
+        <span class="sen-pr">${F(c.wavemaker.price)}</span>
+        <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.wavemaker?'checked':''} onchange="tog('wavemaker')"><span class="tk"></span></label>
+      </div>
+      <div class="sen-bd"><div class="sen-sp"><table>
+        <tr><td>Capacity</td><td>${c.wavemaker.lpm} &bull; Recirculation &amp; mixing for ${c.label} volume</td></tr>
+        <tr><td>Control</td><td>Timer-based relay control via HMI &bull; Configurable ON/OFF cycles</td></tr>
+        <tr><td>Integration</td><td>Free integration with control panel included</td></tr>
+      </table></div></div></div>`;
+  } else {
+    wmEl.innerHTML='';
+  }
 }
 
 /* ════════ OTHER HANDLERS ════════ */
 function pAir(el){ST.air=el.dataset.air;document.querySelectorAll('[data-air]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
 function tog(k){
   if(k==='iotSuite'){ST.iotSuite=!ST.iotSuite;const el=document.getElementById('sen-iotSuite'),cb=el.querySelector('input');cb.checked=ST.iotSuite;el.classList.toggle('on',ST.iotSuite);el.classList.toggle('off',!ST.iotSuite);}
+  if(k==='heater'){ST.heater=!ST.heater;if(cur===5)rStep5Dyn();}
+  if(k==='wavemaker'){ST.wavemaker=!ST.wavemaker;if(cur===5)rStep5Dyn();}
   tick();
+}
+
+function addAddon(id,btn){
+  if(id==='heater')ST.heater=true;
+  if(id==='wavemaker')ST.wavemaker=true;
+  btn.textContent='Added';btn.classList.add('added');btn.disabled=true;
+  tick();rSum();
 }
 
 /* ════════ BADGES ════════ */
@@ -493,6 +544,8 @@ function badges(){
     }
   }
   b.push(ST.air==='A'?'Air: Inlet':'Air: In+Out');
+  if(ST.heater)b.push('Heater');
+  if(ST.wavemaker&&cfg().wavemaker)b.push('Wavemaker');
   if(ST.iotSuite)b.push('IoT Suite');
   return b.map(x=>`<span class="badge">${x}</span>`).join('');
 }
@@ -517,7 +570,7 @@ function rBOM(){
   s+=row('LED Driver / PSU 24V',1,'pcs',c.ledDrv,'DIN-rail, OLP/SCP');
   srow(s);
 
-  s=0;sec('LIQUID SENSORS');
+  s=0;sec('WATER QUALITY SENSORS');
   if(SENS.ph.on){const o=SENS.ph.opts[SENS.ph.v];s+=row(`pH Sensor (${o.grade})`,1,'pcs',o.price,'BNC, 0\u201314 pH, \u00b10.01');}
   if(SENS.turb.on)s+=row('Turbidity Sensor (Normal)',1,'pcs',4480,'0\u20133000 NTU, analog');
   if(SENS.tds.on)s+=row('TDS Sensor (Normal)',1,'pcs',3920,'0\u20131000 ppm, analog');
@@ -536,10 +589,8 @@ function rBOM(){
   s+=row('MCB 2P 16A + RCCB 2P 30mA',1,'set',4400,'Incoming protection');
   s+=row('Control Panel (DIN-rail, IP65)',1,'pcs',18600,'Fabricated to spec');
   s+=row('SMPS 24V + 12V',1,'set',5500,'150W total, DIN-rail');
-  c.heater.forEach((ht,i)=>s+=row(`Culture Heater ${ht.w}W${c.heater.length>1?' #'+(i+1):''}`,1,'pcs',ht.price,'SSR-controlled'));
   s+=row(`Aeration Pump (${c.pump.lpm})`,1,'pcs',c.pump.price,c.pump.w+', valve control');
   s+=row('Fine Bubble Diffuser',c.diffuser.qty,'pcs',c.diffuser.price,c.diffuser.desc);
-  if(c.wavemaker)s+=row(`Wavemaker (${c.wavemaker.lpm})`,1,'pcs',c.wavemaker.price,'Recirculation');
   s+=row('Circulation Fan (HVAC)',c.fans,'pcs',c.fanPrice,'Air intake');
   s+=row('SmartAXIS Touch HMI + PLC',1,'pcs',181000,'7\u2033 touch, 22 I/O, WiFi included');
   s+=row('Miscellaneous (cables, connectors)',1,'lot',12000,'Wire, terminals, labels');
@@ -547,6 +598,11 @@ function rBOM(){
 
   if(ST.iotSuite){s=0;sec('IoT MONITORING, CONTROL &amp; AUTOMATION');
     s+=row('Remote IoT Suite (WiFi + Dashboard + Control + Automation)',1,'service',100000,'One-time setup; annual subscription TBD');
+    srow(s);}
+
+  if(ST.heater||(ST.wavemaker&&c.wavemaker)){s=0;sec('OPTIONAL ADD-ONS (free panel integration)');
+    if(ST.heater)c.heater.forEach((ht,i)=>s+=row(`Culture Heater ${ht.w}W${c.heater.length>1?' #'+(i+1):''}`,1,'pcs',ht.price,'SSR-controlled, auto temp setpoint'));
+    if(ST.wavemaker&&c.wavemaker)s+=row(`Wavemaker (${c.wavemaker.lpm})`,1,'pcs',c.wavemaker.price,'Timer-based relay, recirculation');
     srow(s);}
 
   const st=sub(),gs=gst();
@@ -568,14 +624,45 @@ function rSum(){
      <div><span class="lk">Reference</span><span class="lv">${v('fRef')}</span></div>
      <div><span class="lk">Delivery</span><span class="lv">${v('fLoc')}</span></div>`;
   document.getElementById('sBdg').innerHTML=badges();
+
+  // Addon suggestions
+  const c2=cfg(),suggestions=[];
+  if(!ST.heater){
+    const hd=c2.heater.map(h=>h.w+'W').join(' + ');
+    const hp=c2.heater.reduce((a,h)=>a+h.price,0);
+    suggestions.push({id:'heater',name:`${hd} Culture Heater${c2.heater.length>1?' (Dual)':''}`,
+      desc:`Your ${c2.label} tank benefits from a ${hd} heater with auto temperature setpoint control.`,
+      price:hp});
+  }
+  if(!ST.wavemaker&&c2.wavemaker){
+    suggestions.push({id:'wavemaker',name:`Wavemaker — ${c2.wavemaker.lpm}`,
+      desc:`Recommended for ${c2.label} tanks. Timer-based recirculation & mixing for uniform culture growth.`,
+      price:c2.wavemaker.price});
+  }
+  const sgEl=document.getElementById('addonSuggest');
+  if(suggestions.length>0){
+    sgEl.style.display='block';
+    let sh=`<div class="addon-suggest"><h3><span>Recommended Add-ons for Your ${c2.label} PBR</span></h3>
+      <p style="font-size:10px;color:#92400e;margin-bottom:10px">Based on your tank selection, we suggest the following. All add-ons include <strong>free integration with your control panel</strong> — you buy, we integrate at no extra cost.</p>`;
+    suggestions.forEach(sg=>{
+      sh+=`<div class="addon-item"><div class="ai-info"><div class="ai-name">${sg.name}<span class="free-tag">Free Panel Integration</span></div><div class="ai-desc">${sg.desc}</div></div><div class="ai-price">${F(sg.price)}</div><button class="ai-btn" onclick="addAddon('${sg.id}',this)">+ Add</button></div>`;
+    });
+    sh+=`</div>`;
+    sgEl.innerHTML=sh;
+  } else {
+    sgEl.style.display='none';
+  }
+
   const lines=[
     {k:'Structure (Tank + Frame + Hardware)',v:tStruct()},
     {k:'LED Grow Lighting',v:tLed()},
-    {k:'Liquid Sensors',v:tSen()},
+    {k:'Water Quality Sensors',v:tSen()},
     {k:'Air Quality Sensor',v:tAir()},
-    {k:'Aeration, Mixing & Thermal',v:tThermal()},
+    {k:'Aeration, Mixing & Circulation',v:tThermal()},
     {k:'Electrical & Control System',v:tElec()},
   ];
+  if(ST.heater){const hp=cfg().heater.reduce((a,h)=>a+h.price,0);lines.push({k:'Culture Heater (Add-on)',v:hp});}
+  if(ST.wavemaker&&cfg().wavemaker)lines.push({k:'Wavemaker (Add-on)',v:cfg().wavemaker.price});
   if(ST.iotSuite)lines.push({k:'IoT Monitoring, Control & Automation Suite',v:100000});
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
   const st=sub(),gs=gst(),gr=gt();
@@ -611,7 +698,10 @@ function exportXL(){
   for(const k in SENS){let l=nm[k],val=SENS[k].on?'Selected':'Not included';
     if(SENS[k].opts&&SENS[k].on)val=SENS[k].opts[SENS[k].v].name+' ('+SENS[k].opts[SENS[k].v].grade+')';
     c1.push([l+' Sensor',val]);}
-  c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],['IoT Suite',ST.iotSuite?'Yes (₹1,00,000 + annual TBD)':'No'],
+  c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],
+    ['Culture Heater',ST.heater?'Yes — '+cfg().heater.map(h=>h.w+'W').join(' + '):'No'],
+    ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
+    ['IoT Suite',ST.iotSuite?'Yes (₹1,00,000 + annual TBD)':'No'],
     [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
@@ -658,9 +748,11 @@ function collectData(){
       sensors_total:tSen(),
       air_sensor:ST.air==='A'?'Inlet Only':'Inlet + Outlet',
       air_price:tAir(),
-      heater:c.heater.map(h=>h.w+'W').join(' + '),
+      heater:ST.heater?c.heater.map(h=>h.w+'W').join(' + '):'Not selected',
+      heater_price:ST.heater?c.heater.reduce((a,h)=>a+h.price,0):0,
       aeration:c.pump.lpm,
-      wavemaker:c.wavemaker?c.wavemaker.lpm:'None',
+      wavemaker:(ST.wavemaker&&c.wavemaker)?c.wavemaker.lpm:'Not selected',
+      wavemaker_price:(ST.wavemaker&&c.wavemaker)?c.wavemaker.price:0,
       iot_suite:ST.iotSuite?'Yes':'No',
     },
     pricing:{
