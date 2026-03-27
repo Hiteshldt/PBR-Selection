@@ -240,9 +240,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   <div class="card">
     <div class="card-h"><h2>5. Electrical, PLC/HMI &amp; Control System</h2><p>Fixed components for your PBR</p></div>
     <div class="sec-label"><span class="n">1</span>Electrical Panel &amp; Protection</div>
-    <div class="inc"><div class="ib"><div class="in">MCB Branch Circuit + GFCI/RCCB</div><div class="is">2P 16A MCB (incoming) + 2P 30mA RCCB &bull; CEC/CSA compliant &bull; DIN-rail</div></div><div class="ie"><div class="ip">&#8377;4,400</div><div class="it">Fixed</div></div></div>
-    <div class="inc"><div class="ib"><div class="in">Control Panel (DIN-rail Enclosure, IP65)</div><div class="is">Panel fabricated to spec &bull; Wiring, terminals, DIN rails, ducts &bull; SSR &amp; relays</div></div><div class="ie"><div class="ip">&#8377;18,600</div><div class="it">Fixed</div></div></div>
-    <div class="inc"><div class="ib"><div class="in">SMPS 24 V + 12 V DC</div><div class="is">Mean Well HDR-100-24 / LRS-100-12 &bull; 150 W total &bull; DIN-rail mount</div></div><div class="ie"><div class="ip">&#8377;5,500</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">Electrical Panel, MCB, RCCB &amp; SMPS</div><div class="is">DIN-rail IP65 enclosure &bull; 2P 16A MCB + 30mA RCCB &bull; 24V + 12V SMPS (150W)</div></div><div class="ie"><div class="ip">&#8377;28,500</div><div class="it">Fixed</div></div></div>
 
     <div class="sec-label"><span class="n">2</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
     <div class="inc"><div class="ib"><div class="in">All-in-One HMI + PLC Control Unit (WiFi included)</div><div class="is" style="line-height:1.65">
@@ -379,7 +377,7 @@ const T={
     wavemaker:{lpm:'120 LPM',price:22000},fans:2,fanPrice:6300}
 };
 
-const ELEC={mcb:4400,panel:18600,smps:5500,misc:12000};
+const ELEC={panel:28500,misc:12000};
 const HMI=181000;
 const SIG=3360,ENCL=12300;
 
@@ -416,7 +414,7 @@ function tStruct(){const c=cfg();return c.tank+(ST.frame==='ss'?c.frameSS:c.fram
 function tLed(){const c=cfg();const l=ST.led==='strip'?c.ledStrip:c.ledTube;return l.qty*l.unit+c.ledDrv;}
 function tAir(){return ST.air==='A'?42500:78000;}
 function tThermal(){const c=cfg();let t=0;if(ST.heater)c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(ST.wavemaker&&c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
-function tElec(){return ELEC.mcb+ELEC.panel+ELEC.smps+ELEC.misc+HMI;}
+function tElec(){return ELEC.panel+ELEC.misc+HMI;}
 function tIoT(){return(ST.conn==='wifi'?5000:22000)+(ST.iotDash?35000:0);}
 function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
 function gst(){return Math.round(sub()*.18);}
@@ -624,9 +622,7 @@ function rBOM(){
   srow(s);
 
   s=0;sec('ELECTRICAL &amp; CONTROL');
-  s+=row('MCB 2P 16A + RCCB 2P 30mA',1,'set',4400,'Incoming protection');
-  s+=row('Control Panel (DIN-rail, IP65)',1,'pcs',18600,'Fabricated to spec');
-  s+=row('SMPS 24V + 12V',1,'set',5500,'150W total, DIN-rail');
+  s+=row('Electrical Panel, MCB, RCCB & SMPS',1,'set',28500,'IP65, 2P 16A MCB, 30mA RCCB, 24V+12V SMPS');
   s+=row(`Aeration Pump (${c.pump.lpm})`,1,'pcs',c.pump.price,c.pump.w+', valve control');
   s+=row('Fine Bubble Diffuser',c.diffuser.qty,'pcs',c.diffuser.price,c.diffuser.desc);
   s+=row('Circulation Fan (HVAC)',c.fans,'pcs',c.fanPrice,'Air intake');
