@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carbelim — PBR Product Configurator</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#111827;--ink2:#374151;--ink3:#6b7280;--ink4:#9ca3af;--sf:#fff;--sf2:#f9fafb;--sf3:#f3f4f6;--sf4:#e5e7eb;--sf5:#d1d5db;--g:#065f46;--g2:#047857;--g3:#059669;--g4:#d1fae5;--g5:#ecfdf5;--tl:#0d9488;--r:10px;--r2:14px;--sh:0 1px 2px rgba(0,0,0,.05);--sh2:0 4px 16px rgba(0,0,0,.06)}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#f5f6f8;color:var(--ink);line-height:1.6;font-size:14px;-webkit-font-smoothing:antialiased}
+.topbar{background:var(--g);color:#fff;height:auto;min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:10px 28px;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(0,0,0,.1);flex-wrap:wrap;gap:4px}
+.topbar-brand{display:flex;flex-direction:column}.topbar-brand .logo{font-size:14px;font-weight:700;letter-spacing:.8px}.topbar-brand .product{font-size:11px;font-weight:500;opacity:.85;margin-top:1px}
+.topbar-end{font-size:9px;opacity:.55;line-height:1.4;text-align:right}
+.step-wrap{background:var(--sf);border-bottom:1px solid var(--sf4);padding:14px 0;position:sticky;top:72px;z-index:190}
+.stepper{max-width:780px;margin:0 auto;display:flex;padding:0 16px}
+.st{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer}
+.st .circle{width:26px;height:26px;border-radius:50%;border:2px solid var(--sf5);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ink4);background:var(--sf);position:relative;z-index:2;transition:.3s}
+.st .label{font-size:8px;font-weight:600;color:var(--ink4);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.st::before{content:'';position:absolute;top:13px;left:-50%;width:100%;height:2px;background:var(--sf4);z-index:1}.st:first-child::before{display:none}
+.st.on .circle{border-color:var(--g);background:var(--g);color:#fff}.st.on .label{color:var(--g)}
+.st.done .circle{border-color:var(--g3);background:var(--g3);color:#fff}.st.done .label{color:var(--g3)}.st.done::before,.st.on::before{background:var(--g3)}
+.main{max-width:960px;margin:0 auto;padding:24px 20px 100px}
+.vw{display:none;animation:rise .35s ease}.vw.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--sf);border:1px solid var(--sf4);border-radius:var(--r2);padding:24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card-h{display:flex;align-items:center;gap:8px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--sf3)}
+.card-h h2{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-.2px}.card-h p{font-size:11px;color:var(--ink3);margin-left:auto}
+.field{margin-bottom:12px}.field label{display:block;font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.field input,.field select{width:100%;padding:9px 12px;border:1px solid var(--sf4);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--sf);transition:.2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--g2);box-shadow:0 0 0 3px rgba(5,150,105,.1)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}.span-2{grid-column:span 2}
+.sec-label{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--ink);margin:18px 0 8px}
+.sec-label:first-child{margin-top:0}
+.sec-label .n{width:20px;height:20px;border-radius:50%;background:var(--g);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.inc{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:12px 14px;border:1px solid var(--sf4);border-radius:var(--r);background:var(--sf2);margin-bottom:6px}
+.inc .ib{flex:1;min-width:0}.inc .in{font-size:12px;font-weight:600;color:var(--ink)}.inc .is{font-size:10px;color:var(--ink3);margin-top:2px;line-height:1.5}
+.inc .ie{text-align:right;flex-shrink:0}.inc .ip{font-size:13px;font-weight:700;color:var(--g)}.inc .it{font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:var(--g3);font-weight:700;margin-top:1px}
+/* Size cards */
+.sizes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.sz{flex:1;min-width:100px;border:1.5px solid var(--sf4);border-radius:var(--r);padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;background:var(--sf);position:relative}
+.sz:hover{border-color:var(--tl)}.sz.pk{border-color:var(--g3);background:var(--g5);box-shadow:0 0 0 1px var(--g3)}
+.sz.pk::after{content:'\2713';position:absolute;top:6px;right:8px;width:16px;height:16px;border-radius:50%;background:var(--g3);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center}
+.sz .sz-vol{font-size:18px;font-weight:800;color:var(--ink)}.sz .sz-lbl{font-size:10px;color:var(--ink3);margin-top:2px}
+/* Option cards */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.opts3{grid-template-columns:repeat(3,1fr)}
+.opt{border:1.5px solid var(--sf4);border-radius:var(--r);padding:14px;cursor:pointer;transition:.2s;position:relative;background:var(--sf)}
+.opt:hover{border-color:var(--tl);box-shadow:var(--sh)}.opt.pk{border-color:var(--g3);background:var(--g5)}
+.opt.pk::before{content:'\2713';position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--g3);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.opt-n{font-size:12px;font-weight:600;color:var(--ink)}.opt-d{font-size:10px;color:var(--ink3);margin-top:3px;line-height:1.4}
+.opt-p{font-size:13px;font-weight:700;color:var(--g);margin-top:6px}
+/* Sensor cards */
+.sen{border:1.5px solid var(--sf4);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:.2s;background:var(--sf)}
+.sen.on{border-color:var(--g3);box-shadow:0 0 0 1px var(--g3)}.sen.off{border-color:#fecaca;background:#fef2f2;opacity:.7}
+.sen-hd{display:flex;align-items:center;padding:10px 14px;gap:10px;cursor:pointer;transition:.15s;user-select:none}.sen-hd:hover{background:var(--sf2)}
+.sen-nm{flex:1;font-size:12px;font-weight:600;color:var(--ink)}
+.sen-tg{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 6px;border-radius:3px}.tg-i{background:var(--g4);color:var(--g)}.tg-n{background:#dbeafe;color:#1e40af}
+.sen-pr{font-size:12px;font-weight:700;color:var(--g);min-width:70px;text-align:right;margin-right:6px}
+.sen.off .sen-pr{color:var(--ink4);text-decoration:line-through}
+.sw{position:relative;width:34px;height:18px;flex-shrink:0}.sw input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;z-index:2;margin:0}
+.sw .tk{position:absolute;inset:0;border-radius:18px;background:var(--sf5);transition:.25s}.sw .tk::after{content:'';position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.25s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.sw input:checked~.tk{background:var(--g3)}.sw input:checked~.tk::after{transform:translateX(16px)}
+.sen-bd{display:none;padding:0 14px 12px;border-top:1px solid var(--sf3)}.sen.on .sen-bd{display:block}
+.sen-sp{margin-top:6px}.sen-sp table{width:100%;border-collapse:collapse}.sen-sp td{padding:3px 0;font-size:10px;border-bottom:1px solid var(--sf3)}.sen-sp td:first-child{font-weight:600;color:var(--ink2);width:34%}.sen-sp td:last-child{color:var(--ink3)}
+.vars{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.vr{border:1.5px solid var(--sf4);border-radius:7px;padding:12px;cursor:pointer;transition:.2s;position:relative;background:var(--sf)}
+.vr:hover{border-color:var(--tl)}.vr.pk{border-color:var(--g3);background:var(--g5)}
+.vr.pk::before{content:'\2713';position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:var(--g3);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center}
+.vr-n{font-size:11px;font-weight:600}.vr-t{display:inline-block;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:1px 5px;border-radius:3px;margin-top:2px}
+.vr-p{font-size:12px;font-weight:700;color:var(--g);margin-top:3px}.vr-d{font-size:9px;color:var(--ink3);margin-top:4px;line-height:1.45}
+/* Air spec grid */
+.ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin-bottom:12px}
+.ap{display:flex;justify-content:space-between;padding:4px 8px;background:var(--sf2);border-radius:5px;font-size:10px}.ap .ak{font-weight:600;color:var(--ink2)}.ap .av{color:var(--ink3)}
+/* BOM */
+.tbl-wrap{overflow-x:auto;margin:0 -24px;padding:0 24px}
+table.bom{width:100%;border-collapse:separate;border-spacing:0;font-size:11px}
+table.bom thead th{background:var(--g);color:#fff;padding:8px 10px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.4px;font-weight:600;white-space:nowrap}
+table.bom thead th:first-child{border-radius:var(--r) 0 0 0}table.bom thead th:last-child{border-radius:0 var(--r) 0 0}
+table.bom td{padding:7px 10px;border-bottom:1px solid var(--sf3)}table.bom tbody tr:hover{background:var(--sf2)}
+table.bom .cat{background:var(--g5);font-weight:700;color:var(--g)}.cat td{border-bottom:2px solid var(--g4);font-size:10px;letter-spacing:.2px}
+table.bom .sub{background:var(--sf3);font-weight:700}.sub td{border-bottom:2px solid var(--sf5)}
+table.bom .grand{background:var(--g5)}.grand td{font-weight:800;color:var(--g);font-size:12px;border-bottom:none}
+.ar{text-align:right}.ac{text-align:center}
+/* Specs */
+.sp-s{margin-bottom:16px}.sp-s h4{font-size:11px;font-weight:700;color:var(--g);padding:6px 12px;background:var(--g5);border-radius:6px;border-left:3px solid var(--g);margin-bottom:4px}
+table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-size:11px;border-bottom:1px solid var(--sf3)}table.sp td:first-child{font-weight:600;color:var(--ink2);width:36%}table.sp td:last-child{color:var(--ink3);font-size:10px}
+/* Summary */
+.sum-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.pl .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sf3);font-size:12px}.pl .row .k{color:var(--ink3)}.pl .row .v{font-weight:600}
+.pl .row.total{border-top:2px solid var(--g);border-bottom:none;padding-top:10px;margin-top:4px}.pl .row.total .k,.pl .row.total .v{color:var(--g);font-weight:800;font-size:14px}
+.gb{background:linear-gradient(135deg,var(--g),var(--g2),var(--tl));color:#fff;border-radius:var(--r2);padding:28px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.gb .gl{font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.6;font-weight:600}.gb .gv{font-size:1.8rem;font-weight:800;margin:8px 0 4px;letter-spacing:-1px}.gb .gs{font-size:10px;opacity:.5}
+.badges{display:flex;flex-wrap:wrap;gap:4px}.badge{background:var(--g5);color:var(--g);padding:2px 8px;border-radius:3px;font-size:9px;font-weight:600;border:1px solid var(--g4)}.badge.off{background:var(--sf3);color:var(--ink4);border-color:var(--sf4)}
+.cl-g{display:grid;grid-template-columns:1fr 1fr;gap:3px 18px;font-size:11px}.cl-g div{padding:3px 0;display:flex;gap:5px}.cl-g .lk{color:var(--ink3);min-width:80px;font-weight:500}.cl-g .lv{color:var(--ink);font-weight:600}
+.nav{display:flex;justify-content:space-between;margin-top:20px;padding-top:14px;border-top:1px solid var(--sf4)}
+.btn{padding:9px 22px;border-radius:7px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;border:none;transition:.2s;display:inline-flex;align-items:center;gap:5px}.btn:active{transform:scale(.98)}
+.bp{background:var(--g);color:#fff}.bp:hover{background:var(--g2);box-shadow:var(--sh2)}.bs{background:var(--sf);color:var(--ink2);border:1px solid var(--sf5)}.bs:hover{border-color:var(--g3);color:var(--g)}
+.bx{background:var(--g3);color:#fff;padding:12px 32px;font-size:13px}.bx:hover{background:var(--g2);box-shadow:0 6px 20px rgba(5,150,105,.25)}
+.ticker{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--sf);border-top:1px solid var(--sf4);box-shadow:0 -2px 12px rgba(0,0,0,.04);padding:7px 24px;display:flex;align-items:center;justify-content:center;gap:24px}
+.ticker .ti{display:flex;align-items:center;gap:4px;font-size:11px}.ti .tl{color:var(--ink4);font-weight:500}.ti .tv{font-weight:700;color:var(--ink2)}
+.ticker .sep{width:1px;height:14px;background:var(--sf4)}.ticker .big{font-size:14px;font-weight:800;color:var(--g)}
+.footer{text-align:center;padding:14px 20px;font-size:9px;color:var(--ink4);border-top:1px solid var(--sf4);margin-bottom:48px}
+/* Dynamic preview */
+.preview-box{background:var(--sf2);border:1px solid var(--sf4);border-radius:var(--r);padding:12px 14px;margin-top:12px;font-size:11px;color:var(--ink3);line-height:1.7}
+.preview-box strong{color:var(--ink2)}
+@media(max-width:700px){.grid-2,.vars,.opts,.sum-2,.ap-grid{grid-template-columns:1fr}.span-2{grid-column:span 1}.sizes{flex-direction:column}.ticker{gap:8px;flex-wrap:wrap;padding:5px 10px}.ticker .sep{display:none}.gb .gv{font-size:1.4rem}.card{padding:18px}}
+@media print{.topbar,.step-wrap,.nav,.ticker{display:none!important}.vw{display:block!important;page-break-inside:avoid}.main{padding-top:0}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-brand"><span class="logo">CARBELIM PRIVATE LIMITED</span><span class="product">Photobioreactor (PBR) Custom Design</span></div>
+  <div class="topbar-end">Product Configuration &amp; Quotation Document &bull; v1.0<br>Ex-works Coimbatore, India &bull; Prices indicative &bull; Validity 30 days</div>
+</header>
+<nav class="step-wrap"><div class="stepper" id="stepper">
+  <div class="st on" onclick="go(1)"><span class="circle">1</span><span class="label">Client</span></div>
+  <div class="st" onclick="go(2)"><span class="circle">2</span><span class="label">PBR Size</span></div>
+  <div class="st" onclick="go(3)"><span class="circle">3</span><span class="label">Sensors</span></div>
+  <div class="st" onclick="go(4)"><span class="circle">4</span><span class="label">Air</span></div>
+  <div class="st" onclick="go(5)"><span class="circle">5</span><span class="label">Controls</span></div>
+  <div class="st" onclick="go(6)"><span class="circle">6</span><span class="label">BOM</span></div>
+  <div class="st" onclick="go(7)"><span class="circle">7</span><span class="label">Summary</span></div>
+</div></nav>
+
+<main class="main">
+
+<!-- ═══ 1. CLIENT ═══ -->
+<section class="vw on" id="v1">
+  <div class="card">
+    <div class="card-h"><h2>1. Client Information</h2></div>
+    <div class="grid-2">
+      <div class="field span-2"><label>Organisation</label><input id="fOrg" placeholder="Enter organisation name"></div>
+      <div class="field"><label>Contact Person</label><input id="fName" placeholder="Full name"></div>
+      <div class="field"><label>Email / Phone</label><input id="fContact" placeholder="Email or phone number"></div>
+      <div class="field"><label>Quotation Date</label><input type="date" id="fDate"></div>
+      <div class="field"><label>Reference #</label><input id="fRef" value="CBL-PBR-001"></div>
+      <div class="field span-2"><label>Delivery Location</label><input id="fLoc" placeholder="Full delivery address"></div>
+    </div>
+  </div>
+  <div class="nav"><div></div><button class="btn bp" onclick="go(2)">Continue</button></div>
+</section>
+
+<!-- ═══ 2. PBR SIZE & BUILD ═══ -->
+<section class="vw" id="v2">
+  <div class="card">
+    <div class="card-h"><h2>2. Choose Your PBR Size and Capacity</h2></div>
+    <div class="sec-label"><span class="n">1</span>Photobioreactor (Flat Shaped) &mdash; Culture Tank</div>
+    <p style="font-size:10px;color:var(--ink3);margin-bottom:10px">100% Virgin Cast acrylic &bull; Sealed joints &bull; Bottom drain port with valves &bull; Full transparency &bull; Chemically inert &bull; 5&ndash;45 &deg;C</p>
+    <div class="sizes" id="szCards"></div>
+
+    <div class="sec-label"><span class="n">2</span>Frame Structure</div>
+    <div class="opts" id="frameOpts"></div>
+    <div id="colorRow" style="display:none;margin-top:8px">
+      <div class="field"><label>Choose Your Colour (write colour name or RAL code &mdash; we will best-match)</label><input id="fColor" placeholder="e.g. RAL 7035, Matte Black, Navy Blue"></div>
+    </div>
+    <div class="inc" style="margin-top:6px" id="hwRow"></div>
+
+    <div class="sec-label"><span class="n">3</span>LED Grow Lighting</div>
+    <div class="opts" id="ledOpts"></div>
+    <div class="inc" style="margin-top:6px" id="ledDrvRow"></div>
+
+    <div class="preview-box" id="sizePreview"></div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(1)">Back</button><button class="btn bp" onclick="go(3)">Continue to Sensors</button></div>
+</section>
+
+<!-- ═══ 3. SENSORS ═══ -->
+<section class="vw" id="v3">
+  <div class="card">
+    <div class="card-h"><h2>3. Water Quality Sensors</h2><p>Toggle each sensor &bull; Select variant where available</p></div>
+    <div id="sensorCards"></div>
+    <div id="senAccessories" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--sf4)">
+      <p style="font-size:9px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Included with Sensor Package</p>
+      <div class="inc"><div class="ib"><div class="in">Signal Converter 0&ndash;5 V &#8594; 4&ndash;20 mA (&times;3)</div><div class="is">DIN-rail mount &bull; For long cable runs to PLC/PCB</div></div><div class="ie"><div class="ip">&#8377;3,360</div><div class="it">Included</div></div></div>
+      <div class="inc"><div class="ib"><div class="in">Sensor Enclosure</div><div class="is">Waterproof housing for electrode probes &bull; Cable glands</div></div><div class="ie"><div class="ip">&#8377;12,300</div><div class="it">Included</div></div></div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(2)">Back</button><button class="btn bp" onclick="go(4)">Continue to Air Sensor</button></div>
+</section>
+
+<!-- ═══ 4. AIR SENSOR ═══ -->
+<section class="vw" id="v4">
+  <div class="card">
+    <div class="card-h"><h2>4. Air Quality Sensor &mdash; ZPHS01B Multi-in-One Module</h2></div>
+    <p style="font-size:10px;color:var(--ink3);margin-bottom:12px">Integrated 11-parameter air quality module with laser dust sensor, infrared CO&#8322;, electrochemical gas sensors, and temperature/humidity sensing. UART (TTL level) communication.</p>
+    <div class="ap-grid">
+      <div class="ap"><span class="ak">PM1.0 / PM2.5 / PM10</span><span class="av">0&ndash;1000 &micro;g/m&sup3; &bull; &plusmn;15 or &plusmn;15%</span></div>
+      <div class="ap"><span class="ak">CO&#8322;</span><span class="av">0&ndash;5000 ppm &bull; &plusmn;(50ppm+5%)</span></div>
+      <div class="ap"><span class="ak">CH&#8322;O (HCHO)</span><span class="av">0&ndash;6.25 mg/m&sup3; &bull; &plusmn;0.03 or &plusmn;20%</span></div>
+      <div class="ap"><span class="ak">TVOC</span><span class="av">0&ndash;3 grades &bull; &le;20 s</span></div>
+      <div class="ap"><span class="ak">O&#8323; (Ozone)</span><span class="av">0&ndash;10 ppm &bull; 0.01 res &bull; &plusmn;0.1</span></div>
+      <div class="ap"><span class="ak">CO</span><span class="av">0&ndash;500 ppm &bull; 0.1 res &bull; &plusmn;10%</span></div>
+      <div class="ap"><span class="ak">NO&#8322;</span><span class="av">0.1&ndash;10 ppm &bull; 0.05 res</span></div>
+      <div class="ap"><span class="ak">Temperature</span><span class="av">-20 to 65 &deg;C &bull; &plusmn;0.5 &deg;C</span></div>
+      <div class="ap"><span class="ak">Humidity</span><span class="av">0&ndash;100% RH &bull; &plusmn;3%</span></div>
+      <div class="ap"><span class="ak">Interface</span><span class="av">UART TTL 9600 &bull; 5V &bull; &lt;300mA</span></div>
+      <div class="ap"><span class="ak">Dimensions</span><span class="av">135 &times; 50 &times; 26.2 mm</span></div>
+      <div class="ap"><span class="ak">Warm-up</span><span class="av">3 min (first power-on)</span></div>
+    </div>
+    <div class="opts" id="airOpts">
+      <div class="opt pk" data-air="A" onclick="pAir(this)"><div class="opt-n">Inlet Only</div><div class="opt-d">Single module at air inlet. Monitors incoming air quality fed to the culture.</div><div class="opt-p">&#8377;42,500</div></div>
+      <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; CO&#8322; uptake, O&#8322; production, air purification efficiency.</div><div class="opt-p">&#8377;78,000</div></div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Controls</button></div>
+</section>
+
+<!-- ═══ 5. ELECTRICAL & CONTROL ═══ -->
+<section class="vw" id="v5">
+  <div class="card">
+    <div class="card-h"><h2>5. Electrical, Aeration &amp; Control System</h2><p>Configured for your tank size</p></div>
+    <div class="sec-label"><span class="n">1</span>Electrical Panel &amp; Protection</div>
+    <div class="inc"><div class="ib"><div class="in">MCB Branch Circuit + GFCI/RCCB</div><div class="is">2P 16A MCB (incoming) + 2P 30mA RCCB &bull; CEC/CSA compliant &bull; DIN-rail</div></div><div class="ie"><div class="ip">&#8377;4,400</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">Control Panel (DIN-rail Enclosure, IP65)</div><div class="is">Panel fabricated to spec &bull; Wiring, terminals, DIN rails, ducts &bull; SSR &amp; relays</div></div><div class="ie"><div class="ip">&#8377;18,600</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">SMPS 24 V + 12 V DC</div><div class="is">Mean Well HDR-100-24 / LRS-100-12 &bull; 150 W total &bull; DIN-rail mount</div></div><div class="ie"><div class="ip">&#8377;5,500</div><div class="it">Fixed</div></div></div>
+
+    <div class="sec-label"><span class="n">2</span>Aeration, Mixing &amp; Thermal (auto-configured for <span id="elTankLbl">50L</span>)</div>
+    <div id="elDynamic"></div>
+
+    <div class="sec-label"><span class="n">3</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
+    <div class="inc"><div class="ib"><div class="in">All-in-One HMI + PLC Control Unit (WiFi included)</div><div class="is" style="line-height:1.65">
+      <strong>Display:</strong> 7&Prime; TFT LCD, 800&times;400, PCAP multi-touch, glove-compatible<br>
+      <strong>I/O:</strong> 14 digital in (sink/source) + 8 relay out (2A) &bull; Expandable<br>
+      <strong>Analog:</strong> Built-in 4&ndash;20 mA &amp; 0&ndash;10 V &bull; RTD/thermocouple via expansion<br>
+      <strong>Comm:</strong> Ethernet + RS-485 + USB + WiFi &bull; FTP, email, remote web, mobile app<br>
+      <strong>Control:</strong> PID + PWM + data logging + scripting &bull; Alarms &amp; setpoints<br>
+      <strong>Power:</strong> 24 V DC, 5 W &bull; IP66F/IP67F &bull; -20 to +55 &deg;C
+    </div></div><div class="ie"><div class="ip">&#8377;1,81,000</div><div class="it">Fixed</div></div></div>
+
+    <div class="inc"><div class="ib"><div class="in">Miscellaneous (cables, connectors, labels, ferrules, documentation)</div><div class="is">Complete wiring &amp; documentation pack</div></div><div class="ie"><div class="ip">&#8377;12,000</div><div class="it">Fixed</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><h2>5.3 Remote IoT Monitoring, Control &amp; Automation Suite</h2></div>
+    <div class="sen on" id="sen-iotSuite"><div class="sen-hd" onclick="tog('iotSuite')"><span class="sen-nm">WiFi + Cloud IoT Dashboard + Remote Monitoring &amp; Control + Automation Suite</span><span class="sen-pr">&#8377;1,00,000</span><label class="sw" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="tog('iotSuite')"><span class="tk"></span></label></div>
+      <div class="sen-bd"><div class="sen-sp"><table>
+        <tr><td>Connectivity</td><td>802.11 b/g/n WiFi &bull; MQTT over TLS (QoS 1) &bull; Integrated with HMI</td></tr>
+        <tr><td>Dashboard</td><td>AWS-based real-time WebSocket dashboard &bull; Web + Mobile access &bull; No install required</td></tr>
+        <tr><td>Data Retention</td><td>30-day hot storage &bull; 2-year cold archive &bull; Backup server</td></tr>
+        <tr><td>Control</td><td>Remote relay ON/OFF &bull; Setpoint adjustment &bull; Automation rules &bull; Alert notifications</td></tr>
+        <tr><td>Payment</td><td>One-time setup: &#8377;1,00,000 &bull; Annual subscription: TBD (for continued access, history, automation &amp; backup)</td></tr>
+      </table></div></div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(4)">Back</button><button class="btn bp" onclick="go(6)">View BOM</button></div>
+</section>
+
+<!-- ═══ 6. BOM ═══ -->
+<section class="vw" id="v6">
+  <div class="card">
+    <div class="card-h"><h2>6. Bill of Materials &amp; Indicative Pricing</h2><p>Prices in INR, ex-works. GST @18% additional.</p></div>
+    <div class="badges" id="bomBdg" style="margin-bottom:12px"></div>
+    <div class="tbl-wrap"><table class="bom"><thead><tr><th>#</th><th>Component</th><th class="ac">Qty</th><th>Unit</th><th class="ar">Price (INR)</th><th class="ar">Total (INR)</th><th>Remarks</th></tr></thead><tbody id="bomTb"></tbody></table></div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(5)">Back</button><button class="btn bp" onclick="go(7)">View Summary</button></div>
+</section>
+
+<!-- ═══ 7. SUMMARY ═══ -->
+<section class="vw" id="v7">
+  <div class="card"><div class="card-h"><h2>7. Pricing Summary</h2></div><div class="cl-g" id="sCl"></div><div class="badges" id="sBdg" style="margin-top:10px"></div></div>
+  <div class="sum-2">
+    <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
+    <div class="gb"><div class="gl">Grand Total (incl. 18% GST)</div><div class="gv" id="sGr">--</div><div class="gs">Subtotal: <span id="sSub">--</span> &middot; GST: <span id="sGst">--</span></div></div>
+  </div>
+  <div class="card" style="text-align:center">
+    <p style="font-size:11px;color:var(--ink3);margin-bottom:14px">Download your complete quotation or submit your configuration request.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bx" onclick="exportXL()">Download Quotation (.xlsx)</button>
+      <button class="btn bx" id="btnSubmit" style="background:var(--tl)" onclick="submitQuote()">Submit Configuration Request</button>
+    </div>
+    <div id="submitStatus" style="margin-top:12px;font-size:12px;display:none"></div>
+    <p style="margin-top:12px;font-size:9px;color:var(--ink4)">All prices indicative, ex-works Coimbatore. GST @18% applicable. Validity 30 days. Payment: 50% advance, 50% before dispatch unless otherwise agreed.</p>
+  </div>
+  <div class="card" style="font-size:10px;color:var(--ink3);line-height:1.7">
+    <div class="card-h"><h2>Notes &amp; Terms</h2></div>
+    <ul style="padding-left:16px">
+      <li>All prices are indicative and ex-works Coimbatore, India.</li>
+      <li>GST @ 18% applicable as per Indian tax regulations.</li>
+      <li>Quotation validity: 30 days from the date above.</li>
+      <li>Delivery timelines to be confirmed at order placement.</li>
+      <li>Sensor variants (pH, DO) can be swapped at order time; prices will adjust accordingly.</li>
+      <li>Payment terms: 50% advance, 50% before dispatch, unless otherwise agreed.</li>
+    </ul>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(6)">Back</button><button class="btn bp" onclick="window.print()">Print</button></div>
+</section>
+
+</main>
+
+<div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">50L</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Subtotal</span><span class="tv" id="tkSub">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Grand Total</span><span class="big" id="tkGr">--</span></div></div>
+<footer class="footer">CARBELIM PRIVATE LIMITED &bull; Incubated at IIT Madras IC and Accelerated by IIM-Lucknow EIC &bull; Coimbatore, India</footer>
+
+<script>
+/* ════════ WEBHOOK CONFIG ════════
+   Paste your Google Apps Script web app URL here.
+   See instructions at bottom of this file to set up. */
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyoDGBmimLlPZxeQdpmp5sEYzNxxAiporkQRJL4dIcgRNccdn4FQaHvO9L2zjfuQfnw/exec';
+
+const F=n=>'\u20B9'+n.toLocaleString('en-IN');
+
+/* ════════ TANK CONFIG ════════ */
+const T={
+  50:{label:'50 Litre',tank:63000,
+    frameSS:26775,frameMS:17000,hw:6300,
+    ledStrip:{qty:5,unit:2800,label:'5 strips'},ledTube:{qty:3,unit:5200,label:'3 tubes'},ledDrv:4200,
+    heater:[{w:100,price:3500}],
+    pump:{lpm:'2\u00d74 LPM (8 LPM)',w:'4W',price:2800},
+    diffuser:{desc:'Single outlet',qty:1,price:1800},
+    wavemaker:null,fans:1,fanPrice:6300},
+  100:{label:'100 Litre',tank:95000,
+    frameSS:35000,frameMS:22000,hw:7500,
+    ledStrip:{qty:6,unit:2800,label:'6 strips'},ledTube:{qty:4,unit:5200,label:'4 tubes'},ledDrv:4200,
+    heater:[{w:200,price:5000}],
+    pump:{lpm:'10\u201315 LPM',w:'8W',price:4200},
+    diffuser:{desc:'Dual outlet',qty:1,price:2500},
+    wavemaker:null,fans:1,fanPrice:6300},
+  250:{label:'250 Litre',tank:150000,
+    frameSS:52000,frameMS:33000,hw:9500,
+    ledStrip:{qty:8,unit:2800,label:'8 strips'},ledTube:{qty:5,unit:5200,label:'5 tubes'},ledDrv:6500,
+    heater:[{w:300,price:7000}],
+    pump:{lpm:'20\u201325 LPM',w:'15W',price:7500},
+    diffuser:{desc:'Multi-outlet bar',qty:1,price:4000},
+    wavemaker:{lpm:'40 LPM',price:8000},fans:1,fanPrice:6300},
+  500:{label:'500 Litre',tank:240000,
+    frameSS:78000,frameMS:50000,hw:12000,
+    ledStrip:{qty:12,unit:2800,label:'12 strips'},ledTube:{qty:8,unit:5200,label:'8 tubes'},ledDrv:8500,
+    heater:[{w:500,price:9500}],
+    pump:{lpm:'45\u201355 LPM',w:'25W',price:14000},
+    diffuser:{desc:'Diffuser manifold',qty:1,price:6500},
+    wavemaker:{lpm:'60 LPM',price:12000},fans:2,fanPrice:6300},
+  1000:{label:'1000 Litre',tank:380000,
+    frameSS:120000,frameMS:78000,hw:15000,
+    ledStrip:{qty:16,unit:2800,label:'16 strips'},ledTube:{qty:10,unit:5200,label:'10 tubes'},ledDrv:12000,
+    heater:[{w:500,price:9500},{w:500,price:9500}],
+    pump:{lpm:'100\u2013120 LPM',w:'45W',price:25000},
+    diffuser:{desc:'Manifold + ring diffuser',qty:1,price:10000},
+    wavemaker:{lpm:'120 LPM',price:22000},fans:2,fanPrice:6300}
+};
+
+const ELEC={mcb:4400,panel:18600,smps:5500,misc:12000};
+const HMI=181000;
+const SIG=3360,ENCL=12300;
+
+/* ════════ SENSOR DATA ════════ */
+const SENS={
+  ph:{on:true,v:'ind',label:'pH Sensor + Transmitter',
+    opts:{ind:{price:22400,name:'High-Precision Probe',grade:'Industrial',tag:'tg-i',
+      desc:'Range: 0\u201314 pH \u2022 Accuracy: \u00b10.01 pH\nTemp: 0\u201360 \u00b0C \u2022 BNC probe \u2022 0\u20135V output\nDashboard-guided calibration \u2022 Auto temp compensation\nBest for continuous trend monitoring & long-term culture tracking'},
+      norm:{price:4480,name:'Standard Probe',grade:'Normal',tag:'tg-n',
+      desc:'Range: 0\u201314 pH \u2022 Accuracy: \u00b10.01 pH\nTemp: 0\u201350 \u00b0C \u2022 BNC connector \u2022 Analog output\nManual calibration\nSuited for periodic spot-check readings'}}},
+  turb:{on:true,label:'Turbidity Sensor',grade:'Normal',tag:'tg-n',price:4480,
+    specs:[['Range','0\u20133000 NTU'],['Accuracy','\u00b15% Full Scale'],['Supply','5 V DC'],['Output','Analog 0\u20134.5 V'],['Application','Algal density estimation, water clarity monitoring'],['Type','Laboratory \u2014 suited for periodic spot-check readings']]},
+  tds:{on:true,label:'TDS Sensor',grade:'Normal',tag:'tg-n',price:3920,
+    specs:[['Range','0\u20131000 ppm'],['Accuracy','\u00b110% Full Scale'],['Supply','3.3\u20135.5 V'],['Output','Analog 0\u20132.3 V'],['Application','Nutrient concentration monitoring'],['Type','Laboratory \u2014 suited for periodic spot-check readings']]},
+  temp:{on:true,label:'Water Temperature \u2014 PT-100 RTD + Transmitter',grade:'Industrial',tag:'tg-i',price:3640,
+    specs:[['Sensor Type','RTD PT-100, Pencil Type'],['Sheath','SS316, 6 mm dia, 100 mm length'],['Configuration','3-Wire Simplex'],['Range','-30 \u00b0C to 250 \u00b0C'],['Accuracy','\u00b10.5 \u00b0C @ 0 \u00b0C'],['Cable','7\u00d732 AWG, 3-core Teflon, 4 m'],['Transmitter','4\u201320 mA, -15 to 100 \u00b0C'],['Application','Continuous culture temperature & heater feedback']]},
+  level:{on:true,label:'Liquid Level \u2014 Pressure Sensor',grade:'Industrial',tag:'tg-i',price:5600,
+    specs:[['Type','Piezoresistive Pressure Transducer'],['Working Pressure','0\u201350 kPa'],['Accuracy','\u00b10.05% Full Scale'],['Output','4\u201320 mA'],['Supply','10\u201332 V DC'],['Response','\u226410 ms'],['Overload','200% rated'],['Operating Temp','-20 to 85 \u00b0C'],['IP / Conn.','IP65, G1/4'],['Application','Volume tracking, evaporation & fill monitoring']]},
+  do:{on:true,v:'galv',label:'Dissolved Oxygen (DO) Sensor',
+    opts:{galv:{price:16000,name:'Galvanic Membrane Probe',grade:'Normal',tag:'tg-n',
+      desc:'Range: 0\u201320.0 ppm \u2022 Resolution: 0.1 ppm \u2022 Accuracy: \u00b10.2 ppm\nGold/Silver amperometric membrane type\nAnalog output via signal converter \u2022 9 V supply\nIncludes: probe, signal converter, 4\u00d7 DO membranes, KCL\nRequires periodic KCL electrolyte & membrane replacement'},
+      opt:{price:56500,name:'Optical Fluorescence Probe',grade:'Industrial',tag:'tg-i',
+      desc:'Range: 0\u201320 mg/L (0\u2013200% sat.) \u2022 Resolution: 0.01 mg/L\nAccuracy: \u00b13% FS \u2022 Response: \u226460 s \u2022 0\u201340 \u00b0C\nRS-485 Modbus RTU \u2022 DC 10\u201330 V \u2022 0.2 W \u2022 IP68\nNo electrolyte \u2022 Auto temp compensation\nFluorescent film life: 1 year \u2022 5 m cable'}}}
+};
+
+let ST={size:50,frame:'ss',led:'strip',air:'A',iotSuite:true};
+
+/* ════════ HELPERS ════════ */
+function cfg(){return T[ST.size];}
+function senP(k){const s=SENS[k];if(!s.on)return 0;return s.opts?s.opts[s.v].price:s.price;}
+function anySen(){return Object.values(SENS).some(s=>s.on);}
+function tSen(){let t=0;for(const k in SENS)t+=senP(k);if(anySen())t+=SIG+ENCL;return t;}
+function tStruct(){const c=cfg();return c.tank+(ST.frame==='ss'?c.frameSS:c.frameMS)+c.hw;}
+function tLed(){const c=cfg();const l=ST.led==='strip'?c.ledStrip:c.ledTube;return l.qty*l.unit+c.ledDrv;}
+function tAir(){return ST.air==='A'?42500:78000;}
+function tThermal(){const c=cfg();let t=0;c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
+function tElec(){return ELEC.mcb+ELEC.panel+ELEC.smps+ELEC.misc+HMI;}
+function tIoT(){return ST.iotSuite?100000:0;}
+function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
+function gst(){return Math.round(sub()*.18);}
+function gt(){return sub()+gst();}
+
+function tick(){
+  document.getElementById('tkTank').textContent=cfg().label;
+  document.getElementById('tkSen').textContent=F(tSen());
+  document.getElementById('tkSub').textContent=F(sub());
+  document.getElementById('tkGr').textContent=F(gt());
+}
+
+/* ════════ RENDER STEP 2 ════════ */
+function rStep2(){
+  const c=cfg();
+  // Sizes
+  let h='';[50,100,250,500,1000].forEach(s=>{
+    h+=`<div class="sz${ST.size===s?' pk':''}" onclick="pSz(${s})"><div class="sz-vol">${s}L</div><div class="sz-lbl">${F(T[s].tank)}</div></div>`;
+  });
+  document.getElementById('szCards').innerHTML=h;
+  // Frame
+  document.getElementById('frameOpts').innerHTML=
+    `<div class="opt${ST.frame==='ss'?' pk':''}" onclick="pFrame('ss')"><div class="opt-n">SS304 Matte Frame with Powder Coat</div><div class="opt-d">Stainless Steel 304 square tube &bull; Corrosion resistant &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameSS)}</div></div>
+     <div class="opt${ST.frame==='ms'?' pk':''}" onclick="pFrame('ms')"><div class="opt-n">MS with Powder Coat</div><div class="opt-d">Mild Steel square tube &bull; Powder coated finish &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameMS)}</div></div>`;
+  document.getElementById('colorRow').style.display=ST.frame==='ms'?'block':'none';
+  document.getElementById('hwRow').innerHTML=`<div class="ib"><div class="in">Stainless Steel Hardware Kit</div><div class="is">SS-304 assorted bolts, nuts, standoffs &bull; Complete mounting set</div></div><div class="ie"><div class="ip">${F(c.hw)}</div><div class="it">Included</div></div>`;
+  // LED
+  const ls=c.ledStrip,lt=c.ledTube;
+  document.getElementById('ledOpts').innerHTML=
+    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Spectrum optimised for photosynthesis &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(ls.qty*ls.unit)}</div></div>
+     <div class="opt${ST.led==='tube'?' pk':''}" onclick="pLed('tube')"><div class="opt-n">High-Output LED Grow Tubes</div><div class="opt-d">${lt.label}, enhanced PAR output &bull; Maximum lumination &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(lt.qty*lt.unit)}</div></div>`;
+  document.getElementById('ledDrvRow').innerHTML=`<div class="ib"><div class="in">LED Driver / Power Supply 24 V</div><div class="is">DIN-rail mount &bull; Overload &amp; short-circuit protection</div></div><div class="ie"><div class="ip">${F(c.ledDrv)}</div><div class="it">Included</div></div>`;
+  // Preview
+  let pv=`<strong>Auto-configured for ${c.label}:</strong> `;
+  pv+=c.heater.map(h=>`${h.w}W Culture Heater`).join(' + ')+' &bull; ';
+  pv+=`${c.pump.lpm} Aeration Pump &bull; Fine Bubble Diffuser`;
+  if(c.wavemaker)pv+=` &bull; ${c.wavemaker.lpm} Wavemaker`;
+  pv+=` &bull; ${c.fans} Auxiliary Fan${c.fans>1?'s':''}`;
+  document.getElementById('sizePreview').innerHTML=pv;
+}
+
+function pSz(s){ST.size=s;rStep2();tick();}
+function pFrame(f){ST.frame=f;rStep2();tick();}
+function pLed(l){ST.led=l;rStep2();tick();}
+
+/* ════════ RENDER SENSORS ════════ */
+function rSensors(){
+  let h='';
+  for(const k in SENS){
+    const s=SENS[k];const on=s.on;const cls=on?'on':'off';
+    const price=s.opts?s.opts[s.v].price:s.price;
+    h+=`<div class="sen ${cls}" id="sen-${k}"><div class="sen-hd" onclick="togS('${k}')">`;
+    h+=`<span class="sen-nm">${s.label}</span>`;
+    if(!s.opts&&s.grade)h+=`<span class="sen-tg ${s.tag}">${s.grade} Grade</span>`;
+    h+=`<span class="sen-pr" id="${k}-pr">${F(price)}</span>`;
+    h+=`<label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${on?'checked':''} onchange="togS('${k}')"><span class="tk"></span></label></div>`;
+    h+=`<div class="sen-bd">`;
+    if(s.opts){
+      h+=`<div class="vars">`;
+      for(const vk in s.opts){
+        const o=s.opts[vk];const pk=s.v===vk?'pk':'';
+        h+=`<div class="vr ${pk}" data-s="${k}" data-v="${vk}" onclick="pickV(this)">`;
+        h+=`<div class="vr-n">${o.name}</div><div class="vr-t ${o.tag}">${o.grade} Grade</div>`;
+        h+=`<div class="vr-p">${F(o.price)}</div>`;
+        h+=`<div class="vr-d">${o.desc.replace(/\n/g,'<br>')}</div></div>`;
+      }
+      h+=`</div>`;
+    } else if(s.specs){
+      h+=`<div class="sen-sp"><table>`;
+      s.specs.forEach(r=>h+=`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`);
+      h+=`</table></div>`;
+    }
+    h+=`</div></div>`;
+  }
+  document.getElementById('sensorCards').innerHTML=h;
+}
+function togS(k){SENS[k].on=!SENS[k].on;rSensors();tick();}
+function pickV(el){const k=el.dataset.s,v=el.dataset.v;SENS[k].v=v;rSensors();tick();}
+
+/* ════════ RENDER STEP 5 DYNAMIC ════════ */
+function rStep5Dyn(){
+  const c=cfg();
+  document.getElementById('elTankLbl').textContent=c.label;
+  let h='';
+  c.heater.forEach((ht,i)=>{
+    h+=`<div class="inc"><div class="ib"><div class="in">Culture Heater ${c.heater.length>1?'#'+(i+1):''} &mdash; ${ht.w}W</div><div class="is">Nominal heat management for ${c.label} tank &bull; SSR-controlled via HMI</div></div><div class="ie"><div class="ip">${F(ht.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  });
+  h+=`<div class="inc"><div class="ib"><div class="in">Aeration Pump &mdash; ${c.pump.lpm}</div><div class="is">${c.pump.w} &bull; Manual flow control valve &bull; Fine bubble aeration</div></div><div class="ie"><div class="ip">${F(c.pump.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  h+=`<div class="inc"><div class="ib"><div class="in">Fine Bubble Diffuser</div><div class="is">${c.diffuser.desc} &bull; Optimised for ${c.label} volume</div></div><div class="ie"><div class="ip">${F(c.diffuser.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  if(c.wavemaker){
+    h+=`<div class="inc"><div class="ib"><div class="in">Wavemaker &mdash; ${c.wavemaker.lpm}</div><div class="is">Recirculation &amp; mixing for larger volume culture &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.wavemaker.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  }
+  h+=`<div class="inc"><div class="ib"><div class="in">Auxiliary Circulation Fan${c.fans>1?'s (\u00d72)':''}</div><div class="is">Air intake &amp; HVAC circulation &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.fans*c.fanPrice)}</div><div class="it">Auto-configured</div></div></div>`;
+  document.getElementById('elDynamic').innerHTML=h;
+}
+
+/* ════════ OTHER HANDLERS ════════ */
+function pAir(el){ST.air=el.dataset.air;document.querySelectorAll('[data-air]').forEach(o=>o.classList.remove('pk'));el.classList.add('pk');tick();}
+function tog(k){
+  if(k==='iotSuite'){ST.iotSuite=!ST.iotSuite;const el=document.getElementById('sen-iotSuite'),cb=el.querySelector('input');cb.checked=ST.iotSuite;el.classList.toggle('on',ST.iotSuite);el.classList.toggle('off',!ST.iotSuite);}
+  tick();
+}
+
+/* ════════ BADGES ════════ */
+function badges(){
+  const b=[];b.push(cfg().label+' PBR');
+  b.push(ST.frame==='ss'?'SS304 Frame':'MS Powder Coated');
+  b.push(ST.led==='strip'?'LED Strips':'LED Tubes');
+  const nm={ph:'pH',turb:'Turbidity',tds:'TDS',temp:'Temperature',level:'Level',do:'DO'};
+  for(const k in SENS){
+    if(SENS[k].on){let l=nm[k];
+      if(SENS[k].opts){const o=SENS[k].opts[SENS[k].v];l+=` (${o.grade})`;}
+      b.push(l);
+    }
+  }
+  b.push(ST.air==='A'?'Air: Inlet':'Air: In+Out');
+  if(ST.iotSuite)b.push('IoT Suite');
+  return b.map(x=>`<span class="badge">${x}</span>`).join('');
+}
+
+/* ════════ BOM ════════ */
+function rBOM(){
+  const c=cfg(),tb=document.getElementById('bomTb');let h='',n=0,tot=0;
+  const sec=t=>{h+=`<tr class="cat"><td colspan="7">${t}</td></tr>`;};
+  const row=(d,q,u,p,r)=>{n++;const t=q*p;tot+=t;h+=`<tr><td>${n}</td><td>${d}</td><td class="ac">${q}</td><td>${u}</td><td class="ar">${F(p)}</td><td class="ar">${F(t)}</td><td>${r}</td></tr>`;return t;};
+  const srow=(v)=>{h+=`<tr class="sub"><td colspan="5" class="ar">Subtotal</td><td class="ar">${F(v)}</td><td></td></tr>`;};
+  let s;
+
+  s=0;sec('STRUCTURE &amp; MECHANICAL');
+  s+=row(`Acrylic Culture Tank ${ST.size}L`,1,'pcs',c.tank,'Cast acrylic, sealed, drain port + valves');
+  s+=row(ST.frame==='ss'?'SS304 Matte Frame':'MS Powder Coated Frame',1,'set',ST.frame==='ss'?c.frameSS:c.frameMS,'Top + bottom + legs');
+  s+=row('SS Hardware Kit',1,'set',c.hw,'Bolts, nuts, standoffs');
+  srow(s);
+
+  s=0;sec('LED GROW LIGHTING');
+  const ld=ST.led==='strip'?c.ledStrip:c.ledTube;
+  s+=row(ST.led==='strip'?'Full-Spectrum LED Grow Strips':'High-Output LED Grow Tubes',ld.qty,ST.led==='strip'?'strips':'tubes',ld.unit,'24V DC, photosynthesis-optimised');
+  s+=row('LED Driver / PSU 24V',1,'pcs',c.ledDrv,'DIN-rail, OLP/SCP');
+  srow(s);
+
+  s=0;sec('LIQUID SENSORS');
+  if(SENS.ph.on){const o=SENS.ph.opts[SENS.ph.v];s+=row(`pH Sensor (${o.grade})`,1,'pcs',o.price,'BNC, 0\u201314 pH, \u00b10.01');}
+  if(SENS.turb.on)s+=row('Turbidity Sensor (Normal)',1,'pcs',4480,'0\u20133000 NTU, analog');
+  if(SENS.tds.on)s+=row('TDS Sensor (Normal)',1,'pcs',3920,'0\u20131000 ppm, analog');
+  if(SENS.temp.on)s+=row('Temperature PT-100 + Transmitter',1,'set',3640,'SS316, 4\u201320mA');
+  if(SENS.level.on)s+=row('Level Pressure Transducer',1,'pcs',5600,'0\u201350kPa, 4\u201320mA, IP65');
+  if(SENS.do.on){const o=SENS.do.opts[SENS.do.v];s+=row(`DO Sensor (${o.name})`,1,'pcs',o.price,SENS.do.v==='galv'?'0\u201320 ppm, membrane':'0\u201320 mg/L, RS-485, IP68');}
+  if(anySen()){s+=row('Signal Converter 0\u20135V\u21924\u201320mA',3,'pcs',1120,'DIN-rail');s+=row('Sensor Enclosure',1,'pcs',12300,'Waterproof, cable glands');}
+  srow(s);
+
+  s=0;sec('AIR QUALITY SENSORS');
+  if(ST.air==='A')s+=row('ZPHS01B Air Quality Module (Inlet)',1,'pcs',42500,'11 parameters, UART');
+  else{s+=row('ZPHS01B Air Quality Module (Inlet+Outlet)',2,'pcs',39000,'Dual, 11 params each');}
+  srow(s);
+
+  s=0;sec('ELECTRICAL &amp; CONTROL');
+  s+=row('MCB 2P 16A + RCCB 2P 30mA',1,'set',4400,'Incoming protection');
+  s+=row('Control Panel (DIN-rail, IP65)',1,'pcs',18600,'Fabricated to spec');
+  s+=row('SMPS 24V + 12V',1,'set',5500,'150W total, DIN-rail');
+  c.heater.forEach((ht,i)=>s+=row(`Culture Heater ${ht.w}W${c.heater.length>1?' #'+(i+1):''}`,1,'pcs',ht.price,'SSR-controlled'));
+  s+=row(`Aeration Pump (${c.pump.lpm})`,1,'pcs',c.pump.price,c.pump.w+', valve control');
+  s+=row('Fine Bubble Diffuser',c.diffuser.qty,'pcs',c.diffuser.price,c.diffuser.desc);
+  if(c.wavemaker)s+=row(`Wavemaker (${c.wavemaker.lpm})`,1,'pcs',c.wavemaker.price,'Recirculation');
+  s+=row('Circulation Fan (HVAC)',c.fans,'pcs',c.fanPrice,'Air intake');
+  s+=row('SmartAXIS Touch HMI + PLC',1,'pcs',181000,'7\u2033 touch, 22 I/O, WiFi included');
+  s+=row('Miscellaneous (cables, connectors)',1,'lot',12000,'Wire, terminals, labels');
+  srow(s);
+
+  if(ST.iotSuite){s=0;sec('IoT MONITORING, CONTROL &amp; AUTOMATION');
+    s+=row('Remote IoT Suite (WiFi + Dashboard + Control + Automation)',1,'service',100000,'One-time setup; annual subscription TBD');
+    srow(s);}
+
+  const st=sub(),gs=gst();
+  h+=`<tr class="sub"><td colspan="5" class="ar">Sub-total (ex-GST)</td><td class="ar">${F(st)}</td><td></td></tr>`;
+  h+=`<tr class="sub"><td colspan="5" class="ar">GST @ 18%</td><td class="ar">${F(gs)}</td><td></td></tr>`;
+  h+=`<tr class="grand"><td colspan="5" class="ar">Grand Total (incl. GST)</td><td class="ar">${F(st+gs)}</td><td></td></tr>`;
+  tb.innerHTML=h;
+  document.getElementById('bomBdg').innerHTML=badges();
+}
+
+/* ════════ SUMMARY ════════ */
+function rSum(){
+  const v=id=>document.getElementById(id).value||'\u2014';
+  document.getElementById('sCl').innerHTML=
+    `<div><span class="lk">Organisation</span><span class="lv">${v('fOrg')}</span></div>
+     <div><span class="lk">Contact</span><span class="lv">${v('fName')}</span></div>
+     <div><span class="lk">Email/Phone</span><span class="lv">${v('fContact')}</span></div>
+     <div><span class="lk">Date</span><span class="lv">${v('fDate')}</span></div>
+     <div><span class="lk">Reference</span><span class="lv">${v('fRef')}</span></div>
+     <div><span class="lk">Delivery</span><span class="lv">${v('fLoc')}</span></div>`;
+  document.getElementById('sBdg').innerHTML=badges();
+  const lines=[
+    {k:'Structure (Tank + Frame + Hardware)',v:tStruct()},
+    {k:'LED Grow Lighting',v:tLed()},
+    {k:'Liquid Sensors',v:tSen()},
+    {k:'Air Quality Sensor',v:tAir()},
+    {k:'Aeration, Mixing & Thermal',v:tThermal()},
+    {k:'Electrical & Control System',v:tElec()},
+  ];
+  if(ST.iotSuite)lines.push({k:'IoT Monitoring, Control & Automation Suite',v:100000});
+  let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
+  const st=sub(),gs=gst(),gr=gt();
+  ph+=`<div class="row total"><span class="k">Grand Total (incl. GST)</span><span class="v">${F(gr)}</span></div>`;
+  document.getElementById('sPL').innerHTML=ph;
+  document.getElementById('sGr').textContent=F(gr);
+  document.getElementById('sSub').textContent=F(st);
+  document.getElementById('sGst').textContent=F(gs);
+}
+
+/* ════════ NAV ════════ */
+let cur=1;
+function go(n){
+  cur=n;
+  document.querySelectorAll('.vw').forEach((v,i)=>v.classList.toggle('on',i+1===n));
+  document.querySelectorAll('.stepper .st').forEach((s,i)=>{s.classList.remove('on','done');if(i+1===n)s.classList.add('on');if(i+1<n)s.classList.add('done');});
+  if(n===2)rStep2();
+  if(n===3)rSensors();
+  if(n===5)rStep5Dyn();
+  if(n===6)rBOM();
+  if(n===7)rSum();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ════════ EXCEL ════════ */
+function exportXL(){
+  const wb=XLSX.utils.book_new(),st=sub(),gs=gst(),gr=gt(),v=id=>document.getElementById(id).value||'';
+  const c1=[['CARBELIM PRIVATE LIMITED'],['Photobioreactor (PBR) Custom Design \u2014 Quotation'],[''],
+    ['Organisation',v('fOrg')],['Contact',v('fName')],['Email/Phone',v('fContact')],['Date',v('fDate')],['Reference',v('fRef')],['Delivery',v('fLoc')],[''],
+    ['CONFIGURATION'],['Tank Size',cfg().label],['Frame',ST.frame==='ss'?'SS304 Matte':'MS Powder Coated'],
+    ['Frame Colour',v('fColor')||'N/A'],['LED Type',ST.led==='strip'?'LED Grow Strips':'High-Output LED Tubes']];
+  const nm={ph:'pH',turb:'Turbidity',tds:'TDS',temp:'Temperature',level:'Level',do:'DO'};
+  for(const k in SENS){let l=nm[k],val=SENS[k].on?'Selected':'Not included';
+    if(SENS[k].opts&&SENS[k].on)val=SENS[k].opts[SENS[k].v].name+' ('+SENS[k].opts[SENS[k].v].grade+')';
+    c1.push([l+' Sensor',val]);}
+  c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':'Inlet + Outlet'],['IoT Suite',ST.iotSuite?'Yes (₹1,00,000 + annual TBD)':'No'],
+    [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],['Ex-works Coimbatore. Validity 30 days.']);
+  const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
+
+  const bd=[['CARBELIM \u2014 PBR Bill of Materials'],[''],['#','Component','Qty','Unit','Price','Total','Remarks']];
+  document.getElementById('bomTb').querySelectorAll('tr').forEach(tr=>{const c=tr.querySelectorAll('td'),r=[];c.forEach(td=>r.push(td.textContent.trim()));if(r.length===1)bd.push([r[0]]);else if(r.length)bd.push(r);});
+  const ws2=XLSX.utils.aoa_to_sheet(bd);ws2['!cols']=[{wch:4},{wch:44},{wch:4},{wch:7},{wch:14},{wch:14},{wch:36}];
+  XLSX.utils.book_append_sheet(wb,ws2,'BOM & Pricing');
+
+  XLSX.writeFile(wb,`Carbelim_PBR_Quotation_${v('fRef')||'CBL-PBR-001'}.xlsx`);
+}
+
+/* ════════ SUBMIT TO GOOGLE SHEET ════════ */
+function collectData(){
+  const v=id=>document.getElementById(id).value||'';
+  const c=cfg();
+  const nm={ph:'pH',turb:'Turbidity',tds:'TDS',temp:'Temperature',level:'Level',do:'DO'};
+  const sensors={};
+  for(const k in SENS){
+    const s=SENS[k];
+    if(s.on){
+      let detail=nm[k]+': ON';
+      if(s.opts)detail+=` (${s.opts[s.v].name} — ${s.opts[s.v].grade})`;
+      sensors[k]={selected:true,variant:s.opts?s.opts[s.v].name:'Standard',price:senP(k)};
+    } else {
+      sensors[k]={selected:false,variant:'',price:0};
+    }
+  }
+  return {
+    timestamp: new Date().toISOString(),
+    client:{
+      organisation:v('fOrg'),contact:v('fName'),email_phone:v('fContact'),
+      date:v('fDate'),reference:v('fRef'),delivery:v('fLoc')
+    },
+    config:{
+      tank:c.label,tank_price:c.tank,
+      frame:ST.frame==='ss'?'SS304 Matte':'MS Powder Coated',
+      frame_price:ST.frame==='ss'?c.frameSS:c.frameMS,
+      hardware_price:c.hw,
+      color:v('fColor')||'Not specified',
+      led:ST.led==='strip'?'LED Grow Strips':'High-Output LED Tubes',
+      led_price:tLed(),
+      sensors:sensors,
+      sensors_total:tSen(),
+      air_sensor:ST.air==='A'?'Inlet Only':'Inlet + Outlet',
+      air_price:tAir(),
+      heater:c.heater.map(h=>h.w+'W').join(' + '),
+      aeration:c.pump.lpm,
+      wavemaker:c.wavemaker?c.wavemaker.lpm:'None',
+      iot_suite:ST.iotSuite?'Yes':'No',
+    },
+    pricing:{
+      subtotal:sub(),gst:gst(),grand_total:gt()
+    }
+  };
+}
+
+function submitQuote(){
+  if(!WEBHOOK_URL){alert('Webhook URL not configured. Please set WEBHOOK_URL in the script.');return;}
+  const v=id=>document.getElementById(id).value||'';
+  if(!v('fOrg')&&!v('fName')&&!v('fContact')){
+    alert('Please fill in at least your organisation name or contact details in Step 1.');return;
+  }
+  const btn=document.getElementById('btnSubmit');
+  const status=document.getElementById('submitStatus');
+  btn.disabled=true;btn.textContent='Submitting...';btn.style.opacity='.6';
+  status.style.display='none';
+
+  const data=collectData();
+
+  fetch(WEBHOOK_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(data)
+  }).then(()=>{
+    status.style.display='block';
+    status.style.color='var(--g)';
+    status.innerHTML='<strong>Submitted successfully!</strong> Our team will review your configuration and get in touch.';
+    btn.textContent='Submitted';
+  }).catch(err=>{
+    status.style.display='block';
+    status.style.color='#dc2626';
+    status.innerHTML='<strong>Submission failed.</strong> Please download the Excel file and email it to us instead.';
+    btn.disabled=false;btn.textContent='Retry Submit';btn.style.opacity='1';
+  });
+}
+
+/* ════════ INIT ════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('fDate').valueAsDate=new Date();
+  rStep2();rSensors();tick();
+});
+</script>
+
+<!--
+═══════════════════════════════════════════════════════════════
+  GOOGLE SHEETS WEBHOOK SETUP — Follow these steps:
+═══════════════════════════════════════════════════════════════
+
+1. Go to https://sheets.google.com and create a new spreadsheet
+   Name it: "PBR Configurator Submissions"
+
+2. In the spreadsheet, go to Extensions → Apps Script
+
+3. Delete everything in the editor, paste this code:
+
+────────────────────────────────────────────────────
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+
+  // Add headers if sheet is empty
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      'Timestamp', 'Organisation', 'Contact', 'Email/Phone',
+      'Date', 'Reference', 'Delivery Location',
+      'Tank', 'Frame', 'Color', 'LED Type',
+      'pH', 'Turbidity', 'TDS', 'Temperature', 'Level', 'DO',
+      'Air Sensor', 'IoT Suite',
+      'Subtotal (INR)', 'GST (INR)', 'Grand Total (INR)'
+    ]);
+  }
+
+  var c = data.client;
+  var cfg = data.config;
+  var s = cfg.sensors;
+  var p = data.pricing;
+
+  function senStr(k) {
+    if (!s[k].selected) return 'Not selected';
+    return s[k].variant + ' (₹' + s[k].price + ')';
+  }
+
+  sheet.appendRow([
+    data.timestamp,
+    c.organisation, c.contact, c.email_phone,
+    c.date, c.reference, c.delivery,
+    cfg.tank + ' (₹' + cfg.tank_price + ')',
+    cfg.frame + ' (₹' + cfg.frame_price + ')',
+    cfg.color,
+    cfg.led + ' (₹' + cfg.led_price + ')',
+    senStr('ph'), senStr('turb'), senStr('tds'),
+    senStr('temp'), senStr('level'), senStr('do'),
+    cfg.air_sensor + ' (₹' + cfg.air_price + ')',
+    cfg.iot_suite,
+    p.subtotal, p.gst, p.grand_total
+  ]);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({status: 'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+────────────────────────────────────────────────────
+
+4. Click "Deploy" → "New deployment"
+   - Type: Web app
+   - Execute as: Me
+   - Who has access: Anyone
+   - Click Deploy → Authorize
+
+5. Copy the Web app URL (looks like: https://script.google.com/macros/s/XXXXX/exec)
+
+6. Paste it into WEBHOOK_URL at the top of this file's <script> tag:
+   const WEBHOOK_URL = 'https://script.google.com/macros/s/XXXXX/exec';
+
+7. Done! Every submission will now appear as a row in your Google Sheet.
+
+═══════════════════════════════════════════════════════════════
+-->
+</body>
+</html>
