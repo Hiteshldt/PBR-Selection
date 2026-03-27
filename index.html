@@ -129,7 +129,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   <div class="st" onclick="go(2)"><span class="circle">2</span><span class="label">Structure</span></div>
   <div class="st" onclick="go(3)"><span class="circle">3</span><span class="label">Technology</span></div>
   <div class="st" onclick="go(4)"><span class="circle">4</span><span class="label">Sensors</span></div>
-  <div class="st" onclick="go(5)"><span class="circle">5</span><span class="label">Electrical</span></div>
+  <div class="st" onclick="go(5)"><span class="circle">5</span><span class="label">Control & IoT</span></div>
   <div class="st" onclick="go(6)"><span class="circle">6</span><span class="label">Review</span></div>
   <div class="st" onclick="go(7)"><span class="circle">7</span><span class="label">Download</span></div>
 </div></nav>
@@ -232,14 +232,14 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; CO&#8322; uptake, O&#8322; production, air purification efficiency.</div><div class="opt-p">&#8377;78,000</div></div>
     </div>
   </div>
-  <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Electrical</button></div>
+  <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Control & IoT</button></div>
 </section>
 
 <!-- ═══ 5. ELECTRICAL & CONTROL ═══ -->
 <section class="vw" id="v5">
   <div class="card">
-    <div class="card-h"><h2>5. Electrical, PLC/HMI &amp; Control System</h2><p>Fixed components for your PBR</p></div>
-    <div class="sec-label"><span class="n">1</span>Electrical Panel &amp; Protection</div>
+    <div class="card-h"><h2>5. Control System, Display &amp; IoT</h2><p>PLC/HMI, connectivity &amp; monitoring</p></div>
+    <div class="sec-label"><span class="n">1</span>Electrical Panel</div>
     <div class="inc"><div class="ib"><div class="in">Electrical Panel, MCB, RCCB &amp; SMPS</div><div class="is">DIN-rail IP65 enclosure &bull; 2P 16A MCB + 30mA RCCB &bull; 24V + 12V SMPS (150W)</div></div><div class="ie"><div class="ip">&#8377;28,500</div><div class="it">Fixed</div></div></div>
 
     <div class="sec-label"><span class="n">2</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
@@ -699,7 +699,7 @@ function rStep6(){
     {k:'Water Quality Sensors',v:tSen()},
     {k:'Air Quality Sensor',v:tAir()},
     {k:'Aeration, Mixing & Circulation',v:tThermal()},
-    {k:'Electrical & Control System',v:tElec()},
+    {k:'Control System, Display & IoT',v:tElec()},
   ];
   if(ST.heater){const hp=cfg().heater.reduce((a,h)=>a+h.price,0);lines.push({k:'Culture Heater (Add-on)',v:hp});}
   if(ST.wavemaker&&cfg().wavemaker)lines.push({k:'Wavemaker (Add-on)',v:cfg().wavemaker.price});
