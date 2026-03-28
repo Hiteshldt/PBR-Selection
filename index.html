@@ -303,7 +303,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div id="sensorCards"></div>
     <div id="senAccessories" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--sf4)">
       <p style="font-size:9px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Included with Sensor Package</p>
-      <div class="inc"><div class="ib"><div class="in">Sensor Signal Converter &amp; Enclosure Kit</div><div class="is">3&times; DIN-rail 0&ndash;5 V &#8594; 4&ndash;20 mA converters &bull; Waterproof probe enclosure with cable glands</div></div><div class="ie"><div class="ip">&#8377;15,660</div><div class="it">Included</div></div></div>
+      <div class="inc"><div class="ib"><div class="in">Sensor Signal Converter &amp; Enclosure Kit</div><div class="is">3&times; DIN-rail 0&ndash;5 V &#8594; 4&ndash;20 mA converters &bull; Waterproof probe enclosure with cable glands</div></div><div class="ie"><div class="ip" id="senConvPrice"></div><div class="it">Included</div></div></div>
     </div>
   </div>
 
@@ -325,9 +325,9 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <div class="ap"><span class="ak">Warm-up</span><span class="av">3 min (first power-on)</span></div>
     </div>
     <div class="opts opts3" id="airOpts">
-      <div class="opt pk" data-air="A" onclick="pAir(this)"><div class="opt-n">Inlet Only</div><div class="opt-d">Single module at air inlet. Monitors incoming air quality fed to the culture.</div><div class="opt-p">&#8377;42,500</div></div>
-      <div class="opt" data-air="O" onclick="pAir(this)"><div class="opt-n">Outlet Only</div><div class="opt-d">Single module at air outlet. Monitors exhaust gases &mdash; </div><div class="opt-p">&#8377;42,500</div></div>
-      <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; </div><div class="opt-p">&#8377;78,000</div></div>
+      <div class="opt pk" data-air="A" onclick="pAir(this)"><div class="opt-n">Inlet Only</div><div class="opt-d">Single module at air inlet. Monitors incoming air quality fed to the culture.</div><div class="opt-p" id="airPrA"></div></div>
+      <div class="opt" data-air="O" onclick="pAir(this)"><div class="opt-n">Outlet Only</div><div class="opt-d">Single module at air outlet. Monitors exhaust gases &mdash; CO&#8322; uptake &amp; O&#8322; production by the culture.</div><div class="opt-p" id="airPrO"></div></div>
+      <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; CO&#8322; uptake, O&#8322; production, air purification efficiency.</div><div class="opt-p" id="airPrB"></div></div>
     </div>
   </div>
   <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Control & IoT</button></div>
@@ -338,7 +338,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   <div class="card">
     <div class="card-h"><h2>5. Control System, Display &amp; IoT</h2><p>PLC/HMI, connectivity &amp; monitoring</p></div>
     <div class="sec-label"><span class="n">1</span>Electrical Panel</div>
-    <div class="inc"><div class="ib"><div class="in">Electrical Panel, MCB, RCCB &amp; SMPS</div><div class="is">DIN-rail IP65 enclosure &bull; 2P 16A MCB + 30mA RCCB &bull; 24V + 12V SMPS (150W)</div></div><div class="ie"><div class="ip">&#8377;18,400</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">Electrical Panel, MCB, RCCB &amp; SMPS</div><div class="is">DIN-rail IP65 enclosure &bull; 2P 16A MCB + 30mA RCCB &bull; 24V + 12V SMPS (150W)</div></div><div class="ie"><div class="ip" id="elPanelPr"></div><div class="it">Fixed</div></div></div>
 
     <div class="sec-label"><span class="n">2</span>PLC / HMI &mdash; SmartAXIS Touch FT2J-7U</div>
     <div class="inc"><div class="ib"><div class="in">All-in-One HMI + PLC Control Unit (WiFi included)</div><div class="is" style="line-height:1.65">
@@ -348,10 +348,10 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <strong>Comm:</strong> Ethernet + RS-485 + USB + WiFi &bull; FTP, email, remote web, mobile app<br>
       <strong>Control:</strong> PID + PWM + data logging + scripting &bull; Alarms &amp; setpoints<br>
       <strong>Power:</strong> 24 V DC, 5 W &bull; IP66F/IP67F &bull; -20 to +55 &deg;C
-    </div></div><div class="ie"><div class="ip">&#8377;1,81,000</div><div class="it">Fixed</div></div></div>
+    </div></div><div class="ie"><div class="ip" id="elHmiPr"></div><div class="it">Fixed</div></div></div>
 
     <div class="sec-label"><span class="n">3</span>Miscellaneous</div>
-    <div class="inc"><div class="ib"><div class="in">Miscellaneous (cables, connectors, labels, ferrules, documentation)</div><div class="is">Complete wiring &amp; documentation pack</div></div><div class="ie"><div class="ip">&#8377;8,750</div><div class="it">Fixed</div></div></div>
+    <div class="inc"><div class="ib"><div class="in">Miscellaneous (cables, connectors, labels, ferrules, documentation)</div><div class="is">Complete wiring &amp; documentation pack</div></div><div class="ie"><div class="ip" id="elMiscPr"></div><div class="it">Fixed</div></div></div>
   </div>
 
   <div class="card">
@@ -360,7 +360,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div class="sec-label" style="margin-top:0"><span class="n">A</span>Cloud IoT Dashboard</div>
     <div class="sen on" id="sen-iotDash"><div class="sen-hd" onclick="tog('iotDash')">
       <span class="sen-nm">Cloud IoT Dashboard &mdash; Remote Monitoring, Control &amp; Automation</span>
-      <span class="sen-pr">&#8377;35,000</span>
+      <span class="sen-pr" id="iotDashPr"></span>
       <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="tog('iotDash')"><span class="tk"></span></label>
     </div>
       <div class="sen-bd"><div class="sen-sp"><table>
@@ -374,8 +374,8 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     <div id="connSection">
       <div class="sec-label"><span class="n">B</span>Connectivity (choose one)</div>
       <div class="opts" id="connOpts">
-        <div class="opt pk" data-conn="wifi" onclick="pConn(this)"><div class="opt-n">WiFi Only (Standard)</div><div class="opt-d">802.11 b/g/n 2.4 GHz via customer router &bull; MQTT over TLS &bull; QoS 1</div><div class="opt-p">&#8377;3,760</div></div>
-        <div class="opt" data-conn="4g" onclick="pConn(this)"><div class="opt-n">WiFi + 4G LTE Cat-4</div><div class="opt-d">Standalone 4G SIM connectivity &bull; No router required &bull; Always-on remote access</div><div class="opt-p">&#8377;22,000</div></div>
+        <div class="opt pk" data-conn="wifi" onclick="pConn(this)"><div class="opt-n">WiFi Only (Standard)</div><div class="opt-d">802.11 b/g/n 2.4 GHz via customer router &bull; MQTT over TLS &bull; QoS 1</div><div class="opt-p" id="connWifiPr"></div></div>
+        <div class="opt" data-conn="4g" onclick="pConn(this)"><div class="opt-n">WiFi + 4G LTE Cat-4</div><div class="opt-d">Standalone 4G SIM connectivity &bull; No router required &bull; Always-on remote access</div><div class="opt-p" id="conn4gPr"></div></div>
       </div>
     </div>
     <div class="conn-note" id="connHint">Enable Cloud IoT Dashboard to choose a connectivity option for remote monitoring and control.</div>
@@ -443,7 +443,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 
 <script>
 /* ════════ WEBHOOK CONFIG ════════ */
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbx1D3-mE6ZiH-19GA-r7xtxZG4wQYVweMVWjJBsB0Hn6QXsdeqEOyDSdQsUpCLDfvIoGQ/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbynrdKVmAdcS-Mkuc3Jnj1Ak8TxR7fGoGJkbXxSFCa04xhRdULFampfHNDYT1rIXPiTVg/exec';
 
 const F=n=>'\u20B9'+n.toLocaleString('en-IN');
 
@@ -525,13 +525,12 @@ function tAir(){return ST.air==='B'?78000:42500;}
 function tThermal(){const c=cfg();let t=0;if(ST.heater)c.heater.forEach(h=>t+=h.price);t+=c.pump.price+c.diffuser.price;if(ST.wavemaker&&c.wavemaker)t+=c.wavemaker.price;t+=c.fans*c.fanPrice;return t;}
 function tElec(){return ELEC.panel+ELEC.misc+HMI;}
 function tIoT(){return ST.iotDash?((ST.conn==='wifi'?3760:22000)+35000):0;}
-function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
-function gst(){return Math.round(sub()*.18);}
-function gt(){return sub()+gst();}
+function sub(){return Math.round((tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT())*1.18);}
+function M(v){return Math.round(v*1.18);} // margin multiplier for BOM line items
 
 function tick(){
   document.getElementById('tkTank').textContent=cfg().label;
-  document.getElementById('tkSen').textContent=F(tSen());
+  document.getElementById('tkSen').textContent=F(M(tSen()));
   document.getElementById('tkGr').textContent=F(sub());
 }
 
@@ -540,15 +539,15 @@ function rStep2(){
   const c=cfg();
   // Sizes
   let h='';[50,100,250,500,1000].forEach(s=>{
-    h+=`<div class="sz${ST.size===s?' pk':''}" onclick="pSz(${s})"><div class="sz-vol">${s}L</div><div class="sz-lbl">${F(T[s].tank)}</div></div>`;
+    h+=`<div class="sz${ST.size===s?' pk':''}" onclick="pSz(${s})"><div class="sz-vol">${s}L</div><div class="sz-lbl">${F(M(T[s].tank))}</div></div>`;
   });
   document.getElementById('szCards').innerHTML=h;
   // Frame
   document.getElementById('frameOpts').innerHTML=
-    `<div class="opt${ST.frame==='ss'?' pk':''}" onclick="pFrame('ss')"><div class="opt-n">SS304 Matte Frame with Powder Coat</div><div class="opt-d">Stainless Steel 304 square tube &bull; Corrosion resistant &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameSS)}</div></div>
-     <div class="opt${ST.frame==='ms'?' pk':''}" onclick="pFrame('ms')"><div class="opt-n">MS with Powder Coat</div><div class="opt-d">Mild Steel square tube &bull; Powder coated finish &bull; Top + Bottom + Legs</div><div class="opt-p">${F(c.frameMS)}</div></div>`;
+    `<div class="opt${ST.frame==='ss'?' pk':''}" onclick="pFrame('ss')"><div class="opt-n">SS304 Matte Frame with Powder Coat</div><div class="opt-d">Stainless Steel 304 square tube &bull; Corrosion resistant &bull; Top + Bottom + Legs</div><div class="opt-p">${F(M(c.frameSS))}</div></div>
+     <div class="opt${ST.frame==='ms'?' pk':''}" onclick="pFrame('ms')"><div class="opt-n">MS with Powder Coat</div><div class="opt-d">Mild Steel square tube &bull; Powder coated finish &bull; Top + Bottom + Legs</div><div class="opt-p">${F(M(c.frameMS))}</div></div>`;
   document.getElementById('colorRow').style.display='block';
-  document.getElementById('hwRow').innerHTML=`<div class="ib"><div class="in">Stainless Steel Hardware Kit</div><div class="is">SS-304 assorted bolts, nuts, standoffs &bull; Complete mounting set</div></div><div class="ie"><div class="ip">${F(c.hw)}</div><div class="it">Included</div></div>`;
+  document.getElementById('hwRow').innerHTML=`<div class="ib"><div class="in">Stainless Steel Hardware Kit</div><div class="is">SS-304 assorted bolts, nuts, standoffs &bull; Complete mounting set</div></div><div class="ie"><div class="ip">${F(M(c.hw))}</div><div class="it">Included</div></div>`;
   // Preview
   let pv=`<strong>Auto-configured for ${c.label}:</strong> `;
   pv+=c.heater.map(h=>`${h.w}W Culture Heater`).join(' + ')+' &bull; ';
@@ -645,9 +644,9 @@ function rStep3Dyn(){
   // LED
   const ls=c.ledStrip,lt=c.ledTube;
   document.getElementById('ledOpts').innerHTML=
-    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Spectrum optimised for photosynthesis &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(ls.qty*ls.unit)}</div></div>
-     <div class="opt${ST.led==='tube'?' pk':''}" onclick="pLed('tube')"><div class="opt-n">High-Output LED Grow Tubes</div><div class="opt-d">${lt.label}, enhanced PAR output &bull; Maximum lumination &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(lt.qty*lt.unit)}</div></div>`;
-  document.getElementById('ledDrvRow').innerHTML=`<div class="ib"><div class="in">LED Driver / Power Supply 24 V</div><div class="is">DIN-rail mount &bull; Overload &amp; short-circuit protection</div></div><div class="ie"><div class="ip">${F(c.ledDrv)}</div><div class="it">Included</div></div>`;
+    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Spectrum optimised for photosynthesis &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(M(ls.qty*ls.unit))}</div></div>
+     <div class="opt${ST.led==='tube'?' pk':''}" onclick="pLed('tube')"><div class="opt-n">High-Output LED Grow Tubes</div><div class="opt-d">${lt.label}, enhanced PAR output &bull; Maximum lumination &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(M(lt.qty*lt.unit))}</div></div>`;
+  document.getElementById('ledDrvRow').innerHTML=`<div class="ib"><div class="in">LED Driver / Power Supply 24 V</div><div class="is">DIN-rail mount &bull; Overload &amp; short-circuit protection</div></div><div class="ie"><div class="ip">${F(M(c.ledDrv))}</div><div class="it">Included</div></div>`;
 
   // Heater toggle
   const htrTotal=c.heater.reduce((a,h)=>a+h.price,0);
@@ -656,7 +655,7 @@ function rStep3Dyn(){
     `<div class="sen ${ST.heater?'on':'off'}" id="sen-heater"><div class="sen-hd" onclick="tog('heater')">
       <span class="sen-nm">Culture Heater &mdash; ${htrDesc}${c.heater.length>1?' (Dual)':''}</span>
       <span class="sen-tg tg-i" style="margin-right:4px">Free Panel Integration</span>
-      <span class="sen-pr">${F(htrTotal)}</span>
+      <span class="sen-pr">${F(M(htrTotal))}</span>
       <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.heater?'checked':''} onchange="tog('heater')"><span class="tk"></span></label>
     </div>
     <div class="sen-bd"><div class="sen-sp"><table>
@@ -670,8 +669,8 @@ function rStep3Dyn(){
 
   // Aeration + diffuser
   let h='';
-  h+=`<div class="inc"><div class="ib"><div class="in">Aeration Pump &mdash; ${c.pump.lpm}</div><div class="is">${c.pump.w} &bull; Manual flow control valve &bull; Fine bubble aeration</div></div><div class="ie"><div class="ip">${F(c.pump.price)}</div><div class="it">Auto-configured</div></div></div>`;
-  h+=`<div class="inc"><div class="ib"><div class="in">Fine Bubble Diffuser</div><div class="is">${c.diffuser.desc} &bull; Optimised for ${c.label} volume</div></div><div class="ie"><div class="ip">${F(c.diffuser.price)}</div><div class="it">Auto-configured</div></div></div>`;
+  h+=`<div class="inc"><div class="ib"><div class="in">Aeration Pump &mdash; ${c.pump.lpm}</div><div class="is">${c.pump.w} &bull; Manual flow control valve &bull; Fine bubble aeration</div></div><div class="ie"><div class="ip">${F(M(c.pump.price))}</div><div class="it">Auto-configured</div></div></div>`;
+  h+=`<div class="inc"><div class="ib"><div class="in">Fine Bubble Diffuser</div><div class="is">${c.diffuser.desc} &bull; Optimised for ${c.label} volume</div></div><div class="ie"><div class="ip">${F(M(c.diffuser.price))}</div><div class="it">Auto-configured</div></div></div>`;
   document.getElementById('elDynamic').innerHTML=h;
 
   // Wavemaker toggle (only for 250L+)
@@ -681,7 +680,7 @@ function rStep3Dyn(){
       `<div class="sen ${ST.wavemaker?'on':'off'}" id="sen-wavemaker"><div class="sen-hd" onclick="tog('wavemaker')">
         <span class="sen-nm">Wavemaker &mdash; ${c.wavemaker.lpm}</span>
         <span class="sen-tg tg-i" style="margin-right:4px">Free Panel Integration</span>
-        <span class="sen-pr">${F(c.wavemaker.price)}</span>
+        <span class="sen-pr">${F(M(c.wavemaker.price))}</span>
         <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${ST.wavemaker?'checked':''} onchange="tog('wavemaker')"><span class="tk"></span></label>
       </div>
       <div class="sen-bd"><div class="sen-sp"><table>
@@ -695,7 +694,7 @@ function rStep3Dyn(){
 
   // Fans
   document.getElementById('fanDynamic').innerHTML=
-    `<div class="inc"><div class="ib"><div class="in">Auxiliary Circulation Fan${c.fans>1?'s (\u00d72)':''}</div><div class="is">Air intake &amp; HVAC circulation &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(c.fans*c.fanPrice)}</div><div class="it">Auto-configured</div></div></div>`;
+    `<div class="inc"><div class="ib"><div class="in">Auxiliary Circulation Fan${c.fans>1?'s (\u00d72)':''}</div><div class="is">Air intake &amp; HVAC circulation &bull; Relay-controlled</div></div><div class="ie"><div class="ip">${F(M(c.fans*c.fanPrice))}</div><div class="it">Auto-configured</div></div></div>`;
 }
 
 /* ════════ RENDER SENSORS ════════ */
@@ -707,7 +706,7 @@ function rSensors(){
     h+=`<div class="sen ${cls}" id="sen-${k}"><div class="sen-hd" onclick="togS('${k}')">`;
     h+=`<span class="sen-nm">${s.label}</span>`;
     if(!s.opts&&s.grade)h+=`<span class="sen-tg ${s.tag}">${s.grade} Grade</span>`;
-    h+=`<span class="sen-pr" id="${k}-pr">${F(price)}</span>`;
+    h+=`<span class="sen-pr" id="${k}-pr">${F(M(price))}</span>`;
     h+=`<label class="sw" onclick="event.stopPropagation()"><input type="checkbox" ${on?'checked':''} onchange="togS('${k}')"><span class="tk"></span></label></div>`;
     h+=`<div class="sen-bd">`;
     if(s.opts){
@@ -716,7 +715,7 @@ function rSensors(){
         const o=s.opts[vk];const pk=s.v===vk?'pk':'';
         h+=`<div class="vr ${pk}" data-s="${k}" data-v="${vk}" onclick="pickV(this)">`;
         h+=`<div class="vr-n">${o.name}</div><div class="vr-t ${o.tag}">${o.grade} Grade</div>`;
-        h+=`<div class="vr-p">${F(o.price)}</div>`;
+        h+=`<div class="vr-p">${F(M(o.price))}</div>`;
         h+=`<div class="vr-d">${o.desc.replace(/\n/g,'<br>')}</div></div>`;
       }
       h+=`</div>`;
@@ -789,7 +788,7 @@ function badges(){
 function rBOM(){
   const c=cfg(),tb=document.getElementById('bomTb');let h='',n=0,tot=0;
   const sec=t=>{h+=`<tr class="cat"><td colspan="7">${t}</td></tr>`;};
-  const row=(d,q,u,p,r)=>{n++;const t=q*p;tot+=t;h+=`<tr><td>${n}</td><td>${d}</td><td class="ac">${q}</td><td>${u}</td><td class="ar">${F(p)}</td><td class="ar">${F(t)}</td><td>${r}</td></tr>`;return t;};
+  const row=(d,q,u,p,r)=>{n++;const mp=M(p),t=q*mp;tot+=t;h+=`<tr><td>${n}</td><td>${d}</td><td class="ac">${q}</td><td>${u}</td><td class="ar">${F(mp)}</td><td class="ar">${F(t)}</td><td>${r}</td></tr>`;return t;};
   const srow=(v)=>{h+=`<tr class="sub"><td colspan="5" class="ar">Subtotal</td><td class="ar">${F(v)}</td><td></td></tr>`;};
   let s;
 
@@ -843,8 +842,7 @@ function rBOM(){
     if(ST.wavemaker&&c.wavemaker)s+=row(`Wavemaker (${c.wavemaker.lpm})`,1,'pcs',c.wavemaker.price,'Timer-based relay, recirculation');
     srow(s);}
 
-  const st=sub();
-  h+=`<tr class="grand"><td colspan="5" class="ar">Total (ex-GST)</td><td class="ar">${F(st)}</td><td>GST @18% additional</td></tr>`;
+  h+=`<tr class="grand"><td colspan="5" class="ar">Total (ex-GST)</td><td class="ar">${F(tot)}</td><td>GST @18% additional</td></tr>`;
   tb.innerHTML=h;
   document.getElementById('bomBdg').innerHTML=badges();
 }
@@ -868,17 +866,17 @@ function rStep6(){
     const hp=c2.heater.reduce((a,h)=>a+h.price,0);
     suggestions.push({id:'heater',name:`${hd} Culture Heater${c2.heater.length>1?' (Dual)':''}`,
       desc:`Your ${c2.label} tank would benefit from a ${hd} heater with auto temperature settings — free integration with your control panel.`,
-      price:hp});
+      price:M(hp)});
   }
   if(!ST.wavemaker&&c2.wavemaker){
     suggestions.push({id:'wavemaker',name:`Wavemaker — ${c2.wavemaker.lpm}`,
       desc:`Wavemaker with timer control — free integration with your control panel. Recommended for ${c2.label} tanks for uniform culture growth.`,
-      price:c2.wavemaker.price});
+      price:M(c2.wavemaker.price)});
   }
   if(!ST.iotDash){
     suggestions.push({id:'iotSuite',name:'Cloud IoT Dashboard + WiFi Connectivity',
       desc:'Get live remote monitoring, setpoint control, alerts, automation rules, and historical data access. Start with WiFi now and upgrade to 4G later if you need always-on router-free remote access.',
-      price:38760,pulse:true});
+      price:M(38760),pulse:true});
   }
   const sgEl=document.getElementById('addonSuggest');
   if(suggestions.length>0){
@@ -899,23 +897,23 @@ function rStep6(){
 
   // Pricing summary
   const lines=[
-    {k:'Structure (Tank + Frame + Hardware)',v:tStruct()},
-    {k:'LED Grow Lighting',v:tLed()},
-    {k:'Water Quality Sensors',v:tSen()},
-    {k:'Air Quality Sensor',v:tAir()},
-    {k:'Aeration, Mixing & Circulation',v:tThermal()},
-    {k:'Control System, Display & IoT',v:tElec()},
+    {k:'Structure (Tank + Frame + Hardware)',v:M(tStruct())},
+    {k:'LED Grow Lighting',v:M(tLed())},
+    {k:'Water Quality Sensors',v:M(tSen())},
+    {k:'Air Quality Sensor',v:M(tAir())},
+    {k:'Aeration, Mixing & Circulation',v:M(tThermal())},
+    {k:'Control System, Display & IoT',v:M(tElec())},
   ];
-  if(ST.heater){const hp=cfg().heater.reduce((a,h)=>a+h.price,0);lines.push({k:'Culture Heater (Add-on)',v:hp});}
-  if(ST.wavemaker&&cfg().wavemaker)lines.push({k:'Wavemaker (Add-on)',v:cfg().wavemaker.price});
+  if(ST.heater){const hp=cfg().heater.reduce((a,h)=>a+h.price,0);lines.push({k:'Culture Heater (Add-on)',v:M(hp)});}
+  if(ST.wavemaker&&cfg().wavemaker)lines.push({k:'Wavemaker (Add-on)',v:M(cfg().wavemaker.price)});
   if(ST.iotDash){
-    lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:ST.conn==='wifi'?3760:22000});
-    lines.push({k:'Cloud IoT Dashboard',v:35000});
+    lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:M(ST.conn==='wifi'?3760:22000)});
+    lines.push({k:'Cloud IoT Dashboard',v:M(35000)});
   }
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
   const st=sub();
   ph+=`<div class="row total"><span class="k">Total (ex-GST)</span><span class="v">${F(st)}</span></div>`;
-  ph+=`<div class="row"><span class="k" style="font-size:10px;color:var(--ink4)">GST @18% applicable additionally</span><span class="v" style="font-size:10px;color:var(--ink4)">${F(gst())}</span></div>`;
+  ph+=`<div class="row"><span class="k" style="font-size:10px;color:var(--ink4)">GST @18% applicable additionally</span><span class="v" style="font-size:10px;color:var(--ink4)"></span></div>`;
   document.getElementById('sPL').innerHTML=ph;
   document.getElementById('sGr').textContent=F(st);
 }
@@ -949,8 +947,8 @@ function exportXL(){
   c1.push(['Air Sensors',ST.air==='A'?'Inlet Only':ST.air==='O'?'Outlet Only':'Inlet + Outlet'],
     ['Culture Heater',ST.heater?'Yes — '+cfg().heater.map(h=>h.w+'W').join(' + '):'No'],
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
-    ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only (\u20B93,760)':'WiFi + 4G LTE (\u20B922,000)'):'Not selected'],
-    ['Cloud IoT Dashboard',ST.iotDash?'Yes (\u20B935,000 + annual TBD)':'No'],
+    ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only ('+F(M(3760))+')':'WiFi + 4G LTE ('+F(M(22000))+')'):'Not selected'],
+    ['Cloud IoT Dashboard',ST.iotDash?'Yes ('+F(M(35000))+' + annual TBD)':'No'],
     [''],['TOTAL (ex-GST)',st],['Note','GST @18% applicable additionally'],[''],
     ['REMARKS',v('fRemarks')||'None'],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
@@ -1055,7 +1053,7 @@ function collectData(){
     if(s.on){
       let detail=nm[k]+': ON';
       if(s.opts)detail+=` (${s.opts[s.v].name} — ${s.opts[s.v].grade})`;
-      sensors[k]={selected:true,variant:s.opts?s.opts[s.v].name:'Standard',price:senP(k)};
+      sensors[k]={selected:true,variant:s.opts?s.opts[s.v].name:'Standard',price:M(senP(k))};
     } else {
       sensors[k]={selected:false,variant:'',price:0};
     }
@@ -1067,31 +1065,31 @@ function collectData(){
       date:v('fDate'),reference:v('fRef'),delivery:v('fLoc')
     },
     config:{
-      tank:c.label,tank_price:c.tank,
+      tank:c.label,tank_price:M(c.tank),
       frame:ST.frame==='ss'?'SS304 Matte':'MS Powder Coated',
-      frame_price:ST.frame==='ss'?c.frameSS:c.frameMS,
-      hardware_price:c.hw,
+      frame_price:M(ST.frame==='ss'?c.frameSS:c.frameMS),
+      hardware_price:M(c.hw),
       color:v('fColor')||'Not specified',
       led:ST.led==='strip'?'LED Grow Strips':'High-Output LED Tubes',
-      led_price:tLed(),
+      led_price:M(tLed()),
       sensors:sensors,
-      sensors_total:tSen(),
+      sensors_total:M(tSen()),
       air_sensor:ST.air==='A'?'Inlet Only':ST.air==='O'?'Outlet Only':'Inlet + Outlet',
-      air_price:tAir(),
+      air_price:M(tAir()),
       heater:ST.heater?c.heater.map(h=>h.w+'W').join(' + '):'Not selected',
-      heater_price:ST.heater?c.heater.reduce((a,h)=>a+h.price,0):0,
+      heater_price:ST.heater?M(c.heater.reduce((a,h)=>a+h.price,0)):0,
       aeration:c.pump.lpm,
       wavemaker:(ST.wavemaker&&c.wavemaker)?c.wavemaker.lpm:'Not selected',
-      wavemaker_price:(ST.wavemaker&&c.wavemaker)?c.wavemaker.price:0,
+      wavemaker_price:(ST.wavemaker&&c.wavemaker)?M(c.wavemaker.price):0,
       connectivity:ST.iotDash?(ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE'):'Not selected',
-      connectivity_price:ST.iotDash?(ST.conn==='wifi'?3760:22000):0,
+      connectivity_price:ST.iotDash?M(ST.conn==='wifi'?3760:22000):0,
       iot_dashboard:ST.iotDash?'Yes':'No',
-      iot_dashboard_price:ST.iotDash?35000:0,
+      iot_dashboard_price:ST.iotDash?M(35000):0,
       iot_suite:ST.iotDash?((ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE')+' + Cloud IoT Dashboard'):'Not selected',
     },
     remarks:v('fRemarks'),
     pricing:{
-      subtotal:sub(),gst:gst(),grand_total:sub()
+      subtotal:sub(),grand_total:sub()
     }
   };
 }
@@ -1127,6 +1125,15 @@ function submitQuote(){
   });
 }
 
+/* ════════ FIXED PRICE LABELS ════════ */
+function rFixedPrices(){
+  const el=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=F(M(v));};
+  el('senConvPrice',SIG+ENCL);
+  el('airPrA',42500);el('airPrO',42500);el('airPrB',78000);
+  el('elPanelPr',ELEC.panel);el('elHmiPr',HMI);el('elMiscPr',ELEC.misc);
+  el('iotDashPr',35000);el('connWifiPr',3760);el('conn4gPr',22000);
+}
+
 /* ════════ INIT ════════ */
 function genRef(){
   const d=new Date();
@@ -1141,7 +1148,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('fRef').value=genRef();
   document.getElementById('fColor').value='RAL 7035 - Light Grey';
   renderSwatches();
-  rStep2();rSensors();syncIoTUI();tick();
+  rStep2();rSensors();rFixedPrices();syncIoTUI();tick();
 });
 </script>
 
@@ -1170,7 +1177,7 @@ function doPost(e) {
       'Tank', 'Frame', 'Color', 'LED Type',
       'pH', 'Turbidity', 'TDS', 'Temperature', 'Level', 'DO',
       'Air Sensor', 'IoT Suite',
-      'Subtotal (INR)', 'GST (INR)', 'Grand Total (INR)',
+      'Total ex-GST (INR)',
       'Remarks'
     ]);
   }
@@ -1181,7 +1188,7 @@ function doPost(e) {
   var p = data.pricing;
 
   function senStr(k) {
-    if (!s[k].selected) return 'Not selected';
+    if (!s[k] || !s[k].selected) return 'Not selected';
     return s[k].variant + ' (₹' + s[k].price + ')';
   }
 
@@ -1197,7 +1204,7 @@ function doPost(e) {
     senStr('temp'), senStr('level'), senStr('do'),
     cfg.air_sensor + ' (₹' + cfg.air_price + ')',
     cfg.iot_suite,
-    p.subtotal, p.gst, p.grand_total,
+    p.grand_total,
     data.remarks || ''
   ]);
 
