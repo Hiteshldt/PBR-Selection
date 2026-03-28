@@ -203,7 +203,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
       <div class="field"><label>Contact Person</label><input id="fName" placeholder="Full name"></div>
       <div class="field"><label>Email / Phone</label><input id="fContact" placeholder="Email or phone number"></div>
       <div class="field"><label>Quotation Date</label><input type="date" id="fDate"></div>
-      <div class="field"><label>Reference #</label><input id="fRef" value="CBL-PBR-001"></div>
+      <div class="field"><label>Reference #</label><input id="fRef" readonly style="background:var(--sf2);cursor:default"></div>
       <div class="field span-2"><label>Delivery Location</label><input id="fLoc" placeholder="Full delivery address"></div>
     </div>
   </div>
@@ -326,8 +326,8 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
     </div>
     <div class="opts opts3" id="airOpts">
       <div class="opt pk" data-air="A" onclick="pAir(this)"><div class="opt-n">Inlet Only</div><div class="opt-d">Single module at air inlet. Monitors incoming air quality fed to the culture.</div><div class="opt-p">&#8377;42,500</div></div>
-      <div class="opt" data-air="O" onclick="pAir(this)"><div class="opt-n">Outlet Only</div><div class="opt-d">Single module at air outlet. Monitors exhaust gases &mdash; CO&#8322; production by the culture.</div><div class="opt-p">&#8377;42,500</div></div>
-      <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; CO&#8322; air purification efficiency.</div><div class="opt-p">&#8377;78,000</div></div>
+      <div class="opt" data-air="O" onclick="pAir(this)"><div class="opt-n">Outlet Only</div><div class="opt-d">Single module at air outlet. Monitors exhaust gases &mdash; </div><div class="opt-p">&#8377;42,500</div></div>
+      <div class="opt" data-air="B" onclick="pAir(this)"><div class="opt-n">Inlet + Outlet</div><div class="opt-d">Dual modules at inlet &amp; outlet. Differential analysis &mdash; </div><div class="opt-p">&#8377;78,000</div></div>
     </div>
   </div>
   <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Control & IoT</button></div>
@@ -397,7 +397,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
   </div>
   <div class="sum-2">
     <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
-    <div class="gb"><div class="gl">Grand Total (incl. 18% GST)</div><div class="gv" id="sGr">--</div><div class="gs">Subtotal: <span id="sSub">--</span> &middot; GST: <span id="sGst">--</span></div></div>
+    <div class="gb"><div class="gl">Total (ex-GST)</div><div class="gv" id="sGr">--</div><div class="gs">GST @18% applicable additionally</div></div>
   </div>
   <div class="card">
     <div class="card-h"><h2>Comments / Remarks</h2><p>Optional &mdash; add any notes for our team</p></div>
@@ -434,7 +434,7 @@ table.sp{width:100%;border-collapse:collapse}table.sp td{padding:5px 10px;font-s
 
 </main>
 
-<div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">50L</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Subtotal</span><span class="tv" id="tkSub">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Grand Total</span><span class="big" id="tkGr">--</span></div></div>
+<div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">50L</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Total (ex-GST)</span><span class="big" id="tkGr">--</span></div></div>
 <a class="wa-fab" href="https://wa.me/917005192650?text=Hi%20Carbelim%2C%20I%20have%20a%20query%20about%20the%20PBR%20configurator." target="_blank" rel="noopener" title="Chat with us on WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785c-1.735 0-3.44-.466-4.932-1.348l-.354-.21-3.667.962.979-3.572-.231-.368A9.68 9.68 0 012.27 12.06c0-5.394 4.39-9.784 9.79-9.784a9.72 9.72 0 016.924 2.869 9.72 9.72 0 012.866 6.92c-.004 5.394-4.394 9.784-9.79 9.784zM12.05.516C5.557.516.26 5.813.26 12.06a11.49 11.49 0 001.537 5.748L0 24l6.335-1.662A11.51 11.51 0 0012.05 24c6.493 0 11.79-5.297 11.79-11.94C23.84 5.813 18.543.516 12.05.516z"/></svg>
   <span class="wa-tooltip">Chat with us</span>
@@ -532,8 +532,7 @@ function gt(){return sub()+gst();}
 function tick(){
   document.getElementById('tkTank').textContent=cfg().label;
   document.getElementById('tkSen').textContent=F(tSen());
-  document.getElementById('tkSub').textContent=F(sub());
-  document.getElementById('tkGr').textContent=F(gt());
+  document.getElementById('tkGr').textContent=F(sub());
 }
 
 /* ════════ RENDER STEP 2 — Structure only (no LED) ════════ */
@@ -844,10 +843,8 @@ function rBOM(){
     if(ST.wavemaker&&c.wavemaker)s+=row(`Wavemaker (${c.wavemaker.lpm})`,1,'pcs',c.wavemaker.price,'Timer-based relay, recirculation');
     srow(s);}
 
-  const st=sub(),gs=gst();
-  h+=`<tr class="sub"><td colspan="5" class="ar">Sub-total (ex-GST)</td><td class="ar">${F(st)}</td><td></td></tr>`;
-  h+=`<tr class="sub"><td colspan="5" class="ar">GST @ 18%</td><td class="ar">${F(gs)}</td><td></td></tr>`;
-  h+=`<tr class="grand"><td colspan="5" class="ar">Grand Total (incl. GST)</td><td class="ar">${F(st+gs)}</td><td></td></tr>`;
+  const st=sub();
+  h+=`<tr class="grand"><td colspan="5" class="ar">Total (ex-GST)</td><td class="ar">${F(st)}</td><td>GST @18% additional</td></tr>`;
   tb.innerHTML=h;
   document.getElementById('bomBdg').innerHTML=badges();
 }
@@ -916,12 +913,11 @@ function rStep6(){
     lines.push({k:'Cloud IoT Dashboard',v:35000});
   }
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
-  const st=sub(),gs=gst(),gr=gt();
-  ph+=`<div class="row total"><span class="k">Grand Total (incl. GST)</span><span class="v">${F(gr)}</span></div>`;
+  const st=sub();
+  ph+=`<div class="row total"><span class="k">Total (ex-GST)</span><span class="v">${F(st)}</span></div>`;
+  ph+=`<div class="row"><span class="k" style="font-size:10px;color:var(--ink4)">GST @18% applicable additionally</span><span class="v" style="font-size:10px;color:var(--ink4)">${F(gst())}</span></div>`;
   document.getElementById('sPL').innerHTML=ph;
-  document.getElementById('sGr').textContent=F(gr);
-  document.getElementById('sSub').textContent=F(st);
-  document.getElementById('sGst').textContent=F(gs);
+  document.getElementById('sGr').textContent=F(st);
 }
 
 /* ════════ NAV ════════ */
@@ -941,7 +937,7 @@ function go(n){
 function exportXL(){
   // Ensure BOM is rendered before export
   rBOM();
-  const wb=XLSX.utils.book_new(),st=sub(),gs=gst(),gr=gt(),v=id=>document.getElementById(id).value||'';
+  const wb=XLSX.utils.book_new(),st=sub(),v=id=>document.getElementById(id).value||'';
   const c1=[['CARBELIM PRIVATE LIMITED'],['Photobioreactor (PBR) Custom Design \u2014 Quotation'],[''],
     ['Organisation',v('fOrg')],['Contact',v('fName')],['Email/Phone',v('fContact')],['Date',v('fDate')],['Reference',v('fRef')],['Delivery',v('fLoc')],[''],
     ['CONFIGURATION'],['Tank Size',cfg().label],['Frame',ST.frame==='ss'?'SS304 Matte':'MS Powder Coated'],
@@ -955,7 +951,7 @@ function exportXL(){
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes — '+cfg().wavemaker.lpm:'No'],
     ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only (\u20B93,760)':'WiFi + 4G LTE (\u20B922,000)'):'Not selected'],
     ['Cloud IoT Dashboard',ST.iotDash?'Yes (\u20B935,000 + annual TBD)':'No'],
-    [''],['Sub-total',st],['GST @18%',gs],['GRAND TOTAL',gr],[''],
+    [''],['TOTAL (ex-GST)',st],['Note','GST @18% applicable additionally'],[''],
     ['REMARKS',v('fRemarks')||'None'],[''],['Ex-works Coimbatore. Validity 30 days.']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
@@ -1012,9 +1008,9 @@ function exportPDF(){
       ${plClone.innerHTML}
     </div>
     <div style="text-align:center;margin-top:12px;padding:16px;background:#065f46;color:#fff;border-radius:8px">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.7">Grand Total (incl. 18% GST)</div>
-      <div style="font-size:22px;font-weight:800;margin-top:4px">${F(gt())}</div>
-      <div style="font-size:9px;opacity:.6;margin-top:2px">Subtotal: ${F(sub())} | GST: ${F(gst())}</div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.7">Total (ex-GST)</div>
+      <div style="font-size:22px;font-weight:800;margin-top:4px">${F(sub())}</div>
+      <div style="font-size:9px;opacity:.6;margin-top:2px">GST @18% applicable additionally</div>
     </div>`;
     wrap.appendChild(plDiv);
   }
@@ -1095,7 +1091,7 @@ function collectData(){
     },
     remarks:v('fRemarks'),
     pricing:{
-      subtotal:sub(),gst:gst(),grand_total:gt()
+      subtotal:sub(),gst:gst(),grand_total:sub()
     }
   };
 }
@@ -1132,8 +1128,17 @@ function submitQuote(){
 }
 
 /* ════════ INIT ════════ */
+function genRef(){
+  const d=new Date();
+  const dd=String(d.getDate()).padStart(2,'0');
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const yy=String(d.getFullYear()).slice(-2);
+  const sn=String(Math.floor(Math.random()*900)+100); // 3-digit random serial
+  return 'CBL-PBR-'+dd+mm+yy+'-'+sn;
+}
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('fDate').valueAsDate=new Date();
+  document.getElementById('fRef').value=genRef();
   document.getElementById('fColor').value='RAL 7035 - Light Grey';
   renderSwatches();
   rStep2();rSensors();syncIoTUI();tick();
