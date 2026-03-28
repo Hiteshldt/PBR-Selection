@@ -1,0 +1,15 @@
+{
+  "name": "carbelim-pbr-configurator",
+  "version": "1.0.0",
+  "description": "Carbelim Photobioreactor (PBR) Product Configurator & Quotation Tool",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "nodemailer": "^6.9.14"
+  }
+}

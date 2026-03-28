@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carbelim — PBR Product Configurator</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-brand"><span class="logo">CARBELIM PRIVATE LIMITED</span><span class="product">Photobioreactor (PBR) Custom Design</span></div>
+  <div class="topbar-end">Product Configuration &amp; Quotation Document &bull; v1.1<br>Ex-works Coimbatore, India &bull; Prices indicative &bull; Validity 30 days</div>
+</header>
+<nav class="step-wrap"><div class="stepper" id="stepper">
+  <div class="st on" onclick="go(1)"><span class="circle">1</span><span class="label">Client</span></div>
+  <div class="st" onclick="go(2)"><span class="circle">2</span><span class="label">Structure</span></div>
+  <div class="st" onclick="go(3)"><span class="circle">3</span><span class="label">Technology</span></div>
+  <div class="st" onclick="go(4)"><span class="circle">4</span><span class="label">Control & IoT</span></div>
+  <div class="st" onclick="go(5)"><span class="circle">5</span><span class="label">Sensors</span></div>
+  <div class="st" onclick="go(6)"><span class="circle">6</span><span class="label">Review</span></div>
+  <div class="st" onclick="go(7)"><span class="circle">7</span><span class="label">Download</span></div>
+</div></nav>
+
+<main class="main">
+
+<!-- 1. CLIENT -->
+<section class="vw on" id="v1">
+  <div class="card">
+    <div class="card-h"><h2>1. Client Information</h2></div>
+    <div class="grid-2">
+      <div class="field span-2"><label>Organisation</label><input id="fOrg" placeholder="Enter organisation name"></div>
+      <div class="field"><label>Contact Person</label><input id="fName" placeholder="Full name"></div>
+      <div class="field"><label>Email / Phone</label><input id="fContact" placeholder="Email or phone number"></div>
+      <div class="field"><label>Quotation Date</label><input type="date" id="fDate"></div>
+      <div class="field"><label>Reference #</label><input id="fRef" readonly style="background:var(--sf2);cursor:default"></div>
+      <div class="field span-2"><label>Delivery Location</label><input id="fLoc" placeholder="Full delivery address"></div>
+    </div>
+  </div>
+  <div class="nav"><div></div><button class="btn bp" onclick="go(2)">Continue</button></div>
+</section>
+
+<!-- 2. PBR STRUCTURE -->
+<section class="vw" id="v2">
+  <div class="card">
+    <div class="card-h"><h2>2. PBR Structure &mdash; Tank &amp; Frame</h2></div>
+    <div class="sec-label"><span class="n">1</span>Photobioreactor (Flat Shaped) &mdash; Culture Tank</div>
+    <p style="font-size:10px;color:var(--ink3);margin-bottom:10px">100% Virgin Cast acrylic &bull; Sealed joints &bull; Bottom drain port with valves &bull; Full transparency &bull; Chemically inert &bull; 5&ndash;45 &deg;C</p>
+    <div class="sizes" id="szCards"></div>
+
+    <!-- Custom tank inputs (shown when Custom is selected) -->
+    <div id="customTankInputs" style="display:none">
+      <div class="ctc">
+        <div class="field" style="margin-bottom:12px">
+          <label>Volume &mdash; <strong id="customVolLabel" style="color:var(--g)">50L</strong></label>
+          <div class="ctc-slider-row">
+            <span>5L</span>
+            <input type="range" id="fCustomSlider" min="5" max="50" value="50" oninput="updateCustomVol(true)">
+            <span>50L</span>
+            <input type="number" id="fCustomVol" min="5" max="50" value="50" oninput="updateCustomVol(false)">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Width (cm) &mdash; min 20</label><input type="number" id="fCustomW" min="20" placeholder="e.g. 60" onchange="updateCustomDim()"></div>
+          <div class="field"><label>Height (cm) &mdash; min 20</label><input type="number" id="fCustomH" min="20" placeholder="e.g. 40" onchange="updateCustomDim()"></div>
+          <div class="field"><label>Depth (cm) &mdash; min 20</label><input type="number" id="fCustomD" min="20" placeholder="e.g. 20" onchange="updateCustomDim()"></div>
+        </div>
+        <p style="font-size:9px;color:var(--ink4);margin-top:8px">Dimensions are for reference. Final size will be confirmed with our engineering team and shared with you.</p>
+      </div>
+    </div>
+
+    <div class="sec-label" id="frameSec"><span class="n">2</span>Frame Structure &amp; Hardware Kit</div>
+    <div class="opts" id="frameOpts"></div>
+    <div id="colorRow" style="display:block;margin-top:8px">
+      <div class="clr-picker">
+        <div class="clr-title"><span class="clr-dot"></span>Frame Powder-Coat Finish &mdash; Choose Your Colour</div>
+        <div class="clr-swatches" id="clrSwatches"></div>
+        <div class="clr-divider">Or choose your own</div>
+        <div class="clr-custom-row">
+          <div class="field">
+            <label>Choose Your Color Options ( write &ndash; color or code ) we can try to best match with your color code )</label>
+            <div class="clr-input-wrap">
+              <input type="text" id="fColor" placeholder="e.g. RAL 7035, Matte Black, Navy Blue, Pantone 432 C" oninput="customColorTyped()">
+              <input type="color" id="fColorPick" value="#D7D7D7" onchange="colorPickerChanged(this.value)" title="Pick any colour visually">
+            </div>
+          </div>
+        </div>
+        <div class="clr-preview" id="clrPreview">
+          <div class="pbr-diagram" id="pbrDiagram">
+            <div class="pbr-top" id="pbrTop" style="background:#D7D7D7"></div>
+            <div class="pbr-tank" id="pbrTank" style="border-color:#D7D7D7">
+              <div class="led-strip ll"></div>
+              <div class="led-strip lr"></div>
+              <div class="tank-label">Culture</div>
+              <div class="algae">
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+              </div>
+            </div>
+            <div class="pbr-bottom" id="pbrBottom" style="background:#D7D7D7"></div>
+            <div class="pbr-legs">
+              <div class="pbr-leg" id="pbrLegL" style="background:#D7D7D7"></div>
+              <div class="pbr-leg" id="pbrLegR" style="background:#D7D7D7"></div>
+            </div>
+            <div class="pbr-label">Frame Preview</div>
+          </div>
+          <div class="cpv-swatch" id="cpvSwatch" style="background:#D7D7D7"></div>
+          <div class="cpv-info">
+            <div class="cpv-name" id="cpvName">RAL 7035 &mdash; Light Grey</div>
+            <div class="cpv-code" id="cpvCode">#D7D7D7</div>
+            <div class="cpv-note">Live preview of your PBR frame finish. The acrylic tank remains transparent &mdash; only the frame structure (top, bottom, legs) takes the powder-coat colour. Final shade may vary slightly depending on batch &amp; substrate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-box" id="sizePreview"></div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(1)">Back</button><button class="btn bp" onclick="go(3)">Continue to Technology</button></div>
+</section>
+
+<!-- 3. CORE TECHNOLOGY -->
+<section class="vw" id="v3">
+  <div class="card">
+    <div class="card-h"><h2>3. Core Technology &mdash; Lighting, Heating, Aeration &amp; Mixing</h2><p>Configured for your tank size &bull; Toggle components on/off</p></div>
+
+    <div class="sec-label" id="ledSec"><span class="n">1</span>LED Grow Lighting</div>
+    <div id="ledOpts" class="opts"></div>
+    <div id="ledDrvRow" class="inc" style="margin-top:6px"></div>
+
+    <div class="sec-label"><span class="n">2</span>Culture Heater (Optional)</div>
+    <div id="heaterToggle"></div>
+
+    <div class="sec-label"><span class="n">3</span>Aeration &amp; Diffusion</div>
+    <div id="elDynamic"></div>
+
+    <div class="sec-label"><span class="n">4</span>Wavemaker (Optional)</div>
+    <div id="wavemakerToggle"></div>
+
+    <div class="sec-label"><span class="n">5</span>Auxiliary Circulation</div>
+    <div id="fanDynamic"></div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(2)">Back</button><button class="btn bp" onclick="go(4)">Continue to Control & IoT</button></div>
+</section>
+
+<!-- 4. CONTROL & IoT -->
+<section class="vw" id="v4">
+  <div class="card">
+    <div class="card-h"><h2>4. Control System, Display &amp; IoT</h2><p>Toggle components as needed</p></div>
+    <div id="controlContent"></div>
+  </div>
+
+  <div class="card" id="iotCard">
+    <div class="card-h"><h2>4.2 Connectivity &amp; IoT Options</h2></div>
+
+    <div class="sec-label" style="margin-top:0"><span class="n">A</span>Cloud IoT Dashboard</div>
+    <div class="sen on" id="sen-iotDash"><div class="sen-hd" onclick="tog('iotDash')">
+      <span class="sen-nm">Cloud IoT Dashboard &mdash; Remote Monitoring, Control &amp; Automation</span>
+      <span class="sen-pr" id="iotDashPr"></span>
+      <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="tog('iotDash')"><span class="tk"></span></label>
+    </div>
+      <div class="sen-bd"><div class="sen-sp"><table>
+        <tr><td>Dashboard</td><td>AWS-based real-time WebSocket dashboard &bull; Web + Mobile access &bull; No install required</td></tr>
+        <tr><td>Data Retention</td><td>30-day hot storage &bull; 2-year cold archive &bull; Backup server</td></tr>
+        <tr><td>Control</td><td>Remote relay ON/OFF &bull; Setpoint adjustment &bull; Automation rules &bull; Alert notifications</td></tr>
+        <tr><td>Payment</td><td>One-time setup: &#8377;35,000 &bull; Annual subscription: TBD (for continued access, history, automation &amp; backup)</td></tr>
+      </table></div></div>
+    </div>
+
+    <div id="connSection">
+      <div class="sec-label"><span class="n">B</span>Connectivity (choose one)</div>
+      <div class="opts" id="connOpts">
+        <div class="opt pk" data-conn="wifi" onclick="pConn(this)"><div class="opt-n">WiFi Only (Standard)</div><div class="opt-d">802.11 b/g/n 2.4 GHz via customer router &bull; MQTT over TLS &bull; QoS 1</div><div class="opt-p" id="connWifiPr"></div></div>
+        <div class="opt" data-conn="4g" onclick="pConn(this)"><div class="opt-n">WiFi + 4G LTE Cat-4</div><div class="opt-d">Standalone 4G SIM connectivity &bull; No router required &bull; Always-on remote access</div><div class="opt-p" id="conn4gPr"></div></div>
+      </div>
+    </div>
+    <div class="conn-note" id="connHint">Enable Cloud IoT Dashboard to choose a connectivity option for remote monitoring and control.</div>
+  </div>
+  <div id="noHmiNotice" style="display:none"></div>
+  <div class="nav"><button class="btn bs" onclick="go(3)">Back</button><button class="btn bp" onclick="go(5)">Continue to Sensors</button></div>
+</section>
+
+<!-- 5. SENSORS (Water + Air combined) -->
+<section class="vw" id="v5">
+  <div id="sensorNoHmi" style="display:none"></div>
+  <div class="card" id="sensorCard">
+    <div class="card-h"><h2>5. Water Quality Sensors</h2><p>Toggle each sensor &bull; Select variant where available</p></div>
+    <div id="sensorCards"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><h2>5.2 Air Quality Sensor &mdash; ZPHS01B Multi-in-One Module</h2><label class="sw" style="margin-left:auto" onclick="event.stopPropagation()"><input type="checkbox" id="airToggleChk" onchange="togAirSensor()"><span class="tk"></span></label></div>
+    <div id="airBody">
+      <p style="font-size:10px;color:var(--ink3);margin-bottom:12px">Integrated 11-parameter air quality module with laser dust sensor, infrared CO&#8322;, electrochemical gas sensors, and temperature/humidity sensing. UART (TTL level) communication.</p>
+      <div class="ap-grid">
+        <div class="ap"><span class="ak">PM1.0 / PM2.5 / PM10</span><span class="av">0&ndash;1000 &micro;g/m&sup3; &bull; &plusmn;15 or &plusmn;15%</span></div>
+        <div class="ap"><span class="ak">CO&#8322;</span><span class="av">0&ndash;5000 ppm &bull; &plusmn;(50ppm+5%)</span></div>
+        <div class="ap"><span class="ak">CH&#8322;O (HCHO)</span><span class="av">0&ndash;6.25 mg/m&sup3; &bull; &plusmn;0.03 or &plusmn;20%</span></div>
+        <div class="ap"><span class="ak">TVOC</span><span class="av">0&ndash;3 grades &bull; &le;20 s</span></div>
+        <div class="ap"><span class="ak">O&#8323; (Ozone)</span><span class="av">0&ndash;10 ppm &bull; 0.01 res &bull; &plusmn;0.1</span></div>
+        <div class="ap"><span class="ak">CO</span><span class="av">0&ndash;500 ppm &bull; 0.1 res &bull; &plusmn;10%</span></div>
+        <div class="ap"><span class="ak">NO&#8322;</span><span class="av">0.1&ndash;10 ppm &bull; 0.05 res</span></div>
+        <div class="ap"><span class="ak">Temperature</span><span class="av">-20 to 65 &deg;C &bull; &plusmn;0.5 &deg;C</span></div>
+        <div class="ap"><span class="ak">Humidity</span><span class="av">0&ndash;100% RH &bull; &plusmn;3%</span></div>
+        <div class="ap"><span class="ak">Interface</span><span class="av">UART TTL 9600 &bull; 5V &bull; &lt;300mA</span></div>
+        <div class="ap"><span class="ak">Dimensions</span><span class="av">135 &times; 50 &times; 26.2 mm</span></div>
+        <div class="ap"><span class="ak">Warm-up</span><span class="av">3 min (first power-on)</span></div>
+      </div>
+      <div id="airOpts"></div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(4)">Back</button><button class="btn bp" onclick="go(6)">Review Configuration</button></div>
+</section>
+
+<!-- 6. REVIEW & RECOMMENDATIONS -->
+<section class="vw" id="v6">
+  <div class="card"><div class="card-h"><h2>6. Review &amp; Recommendations</h2></div>
+    <div class="cl-g" id="sCl"></div>
+    <div class="badges" id="sBdg" style="margin-top:10px"></div>
+  </div>
+  <div id="addonSuggest" style="display:none"></div>
+  <div class="card">
+    <div class="card-h"><h2>Bill of Materials &amp; Indicative Pricing</h2><p>Prices in INR, ex-works. GST @18% additional.</p></div>
+    <div class="badges" id="bomBdg" style="margin-bottom:12px"></div>
+    <div class="tbl-wrap"><table class="bom"><thead><tr><th>#</th><th>Component</th><th class="ac">Qty</th><th>Unit</th><th class="ar">Price (INR)</th><th class="ar">Total (INR)</th><th>Remarks</th></tr></thead><tbody id="bomTb"></tbody></table></div>
+  </div>
+  <div class="sum-2">
+    <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
+    <div class="gb"><div class="gl">Total (ex-GST)</div><div class="gv" id="sGr">--</div><div class="gs">GST @18% applicable additionally</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h"><h2>Comments / Remarks</h2><p>Optional &mdash; add any notes for our team</p></div>
+    <div class="field"><label>Your Comments or Special Requirements</label><textarea id="fRemarks" rows="4" placeholder="e.g. Need delivery by April, custom colour matching required, additional spare sensors, special packaging instructions..." style="width:100%;padding:10px 12px;border:1px solid var(--sf4);border-radius:8px;font-size:12px;font-family:inherit;color:var(--ink);background:var(--sf);resize:vertical;line-height:1.6;transition:.2s"></textarea></div>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(5)">Back</button><button class="btn bp" onclick="go(7)">Download &amp; Submit</button></div>
+</section>
+
+<!-- 7. DOWNLOAD & SUBMIT -->
+<section class="vw" id="v7">
+  <div class="card" style="text-align:center">
+    <div class="card-h"><h2>7. Download &amp; Submit</h2></div>
+    <p style="font-size:11px;color:var(--ink3);margin-bottom:14px">Download your complete quotation or submit your configuration request.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bx" onclick="exportXL()">Download Quotation (.xlsx)</button>
+      <button class="btn bx" style="background:#1e40af" onclick="exportPDF()">Download PDF</button>
+      <button class="btn bx" id="btnSubmit" style="background:var(--tl)" onclick="submitQuote()">Submit Configuration Request</button>
+    </div>
+    <div id="submitStatus" style="margin-top:12px;font-size:12px;display:none"></div>
+  </div>
+  <div class="card" style="font-size:10px;color:var(--ink3);line-height:1.7">
+    <div class="card-h"><h2>Notes &amp; Terms</h2></div>
+    <ul style="padding-left:16px">
+      <li>All prices are indicative and ex-works Coimbatore, India.</li>
+      <li>GST @ 18% applicable as per Indian tax regulations.</li>
+      <li>Quotation validity: 30 days from the date above.</li>
+      <li>Delivery timelines will be discussed upon order confirmation.</li>
+      <li>Sensor variants (pH, DO) can be swapped at order time; prices will adjust accordingly.</li>
+      <li>Payment terms: 50% advance, 50% before dispatch, unless otherwise agreed.</li>
+    </ul>
+  </div>
+  <div class="nav"><button class="btn bs" onclick="go(6)">Back to Review</button><div></div></div>
+</section>
+
+</main>
+
+<div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">Custom</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Total (ex-GST)</span><span class="big" id="tkGr">--</span></div></div>
+<a class="wa-fab" href="https://wa.me/917005192650?text=Hi%20Carbelim%2C%20I%20have%20a%20query%20about%20the%20PBR%20configurator." target="_blank" rel="noopener" title="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785c-1.735 0-3.44-.466-4.932-1.348l-.354-.21-3.667.962.979-3.572-.231-.368A9.68 9.68 0 012.27 12.06c0-5.394 4.39-9.784 9.79-9.784a9.72 9.72 0 016.924 2.869 9.72 9.72 0 012.866 6.92c-.004 5.394-4.394 9.784-9.79 9.784zM12.05.516C5.557.516.26 5.813.26 12.06a11.49 11.49 0 001.537 5.748L0 24l6.335-1.662A11.51 11.51 0 0012.05 24c6.493 0 11.79-5.297 11.79-11.94C23.84 5.813 18.543.516 12.05.516z"/></svg>
+  <span class="wa-tooltip">Chat with us</span>
+</a>
+<footer class="footer">CARBELIM PRIVATE LIMITED &bull; Incubated at IIT Madras IC and Accelerated by IIM-Lucknow EIC &bull; Coimbatore, India</footer>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
