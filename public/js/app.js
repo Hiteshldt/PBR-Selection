@@ -5,7 +5,7 @@ const F=n=>'\u20B9'+n.toLocaleString('en-IN');
 /* ════════ TANK CONFIG ════════
    - Custom: up to 50L with user-defined volume & dimensions
    - 100, 250, 500: fixed sizes
-   - 1000L+: contact us (not configurable)
+   - 1000L: largest configurable size; 1000L+: contact us
    - Frame + Hardware Kit combined into one price
    - LED strips 30% lower, tubes unchanged (always more expensive)
    - LED driver: 3000–6000 range
@@ -582,13 +582,11 @@ function syncSensorPage(){
     }
     if(sCard)sCard.style.display='none';
     // hide air card (next sibling card)
-    const airC=document.querySelector('#v4 .card:nth-of-type(2)');
-    if(airC)airC.style.display='none';
+    if(airCard)airCard.style.display='none';
   } else {
     if(noHmi)noHmi.style.display='none';
     if(sCard)sCard.style.display='block';
-    const airC=document.querySelector('#v4 .card:nth-of-type(2)');
-    if(airC)airC.style.display='block';
+    if(airCard)airCard.style.display='block';
   }
 }
 
