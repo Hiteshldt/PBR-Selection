@@ -451,35 +451,35 @@ const F=n=>'\u20B9'+n.toLocaleString('en-IN');
 const T={
   50:{label:'50 Litre',tank:63000,
     frameSS:26775,frameMS:17000,hw:6300,
-    ledStrip:{qty:5,unit:3640,label:'5 strips'},ledTube:{qty:3,unit:5860,label:'3 tubes'},ledDrv:4200,
+    ledStrip:{qty:4,unit:3640,label:'4 strips'},ledTube:{qty:2,unit:5860,label:'2 tubes'},ledDrv:4200,
     heater:[{w:100,price:3500}],
     pump:{lpm:'2\u00d74 LPM (8 LPM)',w:'4W',price:2800},
     diffuser:{desc:'Single outlet',qty:1,price:1800},
     wavemaker:null,fans:1,fanPrice:3650},
   100:{label:'100 Litre',tank:95000,
     frameSS:35000,frameMS:22000,hw:7500,
-    ledStrip:{qty:6,unit:3520,label:'6 strips'},ledTube:{qty:4,unit:5740,label:'4 tubes'},ledDrv:4200,
+    ledStrip:{qty:4,unit:3920,label:'4 strips'},ledTube:{qty:2,unit:6340,label:'2 tubes'},ledDrv:4200,
     heater:[{w:200,price:5000}],
     pump:{lpm:'10\u201315 LPM',w:'8W',price:4200},
     diffuser:{desc:'Dual outlet',qty:1,price:2500},
     wavemaker:null,fans:1,fanPrice:3650},
   250:{label:'250 Litre',tank:150000,
     frameSS:52000,frameMS:33000,hw:9500,
-    ledStrip:{qty:8,unit:3410,label:'8 strips'},ledTube:{qty:5,unit:5625,label:'5 tubes'},ledDrv:6500,
+    ledStrip:{qty:6,unit:3410,label:'6 strips'},ledTube:{qty:4,unit:5625,label:'4 tubes'},ledDrv:6500,
     heater:[{w:300,price:7000}],
     pump:{lpm:'20\u201325 LPM',w:'15W',price:7500},
     diffuser:{desc:'Multi-outlet bar',qty:1,price:4000},
     wavemaker:{lpm:'40 LPM',price:8000},fans:1,fanPrice:3650},
   500:{label:'500 Litre',tank:240000,
     frameSS:78000,frameMS:50000,hw:12000,
-    ledStrip:{qty:12,unit:3325,label:'12 strips'},ledTube:{qty:8,unit:5480,label:'8 tubes'},ledDrv:8500,
+    ledStrip:{qty:6,unit:3725,label:'6 strips'},ledTube:{qty:4,unit:6080,label:'4 tubes'},ledDrv:8500,
     heater:[{w:500,price:9500}],
     pump:{lpm:'45\u201355 LPM',w:'25W',price:14000},
     diffuser:{desc:'Diffuser manifold',qty:1,price:6500},
     wavemaker:{lpm:'60 LPM',price:12000},fans:2,fanPrice:3650},
   1000:{label:'1000 Litre',tank:380000,
     frameSS:120000,frameMS:78000,hw:15000,
-    ledStrip:{qty:16,unit:3240,label:'16 strips'},ledTube:{qty:10,unit:5360,label:'10 tubes'},ledDrv:12000,
+    ledStrip:{qty:8,unit:3640,label:'8 strips'},ledTube:{qty:6,unit:5860,label:'6 tubes'},ledDrv:12000,
     heater:[{w:500,price:9500},{w:500,price:9500}],
     pump:{lpm:'100\u2013120 LPM',w:'45W',price:25000},
     diffuser:{desc:'Manifold + ring diffuser',qty:1,price:10000},
@@ -644,7 +644,7 @@ function rStep3Dyn(){
   // LED
   const ls=c.ledStrip,lt=c.ledTube;
   document.getElementById('ledOpts').innerHTML=
-    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Spectrum optimised for photosynthesis &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(M(ls.qty*ls.unit))}</div></div>
+    `<div class="opt${ST.led==='strip'?' pk':''}" onclick="pLed('strip')"><div class="opt-n">LED Grow Strips</div><div class="opt-d">${ls.label}, full perimeter &bull; Full-spectrum grow light &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(M(ls.qty*ls.unit))}</div></div>
      <div class="opt${ST.led==='tube'?' pk':''}" onclick="pLed('tube')"><div class="opt-n">High-Output LED Grow Tubes</div><div class="opt-d">${lt.label}, enhanced PAR output &bull; Maximum lumination &bull; Relay-controlled &bull; 24V DC</div><div class="opt-p">${F(M(lt.qty*lt.unit))}</div></div>`;
   document.getElementById('ledDrvRow').innerHTML=`<div class="ib"><div class="in">LED Driver / Power Supply 24 V</div><div class="is">DIN-rail mount &bull; Overload &amp; short-circuit protection</div></div><div class="ie"><div class="ip">${F(M(c.ledDrv))}</div><div class="it">Included</div></div>`;
 
@@ -800,7 +800,7 @@ function rBOM(){
 
   s=0;sec('LED GROW LIGHTING');
   const ld=ST.led==='strip'?c.ledStrip:c.ledTube;
-  s+=row(ST.led==='strip'?'Full-Spectrum LED Grow Strips':'High-Output LED Grow Tubes',ld.qty,ST.led==='strip'?'strips':'tubes',ld.unit,'24V DC, photosynthesis-optimised');
+  s+=row(ST.led==='strip'?'Full-Spectrum LED Grow Strips':'High-Output LED Grow Tubes',ld.qty,ST.led==='strip'?'strips':'tubes',ld.unit,'24V DC, full-spectrum grow light');
   s+=row('LED Driver / PSU 24V',1,'pcs',c.ledDrv,'DIN-rail, OLP/SCP');
   srow(s);
 
