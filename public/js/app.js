@@ -13,66 +13,66 @@ const F=n=>'\u20B9'+n.toLocaleString('en-IN');
 */
 const T={
   custom:{label:'Custom',maxVol:50,minVol:5,
-    tank:62800,
-    frameSS:33075,frameMS:23300,
-    ledStrip:{qty:4,unit:2550,label:'4 strips'},ledTube:{qty:2,unit:5860,label:'2 tubes'},ledDrv:3180,
-    heater:[{w:100,price:2340}],
-    pump:{lpm:'2\u00d74 LPM (8 LPM)',w:'4W',price:2800},
-    diffuser:{desc:'Single outlet',qty:1,price:1760},
-    wavemaker:null,fans:1,fanPrice:2680},
-  100:{label:'100 Litre',tank:94500,
-    frameSS:42500,frameMS:29500,
-    ledStrip:{qty:4,unit:2745,label:'4 strips'},ledTube:{qty:2,unit:6340,label:'2 tubes'},ledDrv:3480,
-    heater:[{w:200,price:3350}],
-    pump:{lpm:'10\u201315 LPM',w:'8W',price:4200},
-    diffuser:{desc:'Dual outlet',qty:1,price:2460},
-    wavemaker:null,fans:1,fanPrice:2680},
-  250:{label:'250 Litre',tank:148500,
-    frameSS:61500,frameMS:42500,
-    ledStrip:{qty:6,unit:2390,label:'6 strips'},ledTube:{qty:4,unit:5625,label:'4 tubes'},ledDrv:4580,
-    heater:[{w:300,price:4680}],
-    pump:{lpm:'20\u201325 LPM',w:'15W',price:7500},
-    diffuser:{desc:'Multi-outlet bar',qty:1,price:3850},
-    wavemaker:{lpm:'40 LPM',price:7800},fans:1,fanPrice:2680},
-  500:{label:'500 Litre',tank:208500,
-    frameSS:90000,frameMS:62000,
-    ledStrip:{qty:6,unit:2610,label:'6 strips'},ledTube:{qty:4,unit:6080,label:'4 tubes'},ledDrv:5840,
-    heater:[{w:500,price:6350}],
-    pump:{lpm:'45\u201355 LPM',w:'25W',price:14000},
-    diffuser:{desc:'Diffuser manifold',qty:1,price:6280},
-    wavemaker:{lpm:'60 LPM',price:11800},fans:2,fanPrice:2680},
-  1000:{label:'1000 Litre',tank:312500,
-    frameSS:120000,frameMS:85000,
-    ledStrip:{qty:8,unit:2610,label:'8 strips'},ledTube:{qty:6,unit:6080,label:'6 tubes'},ledDrv:5840,
-    heater:[{w:500,price:6350},{w:500,price:6350}],
-    pump:{lpm:'60\u201380 LPM',w:'40W',price:17800},
-    diffuser:{desc:'Diffuser manifold (dual)',qty:2,price:6280},
-    wavemaker:{lpm:'80 LPM',price:14600},fans:2,fanPrice:2680}
+    tank:74105,
+    frameSS:39025,frameMS:27495,
+    ledStrip:{qty:4,unit:3010,label:'4 strips'},ledTube:{qty:2,unit:6915,label:'2 tubes'},ledDrv:3755,
+    heater:[{w:100,price:2760}],
+    pump:{lpm:'2\u00d74 LPM (8 LPM)',w:'4W',price:3305},
+    diffuser:{desc:'Single outlet',qty:1,price:2075},
+    wavemaker:null,fans:1,fanPrice:3165},
+  100:{label:'100 Litre',tank:111510,
+    frameSS:50150,frameMS:34810,
+    ledStrip:{qty:4,unit:3240,label:'4 strips'},ledTube:{qty:2,unit:7480,label:'2 tubes'},ledDrv:4105,
+    heater:[{w:200,price:3955}],
+    pump:{lpm:'10\u201315 LPM',w:'8W',price:4955},
+    diffuser:{desc:'Dual outlet',qty:1,price:2905},
+    wavemaker:null,fans:1,fanPrice:3165},
+  250:{label:'250 Litre',tank:175230,
+    frameSS:72570,frameMS:50150,
+    ledStrip:{qty:6,unit:2820,label:'6 strips'},ledTube:{qty:4,unit:6640,label:'4 tubes'},ledDrv:5405,
+    heater:[{w:300,price:5525}],
+    pump:{lpm:'20\u201325 LPM',w:'15W',price:8850},
+    diffuser:{desc:'Multi-outlet bar',qty:1,price:4545},
+    wavemaker:{lpm:'40 LPM',price:9205},fans:1,fanPrice:3165},
+  500:{label:'500 Litre',tank:246035,
+    frameSS:106200,frameMS:73160,
+    ledStrip:{qty:6,unit:3080,label:'6 strips'},ledTube:{qty:4,unit:7175,label:'4 tubes'},ledDrv:6890,
+    heater:[{w:500,price:7495}],
+    pump:{lpm:'45\u201355 LPM',w:'25W',price:16520},
+    diffuser:{desc:'Diffuser manifold',qty:1,price:7410},
+    wavemaker:{lpm:'60 LPM',price:13925},fans:2,fanPrice:3165},
+  1000:{label:'1000 Litre',tank:368750,
+    frameSS:141600,frameMS:100300,
+    ledStrip:{qty:8,unit:3080,label:'8 strips'},ledTube:{qty:6,unit:7175,label:'6 tubes'},ledDrv:6890,
+    heater:[{w:500,price:7495},{w:500,price:7495}],
+    pump:{lpm:'60\u201380 LPM',w:'40W',price:21005},
+    diffuser:{desc:'Diffuser manifold (dual)',qty:2,price:7410},
+    wavemaker:{lpm:'80 LPM',price:17230},fans:2,fanPrice:3165}
 };
 
 /* Combined Electrical Panel + Misc (30% reduced) */
-const ELEC_COMBINED=19250;
-const HMI=114500;
+const ELEC_COMBINED=22715;
+const HMI=135100;
 
 /* ════════ SENSOR DATA ════════ */
 const SENS={
   ph:{on:true,v:'ind',label:'pH Sensor + Transmitter',
-    opts:{ind:{price:24800,name:'High-Precision Probe',grade:'Industrial',tag:'tg-i',
+    opts:{ind:{price:29265,name:'High-Precision Probe',grade:'Industrial',tag:'tg-i',
       desc:'Range: 0\u201314 pH \u2022 Accuracy: \u00b10.01 pH\nTemp: 0\u201360 \u00b0C \u2022 BNC probe \u2022 0\u20135V output\nDashboard-guided calibration \u2022 Auto temp compensation\nBest for continuous trend monitoring & long-term culture tracking'},
-      norm:{price:4950,name:'Standard Probe',grade:'Normal',tag:'tg-n',
+      norm:{price:5840,name:'Standard Probe',grade:'Normal',tag:'tg-n',
       desc:'Range: 0\u201314 pH \u2022 Accuracy: \u00b10.01 pH\nTemp: 0\u201350 \u00b0C \u2022 BNC connector \u2022 Analog output\nManual calibration\nSuited for periodic spot-check readings'}}},
-  turb:{on:true,label:'Turbidity Sensor',grade:'Normal',tag:'tg-n',price:4950,
+  turb:{on:true,label:'Turbidity Sensor',grade:'Normal',tag:'tg-n',price:5840,
     specs:[['Range','0\u20133000 NTU'],['Accuracy','\u00b15% Full Scale'],['Supply','5 V DC'],['Output','Analog 0\u20134.5 V'],['Application','Algal density estimation, water clarity monitoring'],['Type','Laboratory \u2014 suited for periodic spot-check readings']]},
-  tds:{on:true,label:'TDS Sensor',grade:'Normal',tag:'tg-n',price:4500,
+  tds:{on:true,label:'TDS Sensor',grade:'Normal',tag:'tg-n',price:5310,
     specs:[['Range','0\u20131000 ppm'],['Accuracy','\u00b110% Full Scale'],['Supply','3.3\u20135.5 V'],['Output','Analog 0\u20132.3 V'],['Application','Nutrient concentration monitoring'],['Type','Laboratory \u2014 suited for periodic spot-check readings']]},
-  temp:{on:true,label:'Water Temperature \u2014 PT-100 RTD + Transmitter',grade:'Industrial',tag:'tg-i',price:3980,
+  temp:{on:true,label:'Water Temperature \u2014 PT-100 RTD + Transmitter',grade:'Industrial',tag:'tg-i',price:4695,
     specs:[['Sensor Type','RTD PT-100, Pencil Type'],['Sheath','SS316, 6 mm dia, 100 mm length'],['Configuration','3-Wire Simplex'],['Range','-30 \u00b0C to 250 \u00b0C'],['Accuracy','\u00b10.5 \u00b0C @ 0 \u00b0C'],['Cable','7\u00d732 AWG, 3-core Teflon, 4 m'],['Transmitter','4\u201320 mA, -15 to 100 \u00b0C'],['Application','Continuous culture temperature & heater feedback']]},
-  level:{on:true,label:'Liquid Level \u2014 Pressure Sensor',grade:'Industrial',tag:'tg-i',price:5900,
+  level:{on:true,label:'Liquid Level \u2014 Pressure Sensor',grade:'Industrial',tag:'tg-i',price:6960,
     specs:[['Type','Piezoresistive Pressure Transducer'],['Working Pressure','0\u201350 kPa'],['Accuracy','\u00b10.05% Full Scale'],['Output','4\u201320 mA'],['Supply','10\u201332 V DC'],['Response','\u226410 ms'],['Overload','200% rated'],['Operating Temp','-20 to 85 \u00b0C'],['IP / Conn.','IP65, G1/4'],['Application','Volume tracking, evaporation & fill monitoring']]},
   do:{on:true,v:'galv',label:'Dissolved Oxygen (DO) Sensor',
-    opts:{galv:{price:17500,name:'Galvanic Membrane Probe',grade:'Normal',tag:'tg-n',
+    opts:{galv:{price:20650,name:'Galvanic Membrane Probe',grade:'Normal',tag:'tg-n',
       desc:'Range: 0\u201320.0 ppm \u2022 Resolution: 0.1 ppm \u2022 Accuracy: \u00b10.2 ppm\nGold/Silver amperometric membrane type\nAnalog output via signal converter \u2022 9 V supply\nIncludes: probe, signal converter, 4\u00d7 DO membranes, KCL\nRequires periodic KCL electrolyte & membrane replacement'},
-      opt:{price:57800,name:'Optical Fluorescence Probe',grade:'Industrial',tag:'tg-i',
+      opt:{price:68200,name:'Optical Fluorescence Probe',grade:'Industrial',tag:'tg-i',
       desc:'Range: 0\u201320 mg/L (0\u2013200% sat.) \u2022 Resolution: 0.01 mg/L\nAccuracy: \u00b13% FS \u2022 Response: \u226460 s \u2022 0\u201340 \u00b0C\nRS-485 Modbus RTU \u2022 DC 10\u201330 V \u2022 0.2 W \u2022 IP68\nNo electrolyte \u2022 Auto temp compensation\nFluorescent film life: 1 year \u2022 5 m cable'}}}
 };
 
@@ -116,7 +116,7 @@ function tLed(){
 }
 function tAir(){
   if(ST.air==='none')return 0;
-  return ST.air==='B'?77800:43250;
+  return ST.air==='B'?91800:51035;
 }
 function tThermal(){
   const c=cfg();let t=0;
@@ -132,8 +132,8 @@ function tElec(){
   if(ST.hmi)t+=HMI;
   return t;
 }
-function tIoT(){return ST.iotDash?((ST.conn==='wifi'?3760:22000)+35000):0;}
-function sub(){return Math.round((tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT())*1.18);}
+function tIoT(){return ST.iotDash?((ST.conn==='wifi'?4435:25960)+41300):0;}
+function sub(){return tStruct()+tLed()+tSen()+tAir()+tThermal()+tElec()+tIoT();}
 
 function tick(){
   document.getElementById('tkTank').textContent=sizeLabel();
@@ -174,7 +174,7 @@ function rStep2(){
   [100,250,500,1000].forEach(s=>{
     h+=`<div class="sz${ST.size===s?' pk':''}" onclick="pSz(${s})"><div class="sz-vol">${s}L</div><div class="sz-lbl">${F(T[s].tank)}</div></div>`;
   });
-  h+=`<div class="sz" style="opacity:.65;cursor:default;border-style:dashed"><div class="sz-vol" style="font-size:14px">1000L+</div><div class="sz-lbl"><a href="https://wa.me/917005192650?text=Hi%20Carbelim%2C%20I%20need%20a%20quote%20for%201000L%2B%20PBR." target="_blank" rel="noopener" style="color:var(--g);text-decoration:none;font-weight:700">Contact Us</a></div></div>`;
+  h+=`<div class="sz" style="opacity:.65;cursor:default;border-style:dashed"><div class="sz-vol" style="font-size:14px">1000L+</div><div class="sz-lbl"><a href="https://wa.me/918590325180?text=Hi%20Carbelim%2C%20I%20need%20a%20quote%20for%201000L%2B%20PBR." target="_blank" rel="noopener" style="color:var(--g);text-decoration:none;font-weight:700">Contact Us</a></div></div>`;
   document.getElementById('szCards').innerHTML=h;
 
   // Custom inputs visibility
@@ -419,9 +419,9 @@ function rAirOpts(){
   // Placement options
   if(airOn){
     const opts=[
-      {key:'A',name:'Inlet Only',desc:'Single module at air inlet. Monitors incoming air quality fed to the culture.',price:43250},
-      {key:'O',name:'Outlet Only',desc:'Single module at air outlet. Monitors exhaust gases &mdash; CO\u2082 uptake & O\u2082 production.',price:43250},
-      {key:'B',name:'Inlet + Outlet',desc:'Dual modules. Differential analysis &mdash; CO\u2082 uptake, O\u2082 production, air purification efficiency.',price:77800}
+      {key:'A',name:'Inlet Only',desc:'Single module at air inlet. Monitors incoming air quality fed to the culture.',price:51035},
+      {key:'O',name:'Outlet Only',desc:'Single module at air outlet. Monitors exhaust gases &mdash; CO\u2082 uptake & O\u2082 production.',price:51035},
+      {key:'B',name:'Inlet + Outlet',desc:'Dual modules. Differential analysis &mdash; CO\u2082 uptake, O\u2082 production, air purification efficiency.',price:91800}
     ];
     let h='<div class="opts opts3">';
     opts.forEach(o=>{
@@ -676,9 +676,9 @@ function rBOM(){
   // AIR QUALITY SENSORS
   if(ST.air!=='none'){
     s=0;sec('AIR QUALITY SENSORS');
-    if(ST.air==='A')s+=row('ZPHS01B Air Quality Module (Inlet)',1,'pcs',43250,'11 parameters, UART');
-    else if(ST.air==='O')s+=row('ZPHS01B Air Quality Module (Outlet)',1,'pcs',43250,'11 parameters, UART');
-    else{s+=row('ZPHS01B Air Quality Module (Inlet+Outlet)',2,'pcs',38900,'Dual, 11 params each');}
+    if(ST.air==='A')s+=row('ZPHS01B Air Quality Module (Inlet)',1,'pcs',51035,'11 parameters, UART');
+    else if(ST.air==='O')s+=row('ZPHS01B Air Quality Module (Outlet)',1,'pcs',51035,'11 parameters, UART');
+    else{s+=row('ZPHS01B Air Quality Module (Inlet+Outlet)',2,'pcs',45900,'Dual, 11 params each');}
     srow(s);
   }
 
@@ -714,9 +714,9 @@ function rBOM(){
   // IoT
   if(ST.iotDash){
     s=0;sec('CONNECTIVITY &amp; IoT');
-    if(ST.conn==='wifi')s+=row('WiFi Connectivity (Standard)',1,'pcs',3760,'802.11 b/g/n, MQTT over TLS');
-    else s+=row('WiFi + 4G LTE Cat-4',1,'pcs',22000,'Standalone SIM, no router required');
-    s+=row('Cloud IoT Dashboard (setup + 1yr)',1,'service',35000,'WebSocket, remote control, data retention');
+    if(ST.conn==='wifi')s+=row('WiFi Connectivity (Standard)',1,'pcs',4435,'802.11 b/g/n, MQTT over TLS');
+    else s+=row('WiFi + 4G LTE Cat-4',1,'pcs',25960,'Standalone SIM, no router required');
+    s+=row('Cloud IoT Dashboard (setup + 1yr)',1,'service',41300,'WebSocket, remote control, data retention');
     srow(s);
   }
 
@@ -756,7 +756,7 @@ function rStep6(){
   if(!ST.iotDash){
     suggestions.push({id:'iotSuite',name:'Cloud IoT Dashboard + WiFi Connectivity',
       desc:'Monitor your PBR remotely from any device. Get live sensor data, automated alerts when parameters drift, remote relay control, and historical trends for research documentation. One-time setup with web + mobile access.',
-      price:38760,pulse:true,tag:'Remote Access'});
+      price:45735,pulse:true,tag:'Remote Access'});
   }
 
   // Electrical panel
@@ -808,7 +808,7 @@ function rStep6(){
   if(ST.air==='none'){
     suggestions.push({id:'airSensor',name:'Air Quality Sensor \u2014 ZPHS01B',
       desc:'Monitors 11 air parameters including CO\u2082, O\u2082, PM2.5, and VOCs. Track photosynthetic CO\u2082 uptake and O\u2082 production rates for culture health assessment and research documentation.',
-      price:43250,tag:'Research Grade'});
+      price:51035,tag:'Research Grade'});
   }
 
   // Fans
@@ -848,8 +848,8 @@ function rStep6(){
   if(ST.electrical)lines.push({k:'Electrical Panel & Accessories',v:ELEC_COMBINED});
   if(ST.hmi)lines.push({k:'HMI + PLC Control Unit',v:HMI});
   if(ST.iotDash){
-    lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:ST.conn==='wifi'?3760:22000});
-    lines.push({k:'Cloud IoT Dashboard',v:35000});
+    lines.push({k:ST.conn==='wifi'?'WiFi Connectivity':'WiFi + 4G LTE',v:ST.conn==='wifi'?4435:25960});
+    lines.push({k:'Cloud IoT Dashboard',v:41300});
   }
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
   const st=sub();
@@ -876,8 +876,8 @@ function go(n){
 /* ════════ EXCEL ════════ */
 function exportXL(){
   rBOM();
-  const wb=XLSX.utils.book_new(),st=sub(),v=id=>document.getElementById(id).value||'';
-  const c1=[['CARBELIM PRIVATE LIMITED'],['Photobioreactor (PBR) Custom Design \u2014 Quotation'],[''],
+  const wb=XLSX.utils.book_new(),v=id=>document.getElementById(id).value||'';
+  const c1=[['CARBELIM PRIVATE LIMITED'],['Photobioreactor (PBR) Custom Design \u2014 Quotation'],['No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, Tamil Nadu 641020'],['mail@carbelim.io | +91 85903 25180'],[''],
     ['Organisation',v('fOrg')],['Contact',v('fName')],['Email/Phone',v('fContact')],['Date',v('fDate')],['Reference',v('fRef')],['Delivery',v('fLoc')]];
   if(ST.size==='custom'&&(ST.customW||ST.customH||ST.customD)){
     c1.push(['Tank Dimensions',`${ST.customW||'?'} × ${ST.customH||'?'} × ${ST.customD||'?'} cm`]);
@@ -896,10 +896,10 @@ function exportXL(){
     ['Wavemaker',ST.wavemaker&&cfg().wavemaker?'Yes \u2014 '+cfg().wavemaker.lpm:'No'],
     ['Electrical Panel',ST.electrical?'Yes ('+F(ELEC_COMBINED)+')':'No'],
     ['HMI/PLC',ST.hmi?'Yes ('+F(HMI)+')':'No'],
-    ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only ('+F(3760)+')':'WiFi + 4G LTE ('+F(22000)+')'):'Not selected'],
-    ['Cloud IoT Dashboard',ST.iotDash?'Yes ('+F(35000)+' + annual TBD)':'No'],
-    [''],['TOTAL (ex-GST)',st],['Note','GST @18% applicable additionally'],[''],
-    ['REMARKS',v('fRemarks')||'None'],[''],['Ex-works Coimbatore. Validity 30 days.']);
+    ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only ('+F(4435)+')':'WiFi + 4G LTE ('+F(25960)+')'):'Not selected'],
+    ['Cloud IoT Dashboard',ST.iotDash?'Yes ('+F(41300)+' + annual TBD)':'No'],
+    [''],['TOTAL (ex-GST)',sub()],['Note','GST @18% applicable additionally'],[''],
+    ['REMARKS',v('fRemarks')||'None'],[''],['Ex-works Coimbatore. Validity 30 days. Payment: 50% advance, 50% before dispatch.'],['Carbelim Private Limited | No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, TN 641020'],['mail@carbelim.io | +91 85903 25180']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
 
@@ -929,6 +929,8 @@ function exportPDF(){
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #065f46">
       <div style="font-size:16px;font-weight:800;color:#065f46;letter-spacing:1px">CARBELIM PRIVATE LIMITED</div>
       <div style="font-size:12px;color:#374151;margin-top:2px">Photobioreactor (PBR) Custom Design \u2014 Quotation</div>
+      <div style="font-size:8px;color:#6b7280;margin-top:4px">No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, Tamil Nadu 641020</div>
+      <div style="font-size:8px;color:#6b7280;margin-top:1px">mail@carbelim.io | +91 85903 25180</div>
       <div style="font-size:9px;color:#6b7280;margin-top:4px">Ex-works Coimbatore, India | Ref: ${ref} | ${v('fDate')||'\u2014'}</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;font-size:10px;margin-bottom:14px">
@@ -973,7 +975,7 @@ function exportPDF(){
 
   const foot=document.createElement('div');
   foot.style.cssText='margin-top:14px;font-size:8px;color:#6b7280;text-align:center;border-top:1px solid #d1d5db;padding-top:8px';
-  foot.textContent='All prices indicative, ex-works Coimbatore. GST @18% applicable. Validity 30 days. Payment: 50% advance, 50% before dispatch.';
+  foot.innerHTML='All prices indicative, ex-works Coimbatore. GST @18% applicable. Validity 30 days. Payment: 50% advance, 50% before dispatch.<br>Carbelim Private Limited | No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, TN 641020 | mail@carbelim.io | +91 85903 25180';
   wrap.appendChild(foot);
 
   document.body.appendChild(wrap);
@@ -1030,13 +1032,13 @@ function collectData(){
       hmi:ST.hmi?'Yes':'No',
       hmi_price:ST.hmi?HMI:0,
       connectivity:ST.iotDash?(ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE'):'Not selected',
-      connectivity_price:ST.iotDash?(ST.conn==='wifi'?3760:22000):0,
+      connectivity_price:ST.iotDash?(ST.conn==='wifi'?4435:25960):0,
       iot_dashboard:ST.iotDash?'Yes':'No',
-      iot_dashboard_price:ST.iotDash?35000:0,
+      iot_dashboard_price:ST.iotDash?41300:0,
       iot_suite:ST.iotDash?((ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE')+' + Cloud IoT Dashboard'):'Not selected',
     },
     remarks:v('fRemarks'),
-    pricing:{subtotal:sub(),grand_total:sub()}
+    pricing:{total_ex_gst:sub(),grand_total:sub()}
   };
   return result;
 }
@@ -1061,11 +1063,13 @@ function submitQuote(){
     if(result.status==='ok'){
       status.style.display='block';status.style.color='var(--g)';
       status.innerHTML='<strong>Submitted successfully!</strong> Our team will review your configuration and get in touch.';
-      btn.textContent='Submitted';
+      btn.textContent='Submitted ✓';
+      const dl=document.getElementById('downloadSection');
+      if(dl)dl.style.display='block';
     } else {throw new Error(result.error||'Unknown error');}
   }).catch(err=>{
     status.style.display='block';status.style.color='#dc2626';
-    status.innerHTML='<strong>Submission failed.</strong> Please download the Excel file and email it to us instead.';
+    status.innerHTML='<strong>Submission failed.</strong> Please try again or email us at <a href="mailto:mail@carbelim.io">mail@carbelim.io</a>';
     btn.disabled=false;btn.textContent='Retry Submit';btn.style.opacity='1';
   });
 }
@@ -1073,7 +1077,7 @@ function submitQuote(){
 /* ════════ FIXED PRICE LABELS ════════ */
 function rFixedPrices(){
   const el=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=F(v);};
-  el('iotDashPr',35000);el('connWifiPr',3760);el('conn4gPr',22000);
+  el('iotDashPr',41300);el('connWifiPr',4435);el('conn4gPr',25960);
 }
 
 /* ════════ INIT ════════ */
