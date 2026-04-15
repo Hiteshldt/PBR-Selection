@@ -200,7 +200,7 @@ async function exportQuotePDF(data) {
 
   wrap.innerHTML = `
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #0A3D2E">
-      <img src="/img/logo.webp" alt="Carbelim" style="height:56px;margin-bottom:4px" onerror="this.style.display='none'">
+      <img src="/img/logo.png" alt="Carbelim" style="height:56px;margin-bottom:4px" onerror="this.style.display='none'">
       <div style="font-size:9px;color:#0A3D2E;font-style:italic;margin-top:2px">Redefining Green Engineering</div>
       <div style="font-size:12px;color:#374151;margin-top:8px;font-weight:600">Photobioreactor (PBR) Custom Design \u2014 Quotation</div>
       <div style="font-size:8px;color:#6b7280;margin-top:6px">R&amp;D and Production Centre, No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, Tamil Nadu 641020</div>
@@ -376,7 +376,8 @@ async function exportQuotePI(data) {
     ['Account No', COMPANY.bank.account],
     ['Account Type', COMPANY.bank.accountType],
     ['Currency', COMPANY.bank.currency],
-    [isDomestic ? 'IFSC Code' : 'SWIFT Code', isDomestic ? COMPANY.bank.ifsc : COMPANY.bank.swift],
+    ['IFSC Code', COMPANY.bank.ifsc],
+    ['SWIFT Code', COMPANY.bank.swift],
     ['Branch', COMPANY.bank.branchAddress],
   ];
   const MONO_KEYS = new Set(['Account No', 'IFSC Code', 'SWIFT Code']);
@@ -399,7 +400,7 @@ async function exportQuotePI(data) {
     <table style="width:100%;border-collapse:collapse;margin-bottom:16px;border-bottom:3px solid #0A3D2E">
       <tr>
         <td style="vertical-align:top;padding-bottom:12px">
-          <img src="/img/logo.webp" alt="Carbelim" style="height:56px;margin-bottom:4px" onerror="this.style.display='none'">
+          <img src="/img/logo.png" alt="Carbelim" style="height:56px;margin-bottom:4px" onerror="this.style.display='none'">
           <div style="font-size:9px;color:#0A3D2E;font-style:italic;margin-top:2px">${COMPANY.tagline}</div>
           <div style="font-size:9px;color:#6b7280;margin-top:6px;max-width:340px">${COMPANY.address}</div>
           <div style="font-size:9px;color:#6b7280;margin-top:2px">${COMPANY.email} | ${COMPANY.phone}</div>

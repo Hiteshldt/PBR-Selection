@@ -1018,7 +1018,7 @@ function _exportPDF_legacy(){
 
   wrap.innerHTML=`
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #065f46">
-      <img src="/img/logo.webp" alt="Carbelim" style="height:40px;margin-bottom:6px" onerror="this.style.display='none'">
+      <img src="/img/logo.png" alt="Carbelim" style="height:40px;margin-bottom:6px" onerror="this.style.display='none'">
       <div style="font-size:16px;font-weight:800;color:#065f46;letter-spacing:1px">CARBELIM PRIVATE LIMITED</div>
       <div style="font-size:12px;color:#374151;margin-top:2px">Photobioreactor (PBR) Custom Design \u2014 Quotation</div>
       <div style="font-size:8px;color:#6b7280;margin-top:4px">No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, Tamil Nadu 641020</div>

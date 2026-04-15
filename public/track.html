@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="/js/export-utils.js?v=12"></script>
+<script src="/js/export-utils.js?v=13"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -123,7 +123,7 @@ function render(d){
 
   el.innerHTML=`
     <div class="hdr">
-      <img src="/img/logo.webp" alt="Carbelim" style="height:36px;margin-bottom:8px" onerror="this.style.display='none'">
+      <div style="background:#fff;display:inline-block;padding:8px 14px;border-radius:8px;margin-bottom:8px"><img src="/img/logo.png" alt="Carbelim" style="height:32px;display:block" onerror="this.style.display='none'"></div>
       <h1>Request Tracking</h1>
       <p>Reference: <strong>${esc(d.reference)}</strong> &bull; Submitted: ${fmtDate(d.created_at)}</p>
       <div style="margin-top:10px"><span class="badge bg-${d.status}">${STATUS_LABELS[d.status]||d.status}</span></div>
