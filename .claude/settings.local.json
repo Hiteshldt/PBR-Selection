@@ -27,7 +27,16 @@
       "Bash(cut -d'\\(' -f1)",
       "Bash(done)",
       "Bash(/tmp/verify.txt:*)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npm install:*)",
+      "Bash(PORT=3099 timeout 4 node server.js)",
+      "Bash(PORT=3099 node server.js)",
+      "Bash(curl:*)",
+      "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\('status:',d['status']\\);print\\('history:',len\\(d['history']\\)\\)\")",
+      "Bash(npm start:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)"
     ]
   }
 }

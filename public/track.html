@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Track Request — Carbelim PBR</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="/js/export-utils.js?v=12"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0A3D2E;--brand2:#0f5d46;--ink:#111827;--ink2:#374151;--ink3:#6b7280;--ink4:#9ca3af;--sf:#fff;--sf2:#f9fafb;--sf3:#f3f4f6;--sf4:#e5e7eb;--ok:#10b981;--warn:#f59e0b;--err:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;background:var(--sf2);color:var(--ink);font-size:13px;line-height:1.5;font-weight:400}
+code,.mono,.v-num{font-family:'IBM Plex Mono',Consolas,monospace}
+h1,h2,h3{font-weight:600}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+.hdr{background:var(--brand);color:#fff;padding:20px 24px;border-radius:12px;margin-bottom:18px}
+.hdr h1{margin:0;font-size:20px}
+.hdr p{margin:6px 0 0;font-size:12px;opacity:.85}
+.card{background:var(--sf);border:1px solid var(--sf4);border-radius:10px;padding:18px 20px;margin-bottom:14px}
+.card h2{margin:0 0 12px;font-size:14px;color:var(--brand);text-transform:uppercase;letter-spacing:.5px}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--sf4);font-size:12px}
+.row:last-child{border:0}
+.row .k{color:var(--ink3)}
+.row .v{font-weight:600;color:var(--ink2);text-align:right}
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--sf4)}
+.tl-item{position:relative;padding:0 0 16px 10px}
+.tl-item::before{content:'';position:absolute;left:-20px;top:4px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--sf4)}
+.tl-item.done::before{background:var(--brand);border-color:var(--brand)}
+.tl-item.active::before{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 4px rgba(245,158,11,.18)}
+.tl-st{font-weight:700;font-size:13px;color:var(--ink)}
+.tl-time{font-size:10px;color:var(--ink4);margin-top:2px}
+.tl-note{margin-top:4px;font-size:11px;color:var(--ink2);font-style:italic}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.bg-received{background:#dbeafe;color:#1e40af}
+.bg-acknowledged{background:#fef3c7;color:#92400e}
+.bg-in_production{background:#fed7aa;color:#9a3412}
+.bg-ready_to_ship{background:#e0e7ff;color:#3730a3}
+.bg-shipped{background:#ccfbf1;color:#115e59}
+.bg-delivered{background:#d1fae5;color:#0A3D2E}
+.bg-cancelled{background:#fee2e2;color:#991b1b}
+.btn{display:inline-block;padding:9px 16px;border-radius:8px;border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:12px;text-decoration:none}
+.btn:hover{background:var(--brand2)}
+.btn-g{background:var(--sf3);color:var(--ink2)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:720px){.grid-2{grid-template-columns:1fr}}
+.err{padding:20px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:10px;text-align:center}
+textarea{width:100%;padding:10px 12px;border:1px solid var(--sf4);border-radius:8px;font-family:inherit;font-size:12px;resize:vertical}
+#loading{text-align:center;padding:60px 20px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="loading">Loading your request...</div>
+  <div id="content" style="display:none"></div>
+</div>
+<script>
+const STATUS_FLOW = ['received','acknowledged','in_production','ready_to_ship','shipped','delivered'];
+const STATUS_LABELS = {received:'Received',acknowledged:'Acknowledged',in_production:'In Production',ready_to_ship:'Ready to Ship',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'};
+
+function qs(){const p=new URLSearchParams(location.search);return{ref:p.get('ref'),token:p.get('token')}}
+function F(n,cur){const num=Number(n)||0;return cur==='USD'?'$'+num.toLocaleString('en-US'):'\u20B9'+num.toLocaleString('en-IN')}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmtDate(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleString()}
+
+async function load(){
+  const{ref,token}=qs();
+  if(!ref||!token){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('content').style.display='block';
+    document.getElementById('content').innerHTML='<div class="err">Invalid tracking link. Please use the link sent to your email.</div>';
+    return;
+  }
+  try{
+    const res=await fetch('/api/quote/'+encodeURIComponent(token)+'?ref='+encodeURIComponent(ref));
+    if(!res.ok){throw new Error('not found')}
+    const d=await res.json();
+    render(d);
+  }catch(e){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('content').style.display='block';
+    document.getElementById('content').innerHTML='<div class="err">We could not find your request. Please check your tracking link or contact us.</div>';
+  }
+}
+
+function renderTimeline(history,currentStatus){
+  if(currentStatus==='cancelled'){
+    return '<div class="tl-item active"><div class="tl-st">Cancelled</div></div>';
+  }
+  const currentIdx=STATUS_FLOW.indexOf(currentStatus);
+  const historyByStatus={};
+  history.forEach(h=>{if(!historyByStatus[h.status])historyByStatus[h.status]=h});
+  return STATUS_FLOW.map((s,i)=>{
+    const h=historyByStatus[s];
+    const cls=i<currentIdx?'done':(i===currentIdx?'active':'');
+    return `<div class="tl-item ${cls}">
+      <div class="tl-st">${STATUS_LABELS[s]}</div>
+      ${h?`<div class="tl-time">${fmtDate(h.changed_at)}${h.eta_date?' &bull; ETA '+esc(h.eta_date):''}</div>`:''}
+      ${h&&h.note?`<div class="tl-note">${esc(h.note)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+let trackData=null;
+function dlPDF(){if(trackData)exportQuotePDF(trackData)}
+function dlXL(){if(trackData)exportQuoteXL(trackData)}
+
+function render(d){
+  trackData=d;
+  document.getElementById('loading').style.display='none';
+  const el=document.getElementById('content');
+  el.style.display='block';
+  const c=d.client||{};
+  const cur=c.currency||'INR';
+  const total=d.pricing?.display_total!=null?d.pricing.display_total:d.pricing?.grand_total_inr||0;
+  const cfgEntries=(typeof configDisplayRows==='function')?configDisplayRows(d.config):[];
+  const cfgRows=cfgEntries.map(([k,v])=>`<div class="row"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join('');
+
+  el.innerHTML=`
+    <div class="hdr">
+      <img src="/img/logo.webp" alt="Carbelim" style="height:36px;margin-bottom:8px" onerror="this.style.display='none'">
+      <h1>Request Tracking</h1>
+      <p>Reference: <strong>${esc(d.reference)}</strong> &bull; Submitted: ${fmtDate(d.created_at)}</p>
+      <div style="margin-top:10px"><span class="badge bg-${d.status}">${STATUS_LABELS[d.status]||d.status}</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Status Timeline</h2>
+      <div class="timeline">${renderTimeline(d.history||[],d.status)}</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h2>Client Details</h2>
+        <div class="row"><span class="k">Organisation</span><span class="v">${esc(c.organisation)}</span></div>
+        <div class="row"><span class="k">Contact</span><span class="v">${esc(c.contact)}</span></div>
+        <div class="row"><span class="k">Email</span><span class="v">${esc(c.email)}</span></div>
+        <div class="row"><span class="k">Phone</span><span class="v">${esc(c.phone)||'—'}</span></div>
+        <div class="row"><span class="k">Country</span><span class="v">${esc(c.country)}</span></div>
+        <div class="row"><span class="k">Delivery</span><span class="v">${esc(c.delivery)}</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Configuration</h2>
+        ${cfgRows||'<div class="row"><span class="k">—</span></div>'}
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--brand);color:#fff;text-align:center;border:none">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.75">Total${cur==='INR'?' (ex-GST)':' ('+cur+')'}</div>
+      <div style="font-size:28px;font-weight:800;margin-top:6px">${F(total,cur)}</div>
+      <div style="font-size:10px;opacity:.7;margin-top:2px">${cur==='INR'?'GST 18 percent applicable additionally':'Shipping, duties and taxes extra at destination'}</div>
+    </div>
+
+    <div class="card" style="text-align:center">
+      <h2>Download Your Quotation</h2>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn" onclick="dlPDF()">Download PDF</button>
+        <button class="btn btn-g" onclick="dlXL()">Download Excel</button>
+      </div>
+    </div>
+
+    ${d.remarks?`<div class="card"><h2>Your Remarks</h2><div style="font-size:12px;color:var(--ink2);white-space:pre-wrap">${esc(d.remarks)}</div></div>`:''}
+
+    <div class="card">
+      <h2>Add a Comment</h2>
+      <textarea id="newComment" rows="3" placeholder="Questions or updates for our team..."></textarea>
+      <div style="margin-top:8px;text-align:right"><button class="btn" onclick="addComment()">Send</button></div>
+      <div id="commentStatus" style="font-size:11px;color:var(--ink3);margin-top:6px"></div>
+      ${d.comments&&d.comments.length?`<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--sf4)"><div style="font-size:11px;color:var(--ink3);margin-bottom:6px">Previous comments:</div>${d.comments.map(c=>`<div style="padding:8px 10px;background:var(--sf2);border-radius:6px;margin-bottom:6px;font-size:11px"><div style="color:var(--ink4);font-size:10px">${fmtDate(c.created_at)}</div><div style="white-space:pre-wrap;margin-top:2px">${esc(c.comment)}</div></div>`).join('')}</div>`:''}
+    </div>
+
+    <div style="text-align:center;padding:20px;color:var(--ink4);font-size:11px">
+      Questions? Email <a href="mailto:mail@carbelim.io" style="color:var(--brand)">mail@carbelim.io</a> or WhatsApp <a href="https://wa.me/918590325180" style="color:var(--brand)">+91 85903 25180</a>
+    </div>
+  `;
+}
+
+async function addComment(){
+  const{ref,token}=qs();
+  const ta=document.getElementById('newComment');
+  const comment=ta.value.trim();
+  const st=document.getElementById('commentStatus');
+  if(!comment){st.textContent='Please enter a comment.';return}
+  st.textContent='Sending...';
+  try{
+    const res=await fetch('/api/quote/'+encodeURIComponent(token)+'/comment?ref='+encodeURIComponent(ref),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({comment})});
+    if(!res.ok)throw new Error('failed');
+    st.textContent='Comment sent. Reloading...';
+    setTimeout(load,700);
+  }catch(e){
+    st.textContent='Could not send. Please try again.';
+  }
+}
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Login — Carbelim</title>
+<style>
+body{margin:0;font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:32px;width:340px;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+h1{margin:0 0 6px;color:#0A3D2E;font-size:18px}
+p{margin:0 0 20px;color:#6b7280;font-size:12px}
+label{display:block;font-size:11px;color:#6b7280;margin:10px 0 4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+input{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;box-sizing:border-box}
+input:focus{outline:none;border-color:#0A3D2E}
+button{width:100%;margin-top:18px;padding:11px;background:#0A3D2E;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px}
+button:hover{background:#0f5d46}
+.err{margin-top:12px;padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:6px;font-size:11px;display:none}
+</style>
+</head>
+<body>
+<form class="card" onsubmit="return login(event)">
+  <div style="text-align:center;margin-bottom:8px"><img src="/img/logo.webp" alt="Carbelim" style="height:36px" onerror="this.style.display='none'"></div>
+  <h1>Carbelim Admin</h1>
+  <p>Sign in to manage PBR quote requests</p>
+  <label>Email</label>
+  <input type="email" id="email" required autocomplete="username">
+  <label>Password</label>
+  <input type="password" id="password" required autocomplete="current-password">
+  <button type="submit">Sign In</button>
+  <div id="err" class="err"></div>
+</form>
+<script>
+async function login(e){
+  e.preventDefault();
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const err=document.getElementById('err');
+  err.style.display='none';
+  try{
+    const res=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    if(!res.ok){const d=await res.json().catch(()=>({}));throw new Error(d.error||'Login failed')}
+    location.href='/admin/dashboard.html';
+  }catch(e){
+    err.textContent=e.message;
+    err.style.display='block';
+  }
+  return false;
+}
+(async()=>{
+  try{const r=await fetch('/api/admin/me');if(r.ok)location.href='/admin/dashboard.html'}catch(e){}
+})();
+</script>
+</body>
+</html>

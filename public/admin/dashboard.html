@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard — Carbelim</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="/js/export-utils.js?v=12"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0A3D2E;--brand2:#0f5d46;--ink:#111827;--ink2:#374151;--ink3:#6b7280;--ink4:#9ca3af;--sf:#fff;--sf2:#f9fafb;--sf3:#f3f4f6;--sf4:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;background:var(--sf2);color:var(--ink);font-size:13px;font-weight:400}
+code,.mono{font-family:'IBM Plex Mono',Consolas,monospace}
+h1,h2,h3,h4{font-weight:600}
+.topbar{background:var(--brand);color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.topbar h1{margin:0;font-size:16px}
+.topbar .r{display:flex;gap:14px;align-items:center;font-size:12px}
+.topbar button{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px}
+.filters{background:var(--sf);border:1px solid var(--sf4);border-radius:10px;padding:14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.filters .f{display:flex;flex-direction:column;gap:4px}
+.filters label{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.filters input,.filters select{padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit}
+.tbl{background:var(--sf);border:1px solid var(--sf4);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:var(--sf2);text-align:left;padding:10px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);border-bottom:1px solid var(--sf4)}
+td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--sf4)}
+tr:hover td{background:var(--sf2)}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase}
+.bg-received{background:#dbeafe;color:#1e40af}
+.bg-acknowledged{background:#fef3c7;color:#92400e}
+.bg-in_production{background:#fed7aa;color:#9a3412}
+.bg-ready_to_ship{background:#e0e7ff;color:#3730a3}
+.bg-shipped{background:#ccfbf1;color:#115e59}
+.bg-delivered{background:#d1fae5;color:#0A3D2E}
+.bg-cancelled{background:#fee2e2;color:#991b1b}
+.btn{padding:6px 11px;border:none;border-radius:6px;background:var(--brand);color:#fff;cursor:pointer;font-size:11px;font-weight:600;text-decoration:none;display:inline-block}
+.btn-g{background:var(--sf3);color:var(--ink2)}
+.btn:hover{opacity:.9}
+.empty{padding:60px;text-align:center;color:var(--ink4)}
+.pg{margin-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ink3)}
+.modal{position:fixed;inset:0;background:rgba(17,24,39,.6);display:none;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;z-index:100}
+.modal.open{display:flex}
+.m-card{background:#fff;border-radius:12px;width:100%;max-width:1100px;margin:20px auto}
+.m-hd{padding:14px 22px;border-bottom:1px solid var(--sf4);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;border-radius:12px 12px 0 0;z-index:1}
+.m-hd h2{margin:0;font-size:15px;color:var(--brand);font-weight:600;letter-spacing:.2px}
+.m-bd{padding:0}
+.m-x{background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--ink3)}
+.m-strip{padding:14px 22px;background:var(--sf2);border-bottom:1px solid var(--sf4);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.m-strip .meta{display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--ink3)}
+.m-strip .meta strong{color:var(--ink);font-weight:600}
+.m-actions{display:flex;gap:6px;flex-wrap:wrap}
+.m-section{padding:18px 22px;border-bottom:1px solid var(--sf4)}
+.m-section:last-child{border-bottom:0}
+.m-section h3{margin:0 0 12px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--brand);font-weight:600}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:760px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.box{border:1px solid var(--sf4);border-radius:8px;padding:12px 14px;background:#fff}
+.box h4{margin:0 0 8px;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);font-weight:600}
+.box .row{display:flex;justify-content:space-between;padding:5px 0;font-size:11px;border-bottom:1px dashed var(--sf4);gap:10px}
+.box .row:last-child{border:0}
+.box .k{color:var(--ink3);flex-shrink:0}
+.box .v{font-weight:500;color:var(--ink);text-align:right;word-break:break-word}
+.box .v.num{font-family:'IBM Plex Mono',Consolas,monospace;font-weight:500}
+.total-bar{background:linear-gradient(135deg,var(--brand) 0%,#0f5d46 100%);color:#fff;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.total-bar .lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;opacity:.75}
+.total-bar .amt{font-family:'IBM Plex Mono',Consolas,monospace;font-size:22px;font-weight:600}
+.copy-field{display:flex;gap:6px;align-items:center}
+.copy-field input{flex:1;padding:7px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:11px;font-family:'IBM Plex Mono',Consolas,monospace;background:var(--sf2)}
+.remark-box{padding:10px 12px;background:var(--sf2);border-left:3px solid var(--brand);border-radius:4px;font-size:11px;white-space:pre-wrap;color:var(--ink2);line-height:1.6}
+.remark-box.long{max-height:120px;overflow-y:auto}
+.timeline{border-left:2px solid var(--sf4);padding-left:14px;margin-top:10px}
+.ti{margin-bottom:12px;position:relative}
+.ti::before{content:'';position:absolute;left:-20px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.ti-st{font-weight:700;font-size:12px}
+.ti-t{font-size:10px;color:var(--ink4)}
+.ti-n{font-size:11px;color:var(--ink2);font-style:italic;margin-top:2px}
+.update-form{margin-top:14px;padding:14px;background:var(--sf2);border-radius:8px}
+.update-form select,.update-form input,.update-form textarea{width:100%;padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit;margin-bottom:8px}
+.update-form textarea{resize:vertical}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:12px"><img src="/img/logo.webp" alt="Carbelim" style="height:28px" onerror="this.style.display='none'"><h1>Carbelim Admin &bull; Quote Requests</h1></div>
+  <div class="r"><span id="who"></span><button onclick="logout()">Sign Out</button></div>
+</div>
+<div class="wrap">
+  <div class="filters">
+    <div class="f"><label>Search</label><input type="text" id="fq" placeholder="Org / email / ref"></div>
+    <div class="f"><label>Status</label><select id="fs"><option value="">All</option><option value="received">Received</option><option value="acknowledged">Acknowledged</option><option value="in_production">In Production</option><option value="ready_to_ship">Ready to Ship</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
+    <div class="f"><label>Country</label><input type="text" id="fc" placeholder="e.g. India"></div>
+    <div class="f"><button class="btn" onclick="loadList()">Filter</button></div>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Reference</th><th>Organisation</th><th>Contact</th><th>Country</th><th>Total</th><th>Status</th><th>Submitted</th><th></th></tr></thead>
+      <tbody id="tb"><tr><td colspan="8" class="empty">Loading...</td></tr></tbody>
+    </table>
+  </div>
+  <div class="pg"><span id="pgInfo"></span><div><button class="btn btn-g" onclick="prevPage()">Prev</button> <button class="btn btn-g" onclick="nextPage()">Next</button></div></div>
+</div>
+
+<div class="modal" id="modal"><div class="m-card">
+  <div class="m-hd"><h2 id="mTitle">Quote Detail</h2><button class="m-x" onclick="closeModal()">&times;</button></div>
+  <div class="m-bd" id="mBody"></div>
+</div></div>
+
+<script>
+const STATUS_LABELS={received:'Received',acknowledged:'Acknowledged',in_production:'In Production',ready_to_ship:'Ready to Ship',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'};
+let page=1,pageSize=25,total=0,currentId=null;
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function F(n,cur){const x=Number(n)||0;return cur==='USD'?'$'+x.toLocaleString('en-US'):'\u20B9'+x.toLocaleString('en-IN')}
+function fmtDate(iso){if(!iso)return'';return new Date(iso).toLocaleString()}
+
+async function me(){
+  try{const r=await fetch('/api/admin/me');if(!r.ok)throw 0;const d=await r.json();document.getElementById('who').textContent=d.name||d.email}catch(e){location.href='/admin/'}
+}
+
+async function loadList(){
+  const q=document.getElementById('fq').value.trim();
+  const status=document.getElementById('fs').value;
+  const country=document.getElementById('fc').value.trim();
+  const params=new URLSearchParams({page,pageSize});
+  if(q)params.set('q',q);
+  if(status)params.set('status',status);
+  if(country)params.set('country',country);
+  const res=await fetch('/api/admin/quotes?'+params);
+  if(!res.ok){if(res.status===401)location.href='/admin/';return}
+  const d=await res.json();
+  total=d.total;
+  const tb=document.getElementById('tb');
+  if(!d.rows.length){tb.innerHTML='<tr><td colspan="8" class="empty">No quotes found</td></tr>';document.getElementById('pgInfo').textContent='0 results';return}
+  tb.innerHTML=d.rows.map(r=>`
+    <tr>
+      <td><strong>${esc(r.reference)}</strong></td>
+      <td>${esc(r.organisation)}</td>
+      <td>${esc(r.contact_name)}<br><span style="font-size:10px;color:var(--ink4)">${esc(r.email)}</span></td>
+      <td>${esc(r.country)}</td>
+      <td>${F(r.display_total,r.currency)}</td>
+      <td><span class="badge bg-${r.status}">${STATUS_LABELS[r.status]||r.status}</span></td>
+      <td>${fmtDate(r.created_at)}</td>
+      <td><button class="btn" onclick="openQuote('${r.id}')">View</button></td>
+    </tr>
+  `).join('');
+  const from=(page-1)*pageSize+1,to=Math.min(page*pageSize,total);
+  document.getElementById('pgInfo').textContent=`${from}–${to} of ${total}`;
+}
+
+function prevPage(){if(page>1){page--;loadList()}}
+function nextPage(){if(page*pageSize<total){page++;loadList()}}
+
+async function openQuote(id){
+  currentId=id;
+  const res=await fetch('/api/admin/quotes/'+id);
+  if(!res.ok)return;
+  const d=await res.json();
+  document.getElementById('mTitle').textContent=`${d.reference}  —  ${d.client.organisation||''}`;
+  const cur=d.client.currency||'INR';
+  const total=d.display_total!=null?d.display_total:d.total_inr;
+
+  const specEntries=(typeof configDisplayRows==='function')?configDisplayRows(d.config):[];
+  const priceEntries=(typeof configPriceRows==='function')?configPriceRows(d.config,cur):[];
+
+  const specMid=Math.ceil(specEntries.length/2);
+  const specColA=specEntries.slice(0,specMid);
+  const specColB=specEntries.slice(specMid);
+  const specCol=list=>list.map(([k,v])=>`<div class="row"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join('')||'<div class="row"><span class="k">—</span></div>';
+
+  const priceHtml=priceEntries.map(([k,v])=>`<div class="row"><span class="k">${esc(k)}</span><span class="v num">${esc(v)}</span></div>`).join('');
+
+  const histHtml=(d.history||[]).map(h=>`<div class="ti"><div class="ti-st">${STATUS_LABELS[h.status]||h.status}</div><div class="ti-t">${fmtDate(h.changed_at)}${h.eta_date?' &bull; ETA '+esc(h.eta_date):''}${h.changed_by?' &bull; by '+esc(h.changed_by):''}</div>${h.note?`<div class="ti-n">${esc(h.note)}</div>`:''}</div>`).join('');
+
+  const commHtml=(d.comments||[]).length?(d.comments.map(c=>`<div style="padding:8px 10px;background:var(--sf2);border-radius:6px;margin-bottom:6px;font-size:11px"><div style="color:var(--ink4);font-size:10px">${fmtDate(c.created_at)}</div><div style="white-space:pre-wrap;margin-top:3px;color:var(--ink2)">${esc(c.comment)}</div></div>`).join('')):'<div style="font-size:11px;color:var(--ink4);font-style:italic">No customer comments yet.</div>';
+
+  const remarksLen=(d.remarks||'').length;
+  const remarksHtml=d.remarks?`<div class="remark-box${remarksLen>400?' long':''}">${esc(d.remarks)}</div>`:'<div style="font-size:11px;color:var(--ink4);font-style:italic">No remarks submitted by customer.</div>';
+
+  currentQuoteData=d;
+  document.getElementById('mBody').innerHTML=`
+    <div class="m-strip">
+      <div class="meta">
+        <span class="badge bg-${d.status}">${STATUS_LABELS[d.status]||d.status}</span>
+        <span>Submitted <strong>${fmtDate(d.created_at)}</strong></span>
+        <span>Currency <strong>${esc(cur)}</strong></span>
+        <span>Delivery <strong>${esc(d.client.delivery||'—')}, ${esc(d.client.country||'')}</strong></span>
+      </div>
+      <div class="m-actions">
+        <button class="btn" onclick="downloadPI()">${cur==='INR'?'Proforma':'Commercial'} Invoice</button>
+        <button class="btn btn-g" onclick="downloadXL()">Config Excel</button>
+      </div>
+    </div>
+
+    <div class="m-section">
+      <div class="total-bar">
+        <div>
+          <div class="lbl">Quoted Total${cur==='INR'?' (ex-GST)':''}</div>
+          <div style="font-size:10px;opacity:.7;margin-top:4px">${cur==='INR'?'GST 18 percent applicable additionally':'International quote — shipping & duties extra at destination'}</div>
+        </div>
+        <div class="amt">${F(total,cur)}</div>
+      </div>
+    </div>
+
+    <div class="m-section">
+      <div class="grid-3">
+        <div class="box">
+          <h4>Client</h4>
+          <div class="row"><span class="k">Organisation</span><span class="v">${esc(d.client.organisation)}</span></div>
+          <div class="row"><span class="k">Contact</span><span class="v">${esc(d.client.contact)}</span></div>
+          <div class="row"><span class="k">Email</span><span class="v">${esc(d.client.email)}</span></div>
+          <div class="row"><span class="k">Phone</span><span class="v num">${esc(d.client.phone)||'—'}</span></div>
+          <div class="row"><span class="k">Country</span><span class="v">${esc(d.client.country)}</span></div>
+        </div>
+        <div class="box">
+          <h4>Customer Remarks</h4>
+          ${remarksHtml}
+        </div>
+        <div class="box">
+          <h4>Customer Portal</h4>
+          <div class="copy-field"><input type="text" id="portalLink" readonly value="${esc(d.portal_url)}"><button class="btn btn-g" onclick="copyLink()">Copy</button></div>
+          <div style="font-size:10px;color:var(--ink4);margin-top:6px">Share this link with the customer for live tracking and downloads.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-section">
+      <h3>Configuration Selected</h3>
+      <div class="grid-2">
+        <div class="box">${specCol(specColA)}</div>
+        <div class="box">${specCol(specColB)}</div>
+      </div>
+    </div>
+
+    ${priceHtml?`<div class="m-section">
+      <h3>Pricing Breakdown</h3>
+      <div class="box">${priceHtml}<div class="row" style="border-top:2px solid var(--brand);margin-top:6px;padding-top:8px"><span class="k" style="font-weight:600;color:var(--ink)">Total</span><span class="v num" style="font-size:13px;color:var(--brand)">${F(total,cur)}</span></div></div>
+    </div>`:''}
+
+    <div class="m-section">
+      <div class="grid-2">
+        <div class="box">
+          <h4>Status Timeline</h4>
+          <div class="timeline">${histHtml||'<div class="ti-t">No status updates yet.</div>'}</div>
+        </div>
+        <div class="box">
+          <h4>Customer Comments</h4>
+          ${commHtml}
+        </div>
+      </div>
+    </div>
+
+    <div class="m-section" style="background:var(--sf2)">
+      <div class="grid-2">
+        <div class="box">
+          <h4>Update Status &amp; Notify Customer</h4>
+          <select id="usStatus" style="width:100%;padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit;margin-bottom:8px">
+            <option value="received">Received</option><option value="acknowledged">Acknowledged</option><option value="in_production">In Production</option><option value="ready_to_ship">Ready to Ship</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option>
+          </select>
+          <input type="date" id="usEta" placeholder="ETA (optional)" style="width:100%;padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit;margin-bottom:8px">
+          <textarea id="usNote" rows="2" placeholder="Note for customer (optional)" style="width:100%;padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit;resize:vertical;margin-bottom:8px"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center"><button class="btn" onclick="updateStatus()">Save &amp; Notify</button><span id="usMsg" style="font-size:11px;color:var(--ink3)"></span></div>
+        </div>
+        <div class="box">
+          <h4>Send Custom Email</h4>
+          <input type="text" id="emailSubject" placeholder="Subject" style="width:100%;padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit;margin-bottom:8px">
+          <textarea id="emailBody" rows="5" placeholder="Message to customer..." style="width:100%;padding:8px 10px;border:1px solid var(--sf4);border-radius:6px;font-size:12px;font-family:inherit;resize:vertical;margin-bottom:8px"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center"><button class="btn" onclick="sendCustomEmail()">Send Email</button><span id="emailMsg" style="font-size:11px;color:var(--ink3)"></span></div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('usStatus').value=d.status;
+  document.getElementById('modal').classList.add('open');
+}
+
+function copyLink(){const i=document.getElementById('portalLink');i.select();document.execCommand('copy');i.blur()}
+
+function closeModal(){document.getElementById('modal').classList.remove('open');currentId=null}
+
+async function updateStatus(){
+  if(!currentId)return;
+  const status=document.getElementById('usStatus').value;
+  const note=document.getElementById('usNote').value.trim();
+  const eta_date=document.getElementById('usEta').value;
+  const msg=document.getElementById('usMsg');
+  msg.textContent='Saving...';
+  const res=await fetch('/api/admin/quotes/'+currentId+'/status',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status,note,eta_date})});
+  if(!res.ok){msg.textContent='Error saving';return}
+  msg.textContent='Updated. Customer notified.';
+  setTimeout(()=>{closeModal();loadList()},700);
+}
+
+async function logout(){await fetch('/api/admin/logout',{method:'POST'});location.href='/admin/'}
+
+let currentQuoteData=null;
+
+async function downloadPDF(){
+  if(!currentQuoteData)return;
+  exportQuotePDF(currentQuoteData);
+}
+async function downloadXL(){
+  if(!currentQuoteData)return;
+  exportQuoteXL(currentQuoteData);
+}
+async function downloadPI(){
+  if(!currentQuoteData)return;
+  exportQuotePI(currentQuoteData);
+}
+
+async function sendCustomEmail(){
+  if(!currentId)return;
+  const subject=document.getElementById('emailSubject').value.trim();
+  const body=document.getElementById('emailBody').value.trim();
+  const msg=document.getElementById('emailMsg');
+  if(!subject||!body){msg.textContent='Subject and message are required.';return}
+  msg.textContent='Sending...';
+  const res=await fetch('/api/admin/quotes/'+currentId+'/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject,body})});
+  if(!res.ok){msg.textContent='Error sending email.';return}
+  msg.textContent='Email sent successfully.';
+  document.getElementById('emailSubject').value='';
+  document.getElementById('emailBody').value='';
+}
+
+me();loadList();
+document.getElementById('fq').addEventListener('keyup',e=>{if(e.key==='Enter')loadList()});
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+</script>
+</body>
+</html>

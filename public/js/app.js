@@ -1,6 +1,23 @@
 /* ════════ PBR Product Configurator — Client JS v1.1 ════════ */
 
-const F=n=>'\u20B9'+n.toLocaleString('en-IN');
+/* ════════ CURRENCY ════════
+   - India: INR, shown as ₹, GST @18% applicable
+   - Other countries: USD, shown as $, converted from INR using USD_RATE × USD_MULT
+*/
+const USD_RATE=85;      // 1 USD ≈ ₹85
+const USD_MULT=2.5;     // International markup multiplier
+function cvNum(n){
+  if(ST && ST.currency==='USD')return Math.round(n/USD_RATE*USD_MULT);
+  return n;
+}
+function F(n){
+  // Mask all pricing until user picks a country
+  if(!ST || !ST.country) return '\u2014\u2014\u2014';
+  if(ST.currency==='USD'){
+    return '$'+cvNum(n).toLocaleString('en-US');
+  }
+  return '\u20B9'+n.toLocaleString('en-IN');
+}
 
 /* ════════ TANK CONFIG ════════
    - Custom: up to 50L with user-defined volume & dimensions
@@ -78,6 +95,8 @@ const SENS={
 
 /* ════════ STATE ════════ */
 let ST={
+  country:'',      // empty until user selects — masks all pricing
+  currency:'',     // 'INR' for India, 'USD' for everyone else, '' = unset
   size:'custom',
   customVol:50,
   customW:'',customH:'',customD:'',
@@ -721,7 +740,7 @@ function rBOM(){
   }
 
   h+=`<tr class="sub"><td colspan="5" class="ar">Components Subtotal</td><td class="ar">${F(tot)}</td><td></td></tr>`;
-  h+=`<tr class="grand"><td colspan="5" class="ar">Total (ex-GST)</td><td class="ar">${F(sub())}</td><td>+ GST @18% applicable</td></tr>`;
+  h+=`<tr class="grand"><td colspan="5" class="ar">Total${ST.currency==='INR'?' (ex-GST)':''}</td><td class="ar">${F(sub())}</td><td>${ST.currency==='INR'?'+ GST @18% applicable':'USD, ex-works'}</td></tr>`;
   tb.innerHTML=h;
   document.getElementById('bomBdg').innerHTML=badges();
 }
@@ -731,7 +750,9 @@ function rStep6(){
   const v=id=>document.getElementById(id).value||'\u2014';
   let clInfo=`<div><span class="lk">Organisation</span><span class="lv">${v('fOrg')}</span></div>
      <div><span class="lk">Contact</span><span class="lv">${v('fName')}</span></div>
-     <div><span class="lk">Email/Phone</span><span class="lv">${v('fContact')}</span></div>
+     <div><span class="lk">Email</span><span class="lv">${v('fEmail')}</span></div>
+     <div><span class="lk">Phone</span><span class="lv">${v('fPhone')}</span></div>
+     <div><span class="lk">Country</span><span class="lv">${v('fCountry')}</span></div>
      <div><span class="lk">Date</span><span class="lv">${v('fDate')}</span></div>
      <div><span class="lk">Reference</span><span class="lv">${v('fRef')}</span></div>
      <div><span class="lk">Delivery</span><span class="lv">${v('fLoc')}</span></div>`;
@@ -853,10 +874,70 @@ function rStep6(){
   }
   let ph='';lines.forEach(l=>ph+=`<div class="row"><span class="k">${l.k}</span><span class="v">${F(l.v)}</span></div>`);
   const st=sub();
-  ph+=`<div class="row total"><span class="k">Total (ex-GST)</span><span class="v">${F(st)}</span></div>`;
-  ph+=`<div class="row"><span class="k" style="font-size:10px;color:var(--ink4)">GST @18% applicable additionally</span><span class="v" style="font-size:10px;color:var(--ink4)"></span></div>`;
+  ph+=`<div class="row total"><span class="k">Total${ST.currency==='INR'?' (ex-GST)':' ('+ST.currency+')'}</span><span class="v">${F(st)}</span></div>`;
+  if(ST.currency==='INR'){
+    ph+=`<div class="row"><span class="k" style="font-size:10px;color:var(--ink4)">GST @18% applicable additionally</span><span class="v" style="font-size:10px;color:var(--ink4)"></span></div>`;
+  } else {
+    ph+=`<div class="row"><span class="k" style="font-size:10px;color:var(--ink4)">International quote — shipping, duties &amp; taxes as applicable at destination</span><span class="v" style="font-size:10px;color:var(--ink4)"></span></div>`;
+  }
   document.getElementById('sPL').innerHTML=ph;
   document.getElementById('sGr').textContent=F(st);
+}
+
+/* ════════ COUNTRY / CURRENCY ════════ */
+function onCountryChange(){
+  const sel=document.getElementById('fCountry');
+  if(!sel)return;
+  ST.country=sel.value;
+  ST.currency=(ST.country==='India')?'INR':'USD';
+  // Re-render current step so all prices reflect new currency
+  rCurrent();
+  tick();
+  // Update topbar GST note visibility
+  const gstNote=document.getElementById('gstTopNote');
+  if(gstNote)gstNote.style.display=(ST.currency==='INR')?'inline':'none';
+  // Update static GST/ex-GST text on review & terms pages
+  const isINR=ST.currency==='INR';
+  const setTxt=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+  setTxt('bomSubtitle',isINR?'Prices in INR, ex-works. GST @18% additional.':'Prices in USD, ex-works. Duties & taxes extra at destination.');
+  setTxt('sGrLbl',isINR?'Total (ex-GST)':'Total (USD)');
+  setTxt('sGrSub',isINR?'GST @18% applicable additionally':'Shipping, duties & taxes extra');
+  setTxt('termPrices',isINR?'All prices are indicative and ex-works Coimbatore, India.':'All prices are indicative in USD and ex-works Coimbatore, India.');
+  setTxt('termTax',isINR?'GST @ 18% applicable as per Indian tax regulations.':'Shipping, import duties and destination taxes are additional, borne by the buyer.');
+  setTxt('tkGrLbl',isINR?'Total (ex-GST)':'Total (USD)');
+  setTxt('bomPriceHdr',isINR?'Price (INR)':'Price (USD)');
+  setTxt('bomTotalHdr',isINR?'Total (INR)':'Total (USD)');
+}
+function rCurrent(){
+  // Re-render whichever step is currently active
+  if(cur===2)rStep2();
+  if(cur===3)rStep3Dyn();
+  if(cur===4){rStep5();syncHmiDeps();rFixedPrices();}
+  if(cur===5){rSensors();rAirOpts();}
+  if(cur===6)rStep6();
+}
+
+/* ════════ STEP 1 VALIDATION ════════ */
+function validateStep1AndGo(){
+  const v=id=>(document.getElementById(id).value||'').trim();
+  const err=document.getElementById('step1Error');
+  const missing=[];
+  if(!v('fOrg'))missing.push('Organisation');
+  if(!v('fName'))missing.push('Contact Person');
+  const em=v('fEmail');
+  if(!em)missing.push('Email');
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))missing.push('Email (valid format)');
+  if(!v('fCountry'))missing.push('Country');
+  if(!v('fLoc'))missing.push('Delivery Location');
+  if(missing.length>0){
+    err.style.display='block';
+    err.innerHTML='<strong>Please complete the following:</strong> '+missing.join(', ');
+    return;
+  }
+  err.style.display='none';
+  // Ensure country state is synced before moving forward
+  onCountryChange();
+  go(2);
 }
 
 /* ════════ NAV ════════ */
@@ -873,16 +954,21 @@ function go(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ════════ EXCEL ════════ */
+/* ════════ EXCEL — delegates to shared export-utils ════════ */
 function exportXL(){
+  rBOM();
+  if(typeof exportQuoteXL==='function'){ exportQuoteXL(collectData()); return; }
+  _exportXL_legacy();
+}
+function _exportXL_legacy(){
   rBOM();
   const wb=XLSX.utils.book_new(),v=id=>document.getElementById(id).value||'';
   const c1=[['CARBELIM PRIVATE LIMITED'],['Photobioreactor (PBR) Custom Design \u2014 Quotation'],['No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, Tamil Nadu 641020'],['mail@carbelim.io | +91 85903 25180'],[''],
-    ['Organisation',v('fOrg')],['Contact',v('fName')],['Email/Phone',v('fContact')],['Date',v('fDate')],['Reference',v('fRef')],['Delivery',v('fLoc')]];
+    ['Organisation',v('fOrg')],['Contact',v('fName')],['Email',v('fEmail')],['Phone',v('fPhone')],['Country',v('fCountry')],['Currency',ST.currency],['Date',v('fDate')],['Reference',v('fRef')],['Delivery',v('fLoc')]];
   if(ST.size==='custom'&&(ST.customW||ST.customH||ST.customD)){
     c1.push(['Tank Dimensions',`${ST.customW||'?'} × ${ST.customH||'?'} × ${ST.customD||'?'} cm`]);
   }
-  c1.push([''],['CONFIGURATION'],['Tank Size',sizeLabel()],['Tank Price',tankPrice()],
+  c1.push([''],['CONFIGURATION'],['Tank Size',sizeLabel()],['Tank Price ('+ST.currency+')',cvNum(tankPrice())],
     ['Frame',ST.frame==='none'?'No Frame':(ST.frame==='ss'?'SS304 Matte + HW Kit':'MS + HW Kit')],
     ['Frame Colour',ST.frame!=='none'?(v('fColor')||'N/A'):'N/A'],
     ['LED Type',ST.led==='none'?'No LED':(ST.led==='strip'?'LED Grow Strips':'High-Output LED Tubes')]);
@@ -898,7 +984,7 @@ function exportXL(){
     ['HMI/PLC',ST.hmi?'Yes ('+F(HMI)+')':'No'],
     ['Connectivity',ST.iotDash?(ST.conn==='wifi'?'WiFi Only ('+F(4435)+')':'WiFi + 4G LTE ('+F(25960)+')'):'Not selected'],
     ['Cloud IoT Dashboard',ST.iotDash?'Yes ('+F(41300)+' + annual TBD)':'No'],
-    [''],['TOTAL (ex-GST)',sub()],['Note','GST @18% applicable additionally'],[''],
+    [''],['TOTAL ('+ST.currency+(ST.currency==='INR'?', ex-GST':'')+')',cvNum(sub())],['Note',ST.currency==='INR'?'GST @18% applicable additionally':'International quote in USD. Shipping, duties & taxes as applicable at destination.'],[''],
     ['REMARKS',v('fRemarks')||'None'],[''],['Ex-works Coimbatore. Validity 30 days. Payment: 50% advance, 50% before dispatch.'],['Carbelim Private Limited | No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, TN 641020'],['mail@carbelim.io | +91 85903 25180']);
   const ws1=XLSX.utils.aoa_to_sheet(c1);ws1['!cols']=[{wch:26},{wch:50}];
   XLSX.utils.book_append_sheet(wb,ws1,'Configuration');
@@ -911,8 +997,13 @@ function exportXL(){
   XLSX.writeFile(wb,`Carbelim_PBR_Quotation_${v('fRef')||'CBL-PBR-001'}.xlsx`);
 }
 
-/* ════════ PDF EXPORT ════════ */
+/* ════════ PDF EXPORT — delegates to shared export-utils ════════ */
 function exportPDF(){
+  rStep6();
+  if(typeof exportQuotePDF==='function'){ exportQuotePDF(collectData()); return; }
+  _exportPDF_legacy();
+}
+function _exportPDF_legacy(){
   rStep6();
   const v=id=>document.getElementById(id).value||'';
   const ref=v('fRef')||'CBL-PBR-001';
@@ -927,6 +1018,7 @@ function exportPDF(){
 
   wrap.innerHTML=`
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #065f46">
+      <img src="/img/logo.webp" alt="Carbelim" style="height:40px;margin-bottom:6px" onerror="this.style.display='none'">
       <div style="font-size:16px;font-weight:800;color:#065f46;letter-spacing:1px">CARBELIM PRIVATE LIMITED</div>
       <div style="font-size:12px;color:#374151;margin-top:2px">Photobioreactor (PBR) Custom Design \u2014 Quotation</div>
       <div style="font-size:8px;color:#6b7280;margin-top:4px">No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, Tamil Nadu 641020</div>
@@ -936,7 +1028,9 @@ function exportPDF(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;font-size:10px;margin-bottom:14px">
       <div><strong>Organisation:</strong> ${v('fOrg')||'\u2014'}</div>
       <div><strong>Contact:</strong> ${v('fName')||'\u2014'}</div>
-      <div><strong>Email/Phone:</strong> ${v('fContact')||'\u2014'}</div>
+      <div><strong>Email:</strong> ${v('fEmail')||'\u2014'}</div>
+      <div><strong>Phone:</strong> ${v('fPhone')||'\u2014'}</div>
+      <div><strong>Country:</strong> ${v('fCountry')||'\u2014'}</div>
       <div><strong>Delivery:</strong> ${v('fLoc')||'\u2014'}</div>
       ${headerExtra}
     </div>
@@ -958,9 +1052,9 @@ function exportPDF(){
       ${plClone.innerHTML}
     </div>
     <div style="text-align:center;margin-top:12px;padding:16px;background:#065f46;color:#fff;border-radius:8px">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.7">Total (ex-GST)</div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.7">Total${ST.currency==='INR'?' (ex-GST)':' ('+ST.currency+')'}</div>
       <div style="font-size:22px;font-weight:800;margin-top:4px">${F(sub())}</div>
-      <div style="font-size:9px;opacity:.6;margin-top:2px">GST @18% applicable additionally</div>
+      <div style="font-size:9px;opacity:.6;margin-top:2px">${ST.currency==='INR'?'GST @18% applicable additionally':'International quote — shipping, duties &amp; taxes as applicable at destination'}</div>
     </div>`;
     wrap.appendChild(plDiv);
   }
@@ -975,20 +1069,25 @@ function exportPDF(){
 
   const foot=document.createElement('div');
   foot.style.cssText='margin-top:14px;font-size:8px;color:#6b7280;text-align:center;border-top:1px solid #d1d5db;padding-top:8px';
-  foot.innerHTML='All prices indicative, ex-works Coimbatore. GST @18% applicable. Validity 30 days. Payment: 50% advance, 50% before dispatch.<br>Carbelim Private Limited | No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, TN 641020 | mail@carbelim.io | +91 85903 25180';
+  foot.innerHTML=`All prices indicative, ex-works Coimbatore. ${ST.currency==='INR'?'GST @18% applicable.':'International quote in USD, duties & taxes extra at destination.'} Validity 30 days. Payment: 50% advance, 50% before dispatch.<br>Carbelim Private Limited | No 52, Prime Industrial Estate, Periyanaickenpalayam, Coimbatore, TN 641020 | mail@carbelim.io | +91 85903 25180`;
   wrap.appendChild(foot);
 
   document.body.appendChild(wrap);
 
-  html2pdf().set({
-    margin:[8,8,8,8],
-    filename:`Carbelim_PBR_Quotation_${ref}.pdf`,
-    image:{type:'jpeg',quality:0.95},
-    html2canvas:{scale:2,useCORS:true},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-    pagebreak:{mode:['avoid-all','css','legacy']}
-  }).from(wrap).save().then(()=>{
-    document.body.removeChild(wrap);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'mm', format:'a4', orientation:'portrait' });
+  doc.html(wrap, {
+    callback: function(doc) {
+      document.body.removeChild(wrap);
+      doc.save(`Carbelim_PBR_Quotation_${ref}.pdf`);
+    },
+    x: 8,
+    y: 8,
+    width: 194,
+    windowWidth: 900,
+    margin: [8, 8, 8, 8],
+    autoPaging: 'text',
+    html2canvas: { scale: 0.215, useCORS: true }
   });
 }
 
@@ -1006,7 +1105,9 @@ function collectData(){
   const result={
     timestamp:new Date().toISOString(),
     client:{
-      organisation:v('fOrg'),contact:v('fName'),email_phone:v('fContact'),
+      organisation:v('fOrg'),contact:v('fName'),
+      email:v('fEmail'),phone:v('fPhone'),
+      country:v('fCountry')||ST.country,currency:ST.currency,
       date:v('fDate'),reference:v('fRef'),delivery:v('fLoc')
     },
     config:{
@@ -1038,15 +1139,25 @@ function collectData(){
       iot_suite:ST.iotDash?((ST.conn==='wifi'?'WiFi Only':'WiFi + 4G LTE')+' + Cloud IoT Dashboard'):'Not selected',
     },
     remarks:v('fRemarks'),
-    pricing:{total_ex_gst:sub(),grand_total:sub()}
+    pricing:{
+      total_ex_gst_inr:sub(),
+      grand_total_inr:sub(),
+      display_currency:ST.currency,
+      display_total:cvNum(sub()),
+      usd_rate:USD_RATE,
+      usd_multiplier:USD_MULT
+    }
   };
   return result;
 }
 
 function submitQuote(){
-  const v=id=>document.getElementById(id).value||'';
-  if(!v('fOrg')&&!v('fName')&&!v('fContact')){
-    alert('Please fill in at least your organisation name or contact details in Step 1.');return;
+  const v=id=>(document.getElementById(id).value||'').trim();
+  if(!v('fOrg')||!v('fName')||!v('fEmail')||!v('fCountry')||!v('fLoc')){
+    alert('Please complete all required client details in Step 1 before submitting.');go(1);return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('fEmail'))){
+    alert('Please enter a valid email address in Step 1.');go(1);return;
   }
   const btn=document.getElementById('btnSubmit');
   const status=document.getElementById('submitStatus');
@@ -1062,8 +1173,13 @@ function submitQuote(){
   }).then(res=>res.json()).then(result=>{
     if(result.status==='ok'){
       status.style.display='block';status.style.color='var(--g)';
-      status.innerHTML='<strong>Submitted successfully!</strong> Our team will review your configuration and get in touch.';
-      btn.textContent='Submitted ✓';
+      let msg='<strong>Submitted successfully!</strong> Our team will review your configuration and get in touch.';
+      if(result.reference){msg+='<br><span style="font-size:11px;color:var(--ink3)">Reference: <strong>'+result.reference+'</strong></span>';}
+      if(result.portal_url){
+        msg+='<div style="margin-top:12px;padding:12px 14px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;text-align:left"><div style="font-size:11px;color:#065f46;font-weight:600;margin-bottom:6px">Track your request anytime:</div><a href="'+result.portal_url+'" target="_blank" style="font-size:11px;color:#065f46;word-break:break-all">'+result.portal_url+'</a><div style="font-size:10px;color:#065f46;opacity:.75;margin-top:6px">A copy of this link has been emailed to you.</div></div>';
+      }
+      status.innerHTML=msg;
+      btn.textContent='Submitted \u2713';
       const dl=document.getElementById('downloadSection');
       if(dl)dl.style.display='block';
     } else {throw new Error(result.error||'Unknown error');}

@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carbelim — PBR Product Configurator</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="/js/export-utils.js?v=12"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -30,16 +32,29 @@
 <section class="vw on" id="v1">
   <div class="card">
     <div class="card-h"><h2>1. Client Information</h2></div>
+    <p style="font-size:10px;color:var(--ink3);margin-bottom:10px">All fields marked <span style="color:#dc2626">*</span> are required.</p>
     <div class="grid-2">
-      <div class="field span-2"><label>Organisation</label><input id="fOrg" placeholder="Enter organisation name"></div>
-      <div class="field"><label>Contact Person</label><input id="fName" placeholder="Full name"></div>
-      <div class="field"><label>Email / Phone</label><input id="fContact" placeholder="Email or phone number"></div>
+      <div class="field span-2"><label>Organisation <span style="color:#dc2626">*</span></label><input id="fOrg" placeholder="Enter organisation name" required></div>
+      <div class="field"><label>Contact Person <span style="color:#dc2626">*</span></label><input id="fName" placeholder="Full name" required></div>
+      <div class="field"><label>Email <span style="color:#dc2626">*</span></label><input type="email" id="fEmail" placeholder="name@company.com" required></div>
+      <div class="field"><label>Phone</label><input type="tel" id="fPhone" placeholder="+91 98765 43210"></div>
+      <div class="field"><label>Country <span style="color:#dc2626">*</span></label>
+        <select id="fCountry" onchange="onCountryChange()" required>
+          <option value="" disabled selected>-- Select Country --</option>
+          <option value="India">India</option>
+          <option value="United States">United States</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Canada">Canada</option>
+          <option value="Other">Others</option>
+        </select>
+      </div>
       <div class="field"><label>Quotation Date</label><input type="date" id="fDate"></div>
       <div class="field"><label>Reference #</label><input id="fRef" readonly style="background:var(--sf2);cursor:default"></div>
-      <div class="field span-2"><label>Delivery Location</label><input id="fLoc" placeholder="Full delivery address"></div>
+      <div class="field span-2"><label>Delivery Location <span style="color:#dc2626">*</span></label><input id="fLoc" placeholder="Full delivery address" required></div>
     </div>
+    <div id="step1Error" style="display:none;margin-top:10px;padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#991b1b;font-size:11px"></div>
   </div>
-  <div class="nav"><div></div><button class="btn bp" onclick="go(2)">Continue</button></div>
+  <div class="nav"><div></div><button class="btn bp" onclick="validateStep1AndGo()">Continue</button></div>
 </section>
 
 <!-- 2. PBR STRUCTURE -->
@@ -223,13 +238,13 @@
   </div>
   <div id="addonSuggest" style="display:none"></div>
   <div class="card">
-    <div class="card-h"><h2>Bill of Materials &amp; Indicative Pricing</h2><p>Prices in INR, ex-works. GST @18% additional.</p></div>
+    <div class="card-h"><h2>Bill of Materials &amp; Indicative Pricing</h2><p id="bomSubtitle">Prices in INR, ex-works. GST @18% additional.</p></div>
     <div class="badges" id="bomBdg" style="margin-bottom:12px"></div>
-    <div class="tbl-wrap"><table class="bom"><thead><tr><th>#</th><th>Component</th><th class="ac">Qty</th><th>Unit</th><th class="ar">Price (INR)</th><th class="ar">Total (INR)</th><th>Remarks</th></tr></thead><tbody id="bomTb"></tbody></table></div>
+    <div class="tbl-wrap"><table class="bom"><thead><tr><th>#</th><th>Component</th><th class="ac">Qty</th><th>Unit</th><th class="ar" id="bomPriceHdr">Price (INR)</th><th class="ar" id="bomTotalHdr">Total (INR)</th><th>Remarks</th></tr></thead><tbody id="bomTb"></tbody></table></div>
   </div>
   <div class="sum-2">
     <div class="card" style="margin-bottom:0"><div class="card-h"><h2>Cost Breakdown</h2></div><div class="pl" id="sPL"></div></div>
-    <div class="gb"><div class="gl">Total (ex-GST)</div><div class="gv" id="sGr">--</div><div class="gs">GST @18% applicable additionally</div></div>
+    <div class="gb"><div class="gl" id="sGrLbl">Total (ex-GST)</div><div class="gv" id="sGr">--</div><div class="gs" id="sGrSub">GST @18% applicable additionally</div></div>
   </div>
   <div class="card">
     <div class="card-h"><h2>Comments / Remarks</h2><p>Optional &mdash; add any notes for our team</p></div>
@@ -246,7 +261,7 @@
     <button class="btn bx" id="btnSubmit" style="background:var(--tl)" onclick="submitQuote()">Submit Configuration Request</button>
     <div id="submitStatus" style="margin-top:12px;font-size:12px;display:none"></div>
     <div id="downloadSection" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb">
-      <p style="font-size:11px;color:#065f46;font-weight:600;margin-bottom:10px">Submission successful — you can now download your quotation</p>
+      <p style="font-size:11px;color:#0A3D2E;font-weight:600;margin-bottom:10px">Submission successful — you can now download your quotation</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <button class="btn bx" onclick="exportXL()">Download Quotation (.xlsx)</button>
         <button class="btn bx" style="background:#1e40af" onclick="exportPDF()">Download PDF</button>
@@ -255,9 +270,9 @@
   </div>
   <div class="card" style="font-size:10px;color:var(--ink3);line-height:1.7">
     <div class="card-h"><h2>Notes &amp; Terms</h2></div>
-    <ul style="padding-left:16px">
-      <li>All prices are indicative and ex-works Coimbatore, India.</li>
-      <li>GST @ 18% applicable as per Indian tax regulations.</li>
+    <ul style="padding-left:16px" id="termsList">
+      <li id="termPrices">All prices are indicative and ex-works Coimbatore, India.</li>
+      <li id="termTax">GST @ 18% applicable as per Indian tax regulations.</li>
       <li>Quotation validity: 30 days from the date above.</li>
       <li>Delivery timelines will be discussed upon order confirmation.</li>
       <li>Sensor variants (pH, DO) can be swapped at order time; prices will adjust accordingly.</li>
@@ -269,7 +284,7 @@
 
 </main>
 
-<div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">Custom</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl">Total (ex-GST)</span><span class="big" id="tkGr">--</span></div></div>
+<div class="ticker"><div class="ti"><span class="tl">Tank</span><span class="tv" id="tkTank">Custom</span></div><div class="sep"></div><div class="ti"><span class="tl">Sensors</span><span class="tv" id="tkSen">--</span></div><div class="sep"></div><div class="ti"><span class="tl" id="tkGrLbl">Total (ex-GST)</span><span class="big" id="tkGr">--</span></div></div>
 <a class="wa-fab" href="https://wa.me/918590325180?text=Hi%20Carbelim%2C%20I%20have%20a%20query%20about%20the%20PBR%20configurator." target="_blank" rel="noopener" title="Chat with us on WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785c-1.735 0-3.44-.466-4.932-1.348l-.354-.21-3.667.962.979-3.572-.231-.368A9.68 9.68 0 012.27 12.06c0-5.394 4.39-9.784 9.79-9.784a9.72 9.72 0 016.924 2.869 9.72 9.72 0 012.866 6.92c-.004 5.394-4.394 9.784-9.79 9.784zM12.05.516C5.557.516.26 5.813.26 12.06a11.49 11.49 0 001.537 5.748L0 24l6.335-1.662A11.51 11.51 0 0012.05 24c6.493 0 11.79-5.297 11.79-11.94C23.84 5.813 18.543.516 12.05.516z"/></svg>
   <span class="wa-tooltip">Chat with us</span>
