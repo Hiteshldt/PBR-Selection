@@ -1,16 +1,34 @@
-const Database = require('better-sqlite3');
-const fs = require('fs');
-const path = require('path');
+const { createClient } = require('@libsql/client');
 
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'carbelim.db');
+const url = process.env.TURSO_DATABASE_URL;
+const authToken = process.env.TURSO_AUTH_TOKEN;
 
-fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+if (!url) {
+  throw new Error('TURSO_DATABASE_URL env var is required');
+}
 
-const db = new Database(DB_PATH);
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+const client = createClient({
+  url,
+  authToken,
+  intMode: 'number',
+});
 
-const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
-db.exec(schema);
+async function get(sql, args = []) {
+  const r = await client.execute({ sql, args });
+  return r.rows[0];
+}
 
-module.exports = db;
+async function all(sql, args = []) {
+  const r = await client.execute({ sql, args });
+  return r.rows;
+}
+
+async function run(sql, args = []) {
+  const r = await client.execute({ sql, args });
+  return {
+    changes: r.rowsAffected,
+    lastInsertRowid: r.lastInsertRowid != null ? Number(r.lastInsertRowid) : 0,
+  };
+}
+
+module.exports = { client, get, all, run };

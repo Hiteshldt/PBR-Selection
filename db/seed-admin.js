@@ -1,7 +1,7 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const readline = require('readline');
-const db = require('./index');
+const { get, run } = require('./index');
 
 function prompt(question, hidden = false) {
   return new Promise((resolve) => {
@@ -41,15 +41,15 @@ function prompt(question, hidden = false) {
     process.exit(1);
   }
 
-  const existing = db.prepare('SELECT id FROM admin_users WHERE email=?').get(email);
+  const existing = await get('SELECT id FROM admin_users WHERE email=?', [email]);
   const hash = bcrypt.hashSync(password, 10);
   const now = new Date().toISOString();
 
   if (existing) {
-    db.prepare('UPDATE admin_users SET password_hash=?, name=? WHERE email=?').run(hash, name, email);
+    await run('UPDATE admin_users SET password_hash=?, name=? WHERE email=?', [hash, name, email]);
     console.log(`\nUpdated existing admin: ${email}`);
   } else {
-    db.prepare('INSERT INTO admin_users (email, password_hash, name, created_at) VALUES (?, ?, ?, ?)').run(email, hash, name, now);
+    await run('INSERT INTO admin_users (email, password_hash, name, created_at) VALUES (?, ?, ?, ?)', [email, hash, name, now]);
     console.log(`\nCreated admin: ${email}`);
   }
   process.exit(0);

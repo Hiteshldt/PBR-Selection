@@ -36,7 +36,8 @@
       "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\('status:',d['status']\\);print\\('history:',len\\(d['history']\\)\\)\")",
       "Bash(npm start:*)",
       "Bash(netstat -ano)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(npm uninstall:*)"
     ]
   }
 }
